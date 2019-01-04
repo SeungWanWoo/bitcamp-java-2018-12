@@ -10,11 +10,12 @@ public class Test03 {
     
     float f1 = 9876.543f;
     float f2 = 12.34567f;
-    //System.out.printf("%f + %f = %f\n", f1, f2, f1 + f2);
+    
     System.out.println(f1);
     System.out.println(f2);
     // float과 float의 계산 결과는 float이다.
     System.out.println(f1 + f2);
+    // = System.out.printf("%f + %f = %f\n", f1, f2, f1 + f2);
     //따라서 계산 결과가 4바이트 float의 크기를 넘어가면 적절히 반올림하여 
     //나머지 값을 버린다.
     
@@ -31,5 +32,3 @@ public class Test03 {
     // 4바이트 정수 리터럴에 접미사를 붙이지 않는다.
   }
 }
-/*
- */

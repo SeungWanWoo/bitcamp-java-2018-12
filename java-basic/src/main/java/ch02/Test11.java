@@ -10,6 +10,7 @@ public class Test11 {
     System.out.println("Hello"); //문자열
     System.out.println('Y'); //문자
     System.out.println(true); //논리
+    
     // 값을 지정하지 않았을 땐 줄바꿈 역할만 한다.
     System.out.println(); //줄바꿈
     
@@ -20,13 +21,9 @@ public class Test11 {
     System.out.print('Y'); //문자
     System.out.print(true); //논리
     
-    //'\n' ==> println()
+    //print(); or printf(); + '\n' ==> println()
     System.out.print('\n');
     System.out.print("OK!\n"); //=println("OK!");
     System.out.print("Hi!\n"); //=println("Hi!");
-    
   }
 }
-
-/* 
- */     

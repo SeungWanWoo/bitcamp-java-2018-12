@@ -6,17 +6,16 @@ public class Test09 {
     //문자열 출력
     System.out.println("홍길동");
     
-    //Concatenation
+    //Concatenation [+]
     System.out.println("Hello," + "World!");
     
-    //Another type Concatenation
+    //Another type Concatenation - 다른 형식과의 + 연산
     System.out.println("나이 : " + 20); // + 정수
     System.out.println(false + "<== 재직자 여부"); // + 논리
     System.out.println("성별 : " + '여'); // + 문자
     System.out.println("키 : " + 170.5f); // + 부동소수점
   }
 }
-
 /*
  * # 문자열
  *  - 자바의 기본 타입이 아니라 객체이다.

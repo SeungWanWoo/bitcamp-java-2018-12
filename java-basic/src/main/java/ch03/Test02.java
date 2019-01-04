@@ -25,5 +25,3 @@ public class Test02 {
     //System.out.println(f); //컴파일 에러!
   }
 }
-/*
- */

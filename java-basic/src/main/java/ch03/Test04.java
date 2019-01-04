@@ -25,4 +25,5 @@ public class Test04 {
  *  a = 100;
  * - a => l-value; //l - value는 반드시 메모리여야한다! 
  * - 100 => r-value;
+ * l-value와 r-value의 데이터 형식이 같아야 한다.
  */

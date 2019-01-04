@@ -16,13 +16,14 @@ public class Test01 {
     s2 = 32767; //OK
     //s3 = 300L; 값이 작더라도 8바이트는 불가능
     //s3 = 32768; 메모리의 크기를 벗어난 크기이기 때문에 컴파일 오류가 발생
+    
     // 4바이트 정수 값을 담을 메모리 준비
     int i1; int i2; int i3;
     i1 = -2100000000; //OK
     i2 = 2100000000; //OK
     //i2 = 2100000000L; //컴파일오류! 8바이트를 4바이트에 적재 불가능
-    //i3 = 2200000000; // 리터럴 표현 오류! 리터럴로는 22억을 표현할 수 없다. 
-    //4바이트 초콰하는 값을 표현
+    //i3 = 2200000000; // 리터럴 표현 오류! 4바이트 리터럴로는 22억을 표현할 수 없다. 
+    //4바이트 초과하는 값을 표현
     
     // 8바이트 정수 값을 담을 메모리 준비
     long l1; long l2; long l3;
@@ -40,23 +41,21 @@ public class Test01 {
     //가능한한 유효자릿수에 맞게 출력을 유도해야한다
     System.out.println(f1);
     System.out.println(f2);
-    f1 = 9876.543f;
-    f2 = 12.34567f;
-    System.out.println(f1);
-    System.out.println(f2);
     
     // 8바이트 부동 소수점을 담을 메모리 준비
     double d1; double d2;
     d1 = 98765.43; //주의! 8바이트 부동소수점을 표현할 때는 f, F 접미사 제거
-    d2 = 98765.43456789; // 유효자릿수가 15자리까지 대부분 짤리 않고 들어간다.
+    d2 = 98765.43456789; // 유효자릿수가 15자리까지 대부분 짤리지 않고 들어간다.
     //유효 자릿수를 넘어가는 경우 짤려서 저장된다.
     System.out.println(d1);
     System.out.println(d2);
+    
     // 논리 값을 담을 메모리 준비
     boolean bool1; boolean bool2; boolean bool3;
     bool1 = true;
     bool2 = false;
     //bool1 = 1; true, false 외의 다른 값은 저장할 수 없다.
+    
     // 문자의 UTF-16 코드 값을 담을 메모리 준비
     char c1; char c2; char c3;
     c1 = 44032; //4바이트 정수 값이라도 (러터럴)이더라도 0~65535까지의 값이라면
@@ -64,7 +63,6 @@ public class Test01 {
     c2 = 0xac00;
     c3 = '가';
     //변수 자체가 char이기 때문에 (char)를 따로 붙이지 않아도 된다.
-    //
     System.out.println(c1); 
     System.out.println(c2);
     System.out.println(c3); 

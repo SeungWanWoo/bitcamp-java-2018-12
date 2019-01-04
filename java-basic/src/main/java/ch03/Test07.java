@@ -4,12 +4,17 @@ package ch03;
 public class Test07 {
   public static void main(String[] args) {
     java.util.Scanner keyboard = new java.util.Scanner(System.in);
+    /* java.io.InputStream in = System.in;을 매번 사용하기에는 불편하기 때문에
+     * Scanner를 선언할 때 내부에 선언해주어 불편함을 덜어준다.
+     */
     
+    //무엇인가 입력할때 알림 문구 같은 것을 써주면 사용자 입장에서 알아보기 편해진다.
     System.out.print("이름을 입력하세요 : ");
     java.lang.String name = keyboard.nextLine();
     
-    // 사용자가 입력할 때 까지 진행이 안되는 동작을 Blocking이라고 부른다.
-    // 입력이 될 때까지 기다리는 것이 아니라 따로 동작하는 동작을 nonBloking이라고 부른다.
+    // 사용자가 입력할 때 까지 진행이 안되게 하는 동작을 Blocking이라고 부른다.
+    // 입력이 될 때까지 기다리는 것이 아니라 따로 동작을 진행하는 것을
+    // nonBloking이라고 부른다.
     System.out.print("나이를 입력하세요 : ");
     String age = keyboard.nextLine(); //java.lang 패키지의 멤버를 사용할 때는
     //패키지 이름을 적지 않아도 된다.
