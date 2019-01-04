@@ -14,10 +14,11 @@ public class App3 {
     
     java.util.Date date = new java.util.Date();
     
+    int viewCount = 0;
     System.out.println();
     System.out.printf("번호 : %d \n", num);
     System.out.printf("내용 : %s \n", content);
     System.out.printf("작성일 : %1$tY-%1$tm-%1$td \n", date);
-    System.out.printf("조회수 : %d \n", 0);
+    System.out.printf("조회수 : %d \n", viewCount);
   }
 }
