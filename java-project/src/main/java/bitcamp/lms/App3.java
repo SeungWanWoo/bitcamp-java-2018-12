@@ -2,9 +2,22 @@ package bitcamp.lms;
 
 public class App3 {
   public static void main(String[] args) {
-    System.out.printf("번호 : %d \n", 1);
-    System.out.printf("내용 : %s \n", "게시글입니다.");
-    System.out.printf("작성일 : %d-%02d-%02d \n", 2019, 1, 1);
+    java.util.Scanner scn = new java.util.Scanner(System.in);
+    
+    System.out.print("번호? ");
+    int num = scn.nextInt();
+    
+    scn.nextLine();
+    
+    System.out.print("내용? ");
+    String content = scn.nextLine();
+    
+    java.util.Date date = new java.util.Date();
+    
+    System.out.println();
+    System.out.printf("번호 : %d \n", num);
+    System.out.printf("내용 : %s \n", content);
+    System.out.printf("작성일 : %1$tY-%1$tm-%1$td \n", date);
     System.out.printf("조회수 : %d \n", 0);
   }
 }

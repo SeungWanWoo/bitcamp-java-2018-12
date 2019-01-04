@@ -5,16 +5,36 @@ package bitcamp.lms;
 
 public class App {
   public static void main(String[] args) {
-    System.out.println("번호 : " + 1);
-    System.out.println("수업명 : " + "자바 프로젝트 실습");
-    System.out.println("설명 : " + "자바 프로젝트를 통한 자바 언어 활용법 익히기");
-    System.out.print("시작일 : ");
-    System.out.println("2019-01-02");
-    System.out.print("종료일 : ");
-    System.out.println("2019-05-28");
-    System.out.print("총수업시간 : ");
-    System.out.print(1000);
-    System.out.println(" 시간");
-    System.out.printf("일수업시간 : %d 시간\n", 8);
+    java.util.Scanner scn = new java.util.Scanner(System.in);
+    
+    System.out.print("번호? ");
+    int num = scn.nextInt();
+    
+    scn.nextLine();
+    
+    System.out.print("수업명? ");
+    String cName = scn.nextLine();
+    
+    System.out.print("설명? ");
+    String explan = scn.nextLine();
+    
+    System.out.print("시작일? ");
+    String sDate = scn.nextLine();
+
+    System.out.print("종료일? ");
+    String dDate = scn.nextLine();
+    
+    System.out.print("총수업시간? ");
+    int totalLectureTime = scn.nextInt();
+    
+    System.out.print("일수업시간? ");
+    int dayLectureTime = scn.nextInt();
+    System.out.println();
+    System.out.println("번호 : " + num);
+    System.out.println("수업명 : " + cName);
+    System.out.println("설명 : " + explan);
+    System.out.printf("기간 : %s ~ %s\n",sDate, dDate);
+    System.out.println("총 수업시간 : " + totalLectureTime);
+    System.out.println("일 수업시간 : " + dayLectureTime);
     }
 }

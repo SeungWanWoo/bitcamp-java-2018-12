@@ -1,3 +1,4 @@
+// 리터럴 = 값을 표현하는 방법
 package ch02;
 
 public class Test01 {
