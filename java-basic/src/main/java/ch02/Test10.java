@@ -34,6 +34,5 @@ public class Test10 {
  *    \b - Backspace(BS, 0x08)
  *    \' - Single Quote(0x27)
  *    \" - Double Quote(0x22)
- *    \\ - Backslash(0x59)
- * 
+ *    \\ - Backslash(0x5c)
  */     

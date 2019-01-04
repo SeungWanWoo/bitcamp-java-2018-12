@@ -1,22 +1,10 @@
 // 콘솔로 출력하기 III - 형식을 갖춰서 날짜값 출력하기
 package ch02;
-
 //Java.lang 패키지의 멤버를 사용할 때는 그냥 이름을 지정하면 된다.
 //그 외 다른 패키지의 멤버를 사용할 때는 반드시 패키지 이름을 함께 지정해야 한다.
-import java.util.Date;
-
 public class Test13 {
   public static void main(String[] args) {
     //현재 날짜 및 시각 정보를 생성한다.
-    Date today = new Date();
-    /*
-     * Java.util.Date today = new Java.util.date();
-     * %t
-     * System.out.printf("%t\n", today);
-     * %Y
-     * System.out.printf("%Y\n", today);
-     * */
-    System.out.println(today);
     java.util.Date today1 = new java.util.Date();
     //%t[날짜 및 시각 옵션]
     // 날짜 및 시각 옵션

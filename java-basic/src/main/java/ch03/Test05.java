@@ -1,8 +1,6 @@
 // # 레퍼런스 변수
 package ch03;
 
-import java.util.Date;
-
 public class Test05 {
   public static void main(String[] args) {
     java.util.Date d1 = new java.util.Date();
