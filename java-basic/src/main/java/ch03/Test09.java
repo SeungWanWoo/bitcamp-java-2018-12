@@ -22,7 +22,7 @@ public class Test09 {
     
     System.out.print("이름? ");
     String name = keyboard.nextLine();
-
+    keyboard.close();
     System.out.printf("%d(%s)\n", age, name); 
   }
 }

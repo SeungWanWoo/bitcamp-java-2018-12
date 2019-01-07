@@ -24,7 +24,7 @@ public class Test06 {
      *     한 줄을 입력하면 그 값을 문자열로 만들어 리턴한다.
      */
     java.lang.String /*읽은 문자열 = */str = keyboard.nextLine();
-    
+    keyboard.close();
     //키보드에서 입력한 값 한 줄 읽기 -> 사용자가 입력한 문자열을 출력한다.
     System.out.printf("당신의 이름은 %s입니다.\n", str);
     

@@ -18,7 +18,7 @@ public class Test07 {
     System.out.print("나이를 입력하세요 : ");
     String age = keyboard.nextLine(); //java.lang 패키지의 멤버를 사용할 때는
     //패키지 이름을 적지 않아도 된다.
-
+    keyboard.close();
     System.out.printf("%s(%s)\n", name, age);
   }
 }

@@ -1,7 +1,5 @@
 package bitcamp.lms;
 
-import java.util.Date;
-
 public class App2 {
   public static void main(String[] args) {
     java.util.Scanner scn = new java.util.Scanner(System.in);
@@ -30,7 +28,15 @@ public class App2 {
     
     scn.close();
     
-    java.util.Date date = new java.util.Date();    
+    java.util.Date date = new java.util.Date();
+    /*
+     * package = 도구함
+     * method = 기능
+     * System.currentTimeMillis()=>1970년대부터 현재 까지의 시간을 밀리초 단위로 리턴
+     * 날짜에 대한 데이터를 출력할 땐 %s로 출력
+     * System = 도구 / currentTimeMillis() => 도구함
+     * 
+     */
     System.out.println();
     System.out.printf("번호 : %d \n", num);
     System.out.printf("이름 : %s \n", name);

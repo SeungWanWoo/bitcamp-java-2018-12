@@ -20,7 +20,7 @@ public class Test08 {
 
     System.out.print("b? ");
     int b = keyboard.nextInt();
-
+    keyboard.close();
     System.out.printf("%d * %d = %d\n", a, b, a * b);
   }
 }

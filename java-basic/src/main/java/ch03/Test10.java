@@ -19,6 +19,7 @@ public class Test10 {
      * nextInt()를 호출한 후 엔터 코드(LF)가 남아 있다 하더라도
      * next는 공백을 버리기 때문에 영향을 받지 않는다.
      */
+    keyboard.close();
     System.out.printf("%d(%s)\n", age, name);
     System.out.println(age + "(" + name + ")");
   }
