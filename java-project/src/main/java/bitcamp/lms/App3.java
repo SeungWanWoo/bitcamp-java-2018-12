@@ -14,6 +14,8 @@ public class App3 {
     
     java.util.Date date = new java.util.Date();
     
+    scn.close();
+    
     int viewCount = 0;
     System.out.println();
     System.out.printf("번호 : %d \n", num);

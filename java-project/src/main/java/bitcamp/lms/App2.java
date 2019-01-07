@@ -28,6 +28,8 @@ public class App2 {
     System.out.print("전화? ");
     String tel = scn.nextLine();
     
+    scn.close();
+    
     java.util.Date date = new java.util.Date();    
     System.out.println();
     System.out.printf("번호 : %d \n", num);

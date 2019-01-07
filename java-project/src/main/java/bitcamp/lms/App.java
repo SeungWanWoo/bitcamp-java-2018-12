@@ -11,7 +11,12 @@ public class App {
     int num = scn.nextInt();
     
     scn.nextLine();
-    
+    /*
+     * nextInt() 대신 String으로 입력 받은 값을 int 형식으로 변환해주는
+     * Integer.parsInt() 메서드를 사용하여 엔터 입력후 버퍼에 남는
+     * LF 코드에 대한 문제를 해결시켜 준다.
+     * int no = Integer.parseInt(scn.nextLine());
+     */
     System.out.print("수업명? ");
     String cName = scn.nextLine();
     
@@ -20,7 +25,12 @@ public class App {
     
     System.out.print("시작일? ");
     String sDate = scn.nextLine();
-
+    /*
+     * Date 형식은 Date 값을 받는 메모리 형식이다. 즉 날짜 데이터를 받고 싶으면 
+     * Date 형식을 써주고 date.valueOf()메서드를 사용하면 nextLine() 메서드를
+     * 사용해도 Date 값을 저장할 수 있게 해준다.
+     * Date startDate = Date.valueOf(scn.nextLine());
+     */
     System.out.print("종료일? ");
     String dDate = scn.nextLine();
     
@@ -29,6 +39,9 @@ public class App {
     
     System.out.print("일수업시간? ");
     int dayLectureTime = scn.nextInt();
+    
+    scn.close();
+    
     System.out.println();
     System.out.println("번호 : " + num);
     System.out.println("수업명 : " + cName);
