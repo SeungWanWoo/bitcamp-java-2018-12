@@ -4,23 +4,47 @@ public class App3 {
   public static void main(String[] args) {
     java.util.Scanner scn = new java.util.Scanner(System.in);
     
-    System.out.print("번호? ");
-    int num = scn.nextInt();
-    
-    scn.nextLine();
-    
-    System.out.print("내용? ");
-    String content = scn.nextLine();
-    
-    java.util.Date date = new java.util.Date();
-    
-    scn.close();
-    
+    int index = 0;
     int viewCount = 0;
-    System.out.println();
-    System.out.printf("번호 : %d \n", num);
-    System.out.printf("내용 : %s \n", content);
-    System.out.printf("작성일 : %1$tY-%1$tm-%1$td \n", date);
-    System.out.printf("조회수 : %d \n", viewCount);
+    int[] num = new int[10];
+    String[] content = new String[10];
+    java.util.Date date = new java.util.Date(System.currentTimeMillis());
+    
+    while (true) {
+      if (index == 10) {
+        System.out.println("저장할 수 있는 영역을 모두 사용하셨습니다.");
+        break;
+      }
+      System.out.print("번호? ");
+      num[index] = Integer.parseInt(scn.nextLine());
+      
+      System.out.print("내용? ");
+      content[index] = scn.nextLine();
+
+      System.out.println();
+
+      System.out.print("계속 입력하시겠습니까?(Y/n) ");
+      String answ = scn.nextLine();
+      
+      System.out.println();
+      
+      if (!answ.equalsIgnoreCase("y") && !answ.equalsIgnoreCase("")) {
+        scn.close();
+        break;
+      } else {
+        index++;
+      }
+    }
+    
+    int i = 0;
+    while (true)
+    {
+      System.out.println(num[i] + ", " + content[i] + "    , "
+          + date + ", " + viewCount);
+        if (i == index)
+          break;
+        else
+          i++;
+    }
   }
 }

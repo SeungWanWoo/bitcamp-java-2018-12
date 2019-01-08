@@ -3,51 +3,70 @@
  */
 package bitcamp.lms;
 
+import java.sql.Date;
+
 public class App {
   public static void main(String[] args) {
     java.util.Scanner scn = new java.util.Scanner(System.in);
-    
-    System.out.print("번호? ");
-    int num = scn.nextInt();
-    
-    scn.nextLine();
-    /*
-     * nextInt() 대신 String으로 입력 받은 값을 int 형식으로 변환해주는
-     * Integer.parsInt() 메서드를 사용하여 엔터 입력후 버퍼에 남는
-     * LF 코드에 대한 문제를 해결시켜 준다.
-     * int no = Integer.parseInt(scn.nextLine());
-     */
-    System.out.print("수업명? ");
-    String cName = scn.nextLine();
-    
-    System.out.print("설명? ");
-    String explan = scn.nextLine();
-    
-    System.out.print("시작일? ");
-    String sDate = scn.nextLine();
-    /*
-     * Date 형식은 Date 값을 받는 메모리 형식이다. 즉 날짜 데이터를 받고 싶으면 
-     * Date 형식을 써주고 date.valueOf()메서드를 사용하면 nextLine() 메서드를
-     * 사용해도 Date 값을 저장할 수 있게 해준다.
-     * Date startDate = Date.valueOf(scn.nextLine());
-     */
-    System.out.print("종료일? ");
-    String dDate = scn.nextLine();
-    
-    System.out.print("총수업시간? ");
-    int totalLectureTime = scn.nextInt();
-    
-    System.out.print("일수업시간? ");
-    int dayLectureTime = scn.nextInt();
-    
-    scn.close();
-    
-    System.out.println();
-    System.out.println("번호 : " + num);
-    System.out.println("수업명 : " + cName);
-    System.out.println("설명 : " + explan);
-    System.out.printf("기간 : %s ~ %s\n",sDate, dDate);
-    System.out.println("총 수업시간 : " + totalLectureTime);
-    System.out.println("일 수업시간 : " + dayLectureTime);
+    int index = 0;
+    int[] num = new int[10];
+    String[] cName = new String[10];
+    String[] explan = new String[10];
+    Date[] sDate = new Date[10];
+    Date[] eDate = new Date[10];
+    int[] totalLectureTime = new int[10];
+    int[] dayLectureTime = new int[10];
+    while (true) {
+      if (index == 10) {
+        System.out.println("저장할 수 있는 영역을 모두 사용하셨습니다.");
+        break;
+      }
+      System.out.print("번호? ");
+      num[index] = Integer.parseInt(scn.nextLine());
+
+      System.out.print("수업명? ");
+      cName[index] = scn.nextLine();
+
+      System.out.print("설명? ");
+      explan[index] = scn.nextLine();
+
+      System.out.print("시작일? ");
+      sDate[index] = Date.valueOf(scn.nextLine());
+
+      System.out.print("종료일? ");
+      eDate[index] = Date.valueOf(scn.nextLine());  
+
+      System.out.print("총수업시간? ");
+      totalLectureTime[index] = Integer.parseInt(scn.nextLine());
+
+      System.out.print("일수업시간? ");
+      dayLectureTime[index] = Integer.parseInt(scn.nextLine());
+
+      System.out.println();
+
+      System.out.print("계속 입력하시겠습니까?(Y/n) ");
+      String answ = scn.nextLine();
+      
+      System.out.println();
+      
+      if (!answ.equalsIgnoreCase("y") && !answ.equalsIgnoreCase("")) {
+        scn.close();
+        break;
+      } else {
+        index++;
+      }
     }
+    int i = 0;
+    while (true)
+    {
+      System.out.println(num[i] + ", " + cName[i] + ", "
+          + sDate[i] + " ~ " + eDate[i] + ", " 
+          + totalLectureTime[i]);
+        if (i == index)
+          break;
+        else
+          i++;
+    }
+  }
 }
+
