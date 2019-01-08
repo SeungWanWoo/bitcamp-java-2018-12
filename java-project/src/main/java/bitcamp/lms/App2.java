@@ -10,7 +10,7 @@ public class App2 {
     int[] passwd = new int[10];
     String[] pic = new String[10];
     String[] tel = new String[10];
-    java.util.Date date = new java.util.Date(System.currentTimeMillis());
+    java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
     while (true) {
       if (index == 10) {
         System.out.println("저장할 수 있는 영역을 모두 사용하셨습니다.");
@@ -50,8 +50,7 @@ public class App2 {
     }
     
     int i = 0;
-    while (true)
-    {
+    while (true) {
       System.out.println(num[i] + ", " + name[i] + "    , "
           + email[i] + "    , " + tel[i] + "    , " 
           + date);

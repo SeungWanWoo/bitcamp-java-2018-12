@@ -8,7 +8,7 @@ public class App3 {
     int viewCount = 0;
     int[] num = new int[10];
     String[] content = new String[10];
-    java.util.Date date = new java.util.Date(System.currentTimeMillis());
+    java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
     
     while (true) {
       if (index == 10) {
@@ -37,8 +37,7 @@ public class App3 {
     }
     
     int i = 0;
-    while (true)
-    {
+    while (true) {
       System.out.println(num[i] + ", " + content[i] + "    , "
           + date + ", " + viewCount);
         if (i == index)

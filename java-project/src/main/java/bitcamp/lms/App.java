@@ -3,8 +3,6 @@
  */
 package bitcamp.lms;
 
-import java.sql.Date;
-
 public class App {
   public static void main(String[] args) {
     java.util.Scanner scn = new java.util.Scanner(System.in);
@@ -12,8 +10,8 @@ public class App {
     int[] num = new int[10];
     String[] cName = new String[10];
     String[] explan = new String[10];
-    Date[] sDate = new Date[10];
-    Date[] eDate = new Date[10];
+    java.sql.Date[] sDate = new java.sql.Date[10];
+    java.sql.Date[] eDate = new java.sql.Date[10];
     int[] totalLectureTime = new int[10];
     int[] dayLectureTime = new int[10];
     while (true) {
@@ -31,10 +29,10 @@ public class App {
       explan[index] = scn.nextLine();
 
       System.out.print("시작일? ");
-      sDate[index] = Date.valueOf(scn.nextLine());
+      sDate[index] = java.sql.Date.valueOf(scn.nextLine());
 
       System.out.print("종료일? ");
-      eDate[index] = Date.valueOf(scn.nextLine());  
+      eDate[index] = java.sql.Date.valueOf(scn.nextLine());  
 
       System.out.print("총수업시간? ");
       totalLectureTime[index] = Integer.parseInt(scn.nextLine());
@@ -57,8 +55,7 @@ public class App {
       }
     }
     int i = 0;
-    while (true)
-    {
+    while (true) {
       System.out.println(num[i] + ", " + cName[i] + ", "
           + sDate[i] + " ~ " + eDate[i] + ", " 
           + totalLectureTime[i]);
