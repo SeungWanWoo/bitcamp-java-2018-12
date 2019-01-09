@@ -116,3 +116,18 @@
 - while 반복문, break와 continue
 
 * java-project-06 과제
+
+## 8일
+- java-project-06 과제 풀이
+- 흐름 제어문 do ~ while 문
+- 흐름 제어문 for 문
+- 메서드의 정의 및 사용
+- 파라미터와 아규먼트
+- 메서드의 리턴값
+- 메서드 중첩 호출
+- 가변 파라미터의 장단점
+- 가변 파라미터와 배열 레퍼런스
+- 로컬 변수의 생성과 소멸
+- 스택 메모리
+- call by value 와 call by reference
+- 재귀 호출
