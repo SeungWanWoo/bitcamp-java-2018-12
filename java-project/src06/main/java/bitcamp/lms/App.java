@@ -4,49 +4,47 @@
  */
 package bitcamp.lms;
 
-import java.sql.Date;
-import java.util.Scanner;
-
 public class App {
   public static void main(String[] args) {
-    Scanner scn = new Scanner(System.in);
+    java.util.Scanner scn = new java.util.Scanner(System.in);
     int index = 0;
-    Lesson[] ls = new Lesson[10];
+    int[] num = new int[10];
+    String[] cName = new String[10];
+    String[] explan = new String[10];
+    java.sql.Date[] sDate = new java.sql.Date[10];
+    java.sql.Date[] eDate = new java.sql.Date[10];
+    int[] totalLectureTime = new int[10];
+    int[] dayLectureTime = new int[10];
 
     // do ~ while 문을 사용하여 App 해결
-    /*
     do {
       if (index == 10) {
         System.out.println("저장할 수 있는 영역을 모두 사용하셨습니다.");
         break;
       }
-      Lesson lss = new Lesson();
-
       System.out.print("번호? ");
-      lss.num = Integer.parseInt(scn.nextLine());
-
+      num[index] = Integer.parseInt(scn.nextLine());
+      
       System.out.print("수업명? ");
-      lss.cName = scn.nextLine();
+      cName[index] = scn.nextLine();
 
       System.out.print("설명? ");
-      lss.explan = scn.nextLine();
+      explan[index] = scn.nextLine();
 
       System.out.print("시작일? ");
-      lss.sDate = Date.valueOf(scn.nextLine());
+      sDate[index] = java.sql.Date.valueOf(scn.nextLine());
 
       System.out.print("종료일? ");
-      lss.eDate = Date.valueOf(scn.nextLine());  
+      eDate[index] = java.sql.Date.valueOf(scn.nextLine());  
 
       System.out.print("총수업시간? ");
-      lss.totalLectureTime = Integer.parseInt(scn.nextLine());
+      totalLectureTime[index] = Integer.parseInt(scn.nextLine());
 
       System.out.print("일수업시간? ");
-      lss.dayLectureTime = Integer.parseInt(scn.nextLine());
+      dayLectureTime[index] = Integer.parseInt(scn.nextLine());
 
       System.out.println();
-
-      ls[index] = lss;
-
+      
       System.out.print("계속 입력하시겠습니까?(Y/n) ");
       String answ = scn.nextLine();
 
@@ -55,97 +53,88 @@ public class App {
       if (!answ.equalsIgnoreCase("y") && !answ.equalsIgnoreCase(""))
         break;
     } while(index++ < 10);
-
+    
     scn.close();
-
+    
     int i = 0;
     do {
       if (i == 10)
         break;
-      System.out.printf("%02d, %-20s, %s ~ %s, %04d\n", ls[i].num, 
-          ls[i].cName, ls[i].sDate, ls[i].eDate, ls[i].totalLectureTime);
-    } while(i++ < index);*/
-
+      System.out.printf("%02d, %-20s, %s ~ %s, %04d\n", num[i], cName[i], sDate[i],
+          eDate[i], totalLectureTime[i]);
+    } while(i++ < index);
+    
     // for 문을 활용하여 App 해결
-
-    while(index < 10) {
-      Lesson lss = new Lesson();
+    /*for (; index < 10; index++) {
+      /*num[index] = index+1;
+      System.out.println("번호? " + num[index]);
       System.out.print("번호? ");
-      lss.num = Integer.parseInt(scn.nextLine());
-
+      num[index] = Integer.parseInt(scn.nextLine());
+      
       System.out.print("수업명? ");
-      lss.cName = scn.nextLine();
+      cName[index] = scn.nextLine();
 
       System.out.print("설명? ");
-      lss.explan = scn.nextLine();
+      explan[index] = scn.nextLine();
 
       System.out.print("시작일? ");
-      lss.sDate = Date.valueOf(scn.nextLine());
+      sDate[index] = java.sql.Date.valueOf(scn.nextLine());
 
       System.out.print("종료일? ");
-      lss.eDate = Date.valueOf(scn.nextLine());  
+      eDate[index] = java.sql.Date.valueOf(scn.nextLine());  
 
       System.out.print("총수업시간? ");
-      lss.totalLectureTime = Integer.parseInt(scn.nextLine());
+      totalLectureTime[index] = Integer.parseInt(scn.nextLine());
 
       System.out.print("일수업시간? ");
-      lss.dayLectureTime = Integer.parseInt(scn.nextLine());
+      dayLectureTime[index] = Integer.parseInt(scn.nextLine());
 
       System.out.println();
-
-      ls[index] = lss;
-
-      index++;
-      if (index == 10) {
-        System.out.println("저장할 수 있는 영역을 모두 사용하셨습니다.");
-        break;
-      }
+      
       System.out.print("계속 입력하시겠습니까?(Y/n) ");
       String answ = scn.nextLine();
 
       System.out.println();
 
-      if (!answ.equalsIgnoreCase("y") && !answ.equalsIgnoreCase("")) {
+      if (index == 10) {
+        System.out.println("저장할 수 있는 영역을 모두 사용하셨습니다.");
         break;
       }
+      if (!answ.equalsIgnoreCase("y") && !answ.equalsIgnoreCase(""))
+        break;
     }
 
     scn.close();
 
-    for (int i = 0; i < index; i++) {
-      System.out.printf("%02d, %-20s, %s ~ %s, %04d\n", 
-          ls[i].num, ls[i].cName, ls[i].sDate, ls[i].eDate, 
-          ls[i].totalLectureTime);
-    }
-
+    for (int i = 0; i <= index; i++) {
+      System.out.printf("%02d, %-20s, %s ~ %s, %04d\n", num[i], cName[i], sDate[i],
+          eDate[i], totalLectureTime[i]);
+    }*/
+    
     // while 문을 활용하여 App 해결
-    /*
-    while (index < 10) {
-      Lesson lss = new Lesson();
+    /*while (index < 10) {
       System.out.print("번호? ");
-      lss.num = Integer.parseInt(scn.nextLine());
+      num[index] = Integer.parseInt(scn.nextLine());
 
       System.out.print("수업명? ");
-      lss.cName = scn.nextLine();
+      cName[index] = scn.nextLine();
 
       System.out.print("설명? ");
-      lss.explan = scn.nextLine();
+      explan[index] = scn.nextLine();
 
       System.out.print("시작일? ");
-      lss.sDate = Date.valueOf(scn.nextLine());
+      sDate[index] = java.sql.Date.valueOf(scn.nextLine());
 
       System.out.print("종료일? ");
-      lss.eDate = Date.valueOf(scn.nextLine());  
+      eDate[index] = java.sql.Date.valueOf(scn.nextLine());  
 
       System.out.print("총수업시간? ");
-      lss.totalLectureTime = Integer.parseInt(scn.nextLine());
+      totalLectureTime[index] = Integer.parseInt(scn.nextLine());
 
       System.out.print("일수업시간? ");
-      lss.dayLectureTime = Integer.parseInt(scn.nextLine());
+      dayLectureTime[index] = Integer.parseInt(scn.nextLine());
 
       System.out.println();
-
-      ls[index] = lss;
 
       System.out.print("계속 입력하시겠습니까?(Y/n) ");
       String answ = scn.nextLine();
@@ -166,10 +155,10 @@ public class App {
 
     int i = 0;
     while (i < index) {
-      System.out.printf("%02d, %-20s, %s ~ %s, %04d\n", 
-          ls[i].num, ls[i].cName, ls[i].sDate,
-          ls[i].eDate, ls[i].totalLectureTime);
+      System.out.printf("%02d, %-20s, %s ~ %s, %04d\n", num[i], cName[i], sDate[i],
+          eDate[i], totalLectureTime[i]);
       i++;
     }*/
   }
 }
+
