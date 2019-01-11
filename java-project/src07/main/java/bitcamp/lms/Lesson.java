@@ -1,3 +1,4 @@
+// 수업 데이터를 저장할 새 데이터 타입
 package bitcamp.lms;
 
 import java.sql.Date;

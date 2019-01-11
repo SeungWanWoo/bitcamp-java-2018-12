@@ -1,9 +1,6 @@
 package bitcamp.lms;
 
 import java.util.Scanner;
-import bitcamp.lms.handler.BoardHandler;
-import bitcamp.lms.handler.LessonHandler;
-import bitcamp.lms.handler.MemberHandler;
 
 public class App {
   static Scanner scn = new Scanner(System.in);
