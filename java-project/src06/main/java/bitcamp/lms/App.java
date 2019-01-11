@@ -106,7 +106,7 @@ public class App {
 
     scn.close();
 
-    for (int i = 0; i <= index; i++) {
+    for (int j = 0; j < i; j++) {
       System.out.printf("%02d, %-20s, %s ~ %s, %04d\n", num[i], cName[i], sDate[i],
           eDate[i], totalLectureTime[i]);
     }*/
