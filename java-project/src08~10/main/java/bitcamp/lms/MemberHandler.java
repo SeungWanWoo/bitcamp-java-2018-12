@@ -5,8 +5,9 @@ import java.util.Scanner;
 
 public class MemberHandler {
   static Scanner scn;
+  static final int length = 10;
   static int memberIdx = 0;
-  static Member[] mm = new Member[10];
+  static Member[] mm = new Member[length];
   
   static void listMember() {
     for (int i = 0; i < memberIdx; i++) {

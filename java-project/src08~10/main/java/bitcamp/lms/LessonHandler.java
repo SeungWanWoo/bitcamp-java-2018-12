@@ -5,8 +5,9 @@ import java.util.Scanner;
 
 public class LessonHandler {
   static Scanner scn;
+  static final int length = 10;
   static int lessonIdx = 0;
-  static Lesson[] ls = new Lesson[10];
+  static Lesson[] ls = new Lesson[length];
   
   static void listLesson() {
     for (int i = 0; i < lessonIdx; i++) {
