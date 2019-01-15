@@ -15,6 +15,7 @@ public class App {
     MemberHandler.keyboard = keyboard;
     BoardHandler.keyboard = keyboard;
     BoardHandler2.keyboard = keyboard;
+    
     while (true) {
       String command = prompt();
 
@@ -44,6 +45,7 @@ public class App {
     }
     keyboard.close();
   }
+
   static String prompt() {
     System.out.print("명령> ");
     String command = keyboard.nextLine().toLowerCase();
