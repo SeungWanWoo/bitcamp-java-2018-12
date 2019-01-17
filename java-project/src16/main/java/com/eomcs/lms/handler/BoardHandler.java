@@ -5,21 +5,21 @@ import java.util.Scanner;
 import com.eomcs.lms.domain.Board;
 
 public class BoardHandler {
-  ArrayList ArrayList;
+  BoardList boardList;
   Scanner keyboard;  
   
   public BoardHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    this.ArrayList = new ArrayList(new Board[5]);
+    this.boardList = new BoardList(5);
   }
   
   // 본인 크기는 크지만 리턴된 배열만큼만 출력한다.
   public void listBoard() {
-    Object[] boards = ArrayList.toArray();
-    for (Object board : boards) {
+    Board[] boards = boardList.toArray();
+    for (Board board : boards) {
       System.out.printf("%3d, %-20s, %s, %d\n", 
-          ((Board)board).getNo(), ((Board) board).getContents(), 
-          ((Board) board).getCreatedDate(), ((Board) board).getViewCount());
+          board.getNo(), board.getContents(), 
+          board.getCreatedDate(), board.getViewCount());
     }
   }
 
@@ -36,7 +36,7 @@ public class BoardHandler {
     
     board.setViewCount(0);
     
-    ArrayList.add(board);
+    boardList.add(board);
     
     System.out.println("저장하였습니다.");
   }
