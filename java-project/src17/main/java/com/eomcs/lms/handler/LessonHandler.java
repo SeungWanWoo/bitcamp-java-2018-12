@@ -6,18 +6,19 @@ import com.eomcs.lms.domain.Lesson;
 
 public class LessonHandler {
   Scanner keyboard;
-  ArrayList<Lesson> ArrayList;
+  ArrayList ArrayList;
   
   public LessonHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    this.ArrayList = new ArrayList<>();
+    this.ArrayList = new ArrayList(5);
   }
   public void listLesson() {
-    Lesson[] lessons = ArrayList.toArray(new Lesson[0]);
-    for (Lesson lesson : lessons) {
+    Object[] lessons = ArrayList.toArray();
+    for (Object lesson : lessons) {
       System.out.printf("%3d, %-15s, %10s ~ %10s, %4d\n", 
-          lesson.getNo(), lesson.getTitle(), lesson.getStartDate(), 
-          lesson.getEndDate(), lesson.getTotalHours());
+          ((Lesson) lesson).getNo(), ((Lesson) lesson).getTitle(), 
+          ((Lesson) lesson).getStartDate(), 
+          ((Lesson) lesson).getEndDate(), ((Lesson) lesson).getTotalHours());
     }
   }
 
