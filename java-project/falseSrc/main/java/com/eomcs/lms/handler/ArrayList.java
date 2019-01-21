@@ -65,7 +65,7 @@ public class ArrayList<E>{
     Object[] dest = Arrays.copyOf(arr, arr.length-1);
     this.arr[index] = null;
     
-    System.arraycopy(this.arr, index+1, dest, index, dest.length);
+    System.arraycopy(this.arr, index+1, dest, index, (arr.length - 1) - index);
     // 힌트: System.arraycopy()참고
     return (E) dest[dest.length];
   }

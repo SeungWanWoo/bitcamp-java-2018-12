@@ -1,8 +1,6 @@
 // Object 클래스 - 자바 최상위 클래스
 package ch15;
 
-
-
 class My1 /*extends Object*/{
   
 }
