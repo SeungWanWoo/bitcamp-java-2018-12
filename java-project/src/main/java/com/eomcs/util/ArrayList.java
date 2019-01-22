@@ -18,15 +18,12 @@ public class ArrayList<E> {
       list = new Object[DEFAULT_CAPACITY];
   }
 
+  public int size() {
+    return this.size;
+  }
   @SuppressWarnings("unchecked")
-  public E[] toArray(E[] a) {
-    if (a.length < size) {
-      return (E[]) Arrays.copyOf(list, size, a.getClass());
-    }
-    System.arraycopy(list, 0, a, 0, size);
-    if (a.length > size)
-      a[size] = null;
-    return a;
+  public E[] toArray() {
+    return (E[]) Arrays.copyOf(list, size);
   }
 
   public void add(E obj) {
@@ -38,36 +35,36 @@ public class ArrayList<E> {
 
     list[size++] = obj;
   }
-  public int size() {
-    return this.size;
-  }
+  
   @SuppressWarnings("unchecked")
   public E get(int index) {
-    if (index < 0 || index >= size())
+    if (index < 0 || index >= size)
       return null;
+    
     return (E) list[index];
   }
   
   @SuppressWarnings("unchecked")
-  public E remove(int index) {
-    if (index < 0 || index >= size())
+  public E set(int index, E obj) {
+    if (index < 0 || index >= size) 
       return null;
-    E obj = (E) new Object(); 
-    for (int i = index; i < size - 1; i++) {
-      list[i] = list[i + 1];
-    }
-    size--;
+    E temp = (E) list[index];
     
-    return obj;
+    list[index] = obj;
+    return temp;
   }
   
   @SuppressWarnings("unchecked")
-  public E set(int index, E values) {
-    if (index < 0 || index >= size())
+  public E remove(int index) {
+    if (index < 0 || index >= size) 
       return null;
-    E obj = (E) new Object(); 
-    list[index] = values;
     
-    return obj;
+    E temp = (E) list[index];
+    
+    for (int i = index; i < list.length - 1; i++)
+      list[i] = list[i + 1];
+    
+    size--;
+    return temp;
   }
 }

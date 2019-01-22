@@ -11,12 +11,13 @@ public class MemberHandler {
   
   public MemberHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    this.list = new ArrayList<>(20);
+    this.list = new ArrayList<Member>(5);
   }
   
   public void listMember() {
-    Member[] members = list.toArray(new Member[] {});
-    for (Member member : members) {
+    Object[] objs = list.toArray();
+    for (Object obj : objs) {
+      Member member = (Member) obj;
       System.out.printf("%3d, %-4s, %-20s, %-15s, %s\n", 
           member.getNo(), member.getName(), 
           member.getEmail(), member.getTel(), member.getRegisteredDate());
@@ -54,10 +55,10 @@ public class MemberHandler {
   public void detailMember() {
     int no = promptNo();
     int index = indexOf(no);
-    
-    Member member = list.get(index);
     if (!validate(index))
       return;
+    
+    Member member = list.get(index);
     
     System.out.printf("이름: %s\n", member.getName());
     System.out.printf("이메일: %s\n", member.getEmail());
@@ -66,7 +67,7 @@ public class MemberHandler {
     System.out.printf("전화: %s\n", member.getTel());
     System.out.printf("가입일: %s\n", member.getRegisteredDate());
   }
-  
+
   public void deleteMember() {
     int no = promptNo();
     int index = indexOf(no);
@@ -76,11 +77,13 @@ public class MemberHandler {
     list.remove(index);
     System.out.println("해당 회원을 삭제했습니다.");
   }
+
   public void updateMember() {
     int no = promptNo();
     int index = indexOf(no);
     if (!validate(index))
       return;
+    
     Member member = list.get(index);
     Member temp = new Member();
     
@@ -97,21 +100,24 @@ public class MemberHandler {
     System.out.printf("암호(%s)? ", member.getPassword());
     input = keyboard.nextLine();
     temp.setPassword(input.length() > 0 ? input : member.getPassword());
-  
+    
     System.out.printf("사진(%s)? ", member.getPhoto());
     input = keyboard.nextLine();
     temp.setPhoto(input.length() > 0 ? input : member.getPhoto());
-  
+    
     System.out.printf("전화(%s)? ", member.getTel());
     input = keyboard.nextLine();
     temp.setTel(input.length() > 0 ? input : member.getTel());
-  
-    temp.setRegisteredDate(new Date(System.currentTimeMillis())); 
+
+    System.out.printf("가입일(%s)? ", member.getRegisteredDate());
+    input = keyboard.nextLine();
+    temp.setRegisteredDate(input.length() > 0 ? 
+        new Date(System.currentTimeMillis()) : member.getRegisteredDate());
     
     list.set(index, temp);
-    System.out.println("해당 회원 정보를 변경하였습니다.");
+    System.out.println("해당 회원의 정보를 수정했습니다.");
   }
-  
+
   private boolean validate(int index) {
     if(index == -1) {
       System.out.println("해당 회원이 존재하지 않습니다.");
@@ -119,12 +125,11 @@ public class MemberHandler {
     }
     return true;
   }
-  
+
   private int indexOf(int index) {
     for (int i = 0; i < list.size(); i++) {
       Member item = list.get(i);
       if (item.getNo() == index) {
-        index = i;
         return i;
       }
     }
@@ -135,6 +140,4 @@ public class MemberHandler {
     System.out.print("번호? ");
     return Integer.parseInt(keyboard.nextLine());
   }
-
-
 }
