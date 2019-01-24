@@ -1,6 +1,7 @@
 package com.eomcs.util;
 
-public class Stack {
+// 스택에 복제 기능 활성화 시키기
+public class Stack<E> implements Cloneable {
 
   public static final int DEFAULT_SIZE = 5;
   Object[] list;
@@ -10,7 +11,7 @@ public class Stack {
     list = new Object[DEFAULT_SIZE];
   }
 
-  public void push(Object value) {
+  public void push(E value) {
     // 맨 마지막에 추가한다.
     // 배열의 크기가 작다면 확장해야 한다.
     if (list.length == size) {
@@ -25,13 +26,14 @@ public class Stack {
     list[size++] = value; 
   }
 
-  public Object pop() {
+  @SuppressWarnings("unchecked")
+  public E pop() {
     // 맨 마지막 값을 꺼내 리턴한다.
     // 꺼낸 값을 배열에서 제거되어야 한다.
     if (size == 0)
       return null;
     
-    return list[--size];
+    return (E) list[--size];
   }
 
   public boolean empty() {
@@ -40,5 +42,11 @@ public class Stack {
 
   public int size() {
     return size;
+  }
+  
+  @SuppressWarnings("unchecked")
+  @Override
+  public Stack<E> clone() throws CloneNotSupportedException {
+    return (Stack<E>) super.clone();
   }
 }

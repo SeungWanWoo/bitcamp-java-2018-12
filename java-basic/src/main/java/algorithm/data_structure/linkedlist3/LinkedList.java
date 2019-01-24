@@ -1,7 +1,11 @@
-package com.eomcs.util;
+// 제네릭 적용하기
 
-import java.lang.reflect.Array;
+package algorithm.data_structure.linkedlist3;
 
+// LinkedList에 보관되는 값의 타입을 E라고 가정한다.
+// => E 타입이라고 가정하고 코드를 작성한다.
+// => E가 무슨 타입인지는 LinkedList를 사용할 때 결정된다.
+//
 public class LinkedList<E> {
   protected Node<E> head;
   protected Node<E> tail;
@@ -13,9 +17,6 @@ public class LinkedList<E> {
     size = 0;
   }
   
-  public int size() {
-    return size;
-  }
   public void add(E value) {
     tail.value = value;
     Node<E> node = new Node<>();
@@ -25,29 +26,8 @@ public class LinkedList<E> {
     size++;
   }
   
-  public Object[] toArray() {
-    Object[] temp = new Object[size()];
-    Node<E> cursor = head;
-    for (int i = 0; i < size(); i++) {
-      temp[i] = cursor.value;
-      cursor = cursor.next;
-    }
-    return temp;
-  }
-  
-  @SuppressWarnings("unchecked")
-  public <T> T[] toArray(T[] a) {
-    T[] temp = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
-    Node<E> cursor = head;
-    for (int i = 0; i < size(); i++) {
-      temp[i] = (T) cursor.value;
-      cursor = cursor.next;
-    }
-    return temp;
-  }
-  
   public E get(int index) {
-    if (index < 0 || index >= size())
+    if (index < 0 || index >= size)
       return null;
     Node<E> cursor = head;
     for (int i = 1; i <= index; i++) {
@@ -56,40 +36,50 @@ public class LinkedList<E> {
     return cursor.value;
   }
   
+  public Object[] toArray() {
+    Object[] arr = new Object[size()];
+    Node<E> cursor = head;
+    int i = 0;
+    while (cursor != tail) {
+      arr[i++] = cursor.value;
+      cursor = cursor.next;
+    }
+    return  arr;
+  }
+  
   public E set(int index, E value) {
-    if (index < 0 || index >= size())
+    if (index < 0 || index >= size)
       return null;
     Node<E> cursor = head;
     for (int i = 1; i <= index; i++) {
       cursor = cursor.next;
     }
-    E temp = cursor.value;
+    E old = cursor.value;
     cursor.value = value;
-    return temp;
+    return old;
   }
-  
   public int insert(int index, E value) {
-    if (index < 0 || index >= size())
+    if (index < 0 || index >= size)
       return -1;
+    Node<E> node = new Node<>(value);
     Node<E> cursor = head;
     for (int i = 1; i <= index; i++) {
       cursor = cursor.next;
     }
-    Node<E> newNode = new Node<>(value);
-    if (cursor.prev != null) {
-      cursor.prev.next = newNode;
+    node.next = cursor;
+    node.prev = cursor.prev;
+    cursor.prev = node;
+    if (node.prev != null) {
+      node.prev.next = node;
     } else {
-      head = newNode;
+      head = node;
     }
-    newNode.prev = cursor.prev;
-    cursor.prev = newNode;
-    newNode.next = cursor;
     size++;
     return 0;
   }
   
   public E remove(int index) {
-    if (index < 0 || index >= size())
+    if (index < 0 || index >= size)
       return null;
     Node<E> cursor = head;
     for (int i = 1; i <= index; i++) {
@@ -101,20 +91,28 @@ public class LinkedList<E> {
       head = cursor.next;
     }
     cursor.next.prev = cursor.prev;
-    E temp = cursor.value;
+    E old = cursor.value;
     cursor.value = null;
-    cursor.next = null;
     cursor.prev = null;
+    cursor.next = null;
     size--;
-    return temp;
+    return old;
   }
   
+  public int size() {
+    return size;
+  }
+
+  // Node가 다루는 값의 타입을 제네릭(Generic)으로 선언한다.
+  //  => 즉, Node가 다루는 데이터의 타입을 E라고 명명하고 코드를 작성한다.
+  // => Node 클래스를 사용하는 시점에 E가 무슨 타입인지 결정될 것이다.
   private static class Node<E> {
-    Node<E> prev;
-    Node<E> next;
     E value;
+    Node<E> next;
+    Node<E> prev;
     
     Node() {}
+    
     Node(E value) {
       this.value = value;
     }

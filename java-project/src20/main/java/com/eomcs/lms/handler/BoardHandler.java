@@ -2,20 +2,21 @@ package com.eomcs.lms.handler;
 import java.sql.Date;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Board;
-import com.eomcs.util.ArrayList;
+import com.eomcs.util.LinkedList;
 
 public class BoardHandler {
   
   Scanner keyboard;
-  ArrayList<Board> list;
+  LinkedList<Board> list;
   
   public BoardHandler(Scanner keyboard) {
     this.keyboard = keyboard;
-    this.list = new ArrayList<>(20);
+    this.list = new LinkedList<>();
   }
   
   public void listBoard() {
-    Board[] boards = list.toArray(new Board[] {});
+    Board[] boards = new Board[list.size()];
+    list.toArray(boards);
     for (Board board : boards) {
       System.out.printf("%3d, %-20s, %s, %d\n", 
           board.getNo(), board.getContents(), 

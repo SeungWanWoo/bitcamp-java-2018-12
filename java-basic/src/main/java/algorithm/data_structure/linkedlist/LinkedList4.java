@@ -1,14 +1,14 @@
-package com.eomcs.util;
+package algorithm.data_structure.linkedlist;
 
 import java.lang.reflect.Array;
 
-public class LinkedList<E> {
-  protected Node<E> head;
-  protected Node<E> tail;
+public class LinkedList4<E> {
+  protected Node3<E> head;
+  protected Node3<E> tail;
   protected int size;
   
-  public LinkedList() {
-    head = new Node<>();
+  public LinkedList4() {
+    head = new Node3<>();
     tail = head;
     size = 0;
   }
@@ -16,9 +16,10 @@ public class LinkedList<E> {
   public int size() {
     return size;
   }
+  
   public void add(E value) {
     tail.value = value;
-    Node<E> node = new Node<>();
+    Node3<E> node = new Node3<>();
     tail.next = node;
     node.prev = tail;
     tail = node;
@@ -27,18 +28,21 @@ public class LinkedList<E> {
   
   public Object[] toArray() {
     Object[] temp = new Object[size()];
-    Node<E> cursor = head;
+    
+    Node3<E> cursor = head;
+    
     for (int i = 0; i < size(); i++) {
       temp[i] = cursor.value;
       cursor = cursor.next;
     }
     return temp;
   }
-  
   @SuppressWarnings("unchecked")
   public <T> T[] toArray(T[] a) {
-    T[] temp = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
-    Node<E> cursor = head;
+    T[] temp = (T[]) Array.newInstance(a.getClass().getComponentType(), size());
+    
+    Node3<E> cursor = head;
+    
     for (int i = 0; i < size(); i++) {
       temp[i] = (T) cursor.value;
       cursor = cursor.next;
@@ -49,7 +53,8 @@ public class LinkedList<E> {
   public E get(int index) {
     if (index < 0 || index >= size())
       return null;
-    Node<E> cursor = head;
+    
+    Node3<E> cursor = head;
     for (int i = 1; i <= index; i++) {
       cursor = cursor.next;
     }
@@ -57,9 +62,10 @@ public class LinkedList<E> {
   }
   
   public E set(int index, E value) {
-    if (index < 0 || index >= size())
+    if (index < 0 || index >= size()) {
       return null;
-    Node<E> cursor = head;
+    }
+    Node3<E> cursor = head;
     for (int i = 1; i <= index; i++) {
       cursor = cursor.next;
     }
@@ -69,19 +75,19 @@ public class LinkedList<E> {
   }
   
   public int insert(int index, E value) {
-    if (index < 0 || index >= size())
+    if (index < 0 || index >= size()) {
       return -1;
-    Node<E> cursor = head;
+    }
+    Node3<E> cursor = head;
     for (int i = 1; i <= index; i++) {
       cursor = cursor.next;
     }
-    Node<E> newNode = new Node<>(value);
-    if (cursor.prev != null) {
-      cursor.prev.next = newNode;
-    } else {
-      head = newNode;
-    }
+    Node3<E> newNode = new Node3<>(value);
     newNode.prev = cursor.prev;
+    if (cursor.prev != null)
+      cursor.prev.next = newNode;
+    else
+      head = newNode;
     cursor.prev = newNode;
     newNode.next = cursor;
     size++;
@@ -91,16 +97,19 @@ public class LinkedList<E> {
   public E remove(int index) {
     if (index < 0 || index >= size())
       return null;
-    Node<E> cursor = head;
+    
+    Node3<E> cursor = head;
     for (int i = 1; i <= index; i++) {
       cursor = cursor.next;
     }
-    if (cursor.prev != null) {
+    
+    if (cursor.prev != null)
       cursor.prev.next = cursor.next;
-    } else {
+    else
       head = cursor.next;
-    }
+    
     cursor.next.prev = cursor.prev;
+    
     E temp = cursor.value;
     cursor.value = null;
     cursor.next = null;
@@ -109,13 +118,14 @@ public class LinkedList<E> {
     return temp;
   }
   
-  private static class Node<E> {
-    Node<E> prev;
-    Node<E> next;
+  private static class Node3<E> {
+    Node3<E> prev;
+    Node3<E> next;
     E value;
     
-    Node() {}
-    Node(E value) {
+    Node3() {}
+    
+    Node3(E value) {
       this.value = value;
     }
   }
