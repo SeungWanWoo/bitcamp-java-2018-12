@@ -177,3 +177,79 @@
 ### - java-project-12~13
 - 과제1: 클래스필드 문법의 활용(ver. 12)
 - 과제2: 인스턴스필드 문법의 활용(ver. 13)
+
+## 12일 
+- 과제 풀이
+- 생성자 활용 : String, java.util.Date, java.util.Calendar
+- 디자인 패턴 : Singleton, Factory Method
+- String 클래스 사용법 
+- Immutable과 Mutable : String과 StringBuffer
+
+## 13일 
+- 과제 풀이 : 14번
+- Wrapper 클래스의 역할과 활용법
+- 오토 박싱과 오토 언박싱 
+- Wrapper 클래스의 생성자가 deprecated 된 이유
+- 캡슐화의 필요성과 활용법
+- setter/getter와 프로퍼티
+- 접근 제한자(modifier): private, (default), protected, public
+- 기능을 확장하는 다양한 방법: 기존 코드 변경, 기존 코드 복제
+- 상속을 이용한 기능 확장의 이점
+
+## 14일 
+- 과제 풀이 
+- 상속의 의미: 수퍼 클래스의 멤버 사용권 획득 
+- 상속 관계에서 인스턴스 필드 생성과 초기화 과정
+- 상속에서 생성자 호출 과정, super()의 활용
+- 다중 상속이 불가한 이유 
+- 오버라이딩이 필요한 이유
+- 오버라이딩 규칙과 this, super 키워드의 메서드 호출 규칙
+- 오버로딩이 필요한 이유와 규칙
+- 다형적 변수의 필요성과 사용법
+- 다형적 변수와 오버라이딩 메서드
+- 다형적 변수와 형변환
+
+## 15일 
+- 과제 풀이
+- 상속의 종류: generalization과 specialization
+- generalization과 추상 클래스, 추상 메서드
+- Object 클래스에 대하여: toString()
+- Hash code와 Hash 알고리즘
+- HashMap과 Key 클래스, hashCode(), equals()
+- 제네릭 사용법
+
+## 16일 
+- 과제 풀이 
+- 추상 메서드와 추상 클래스
+- 정렬 알고리즘: 다형적 변수, 추상 클래스, 추상 메서드 활용
+
+## 17일 
+- 추상 클래스 활용
+- 인터페이스 문법 활용
+- 인터페이스와 추상 클래스를 함께 활용하는 예  
+- ArrayList 구현 
+- JUnit 테스트 프레임워크를 활용하여 단위 테스트 수행하기
+
+## 18일 
+- 디자인 패턴: 템플릿 메서드 패턴 구현 
+- 디자인 패턴: 추상 팩토리 패턴 구현 
+- Linked List 구현 
+- Stack 구현 
+- Queue 구현 
+
+## 19일 
+- 중첩 클래스: static / non-static nested 클래스 
+- static nested class의 활용 예 : 분류명 다루는 클래스 
+- non-static nested class의 활용 예 : LinkedList의 인스턴스를 사용하는 Array 중첩 클래스
+- anonymous class : File의 list()에서 사용할 FilenameFilter 구현하기 
+- LinkedList, Stack, Queue 에 중첩 클래스 및 제네릭 적용
+- 20단계 과제 풀이
+- 21단계 과제 풀이
+- 인스턴스 복제 : java.lang.Cloneable 인터페이스와 Object.clone() 메서드 
+ 
+## 20일 
+- 22단계 과제 풀이 : Queue 사용
+- deep clone 개념과 구현 : Stack의 문제점 해결
+- 23단계 과제 풀이 : List 인터페이스 사용
+- Iterator 디자인 패턴
+- 24단계 과제 풀이 : Java Connection API 사용 -> util 대체

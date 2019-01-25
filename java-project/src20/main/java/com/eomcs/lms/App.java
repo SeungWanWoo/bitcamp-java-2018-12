@@ -107,8 +107,15 @@ public class App {
     // 명령어가 보관된 스택에서 명령어를 꺼내기 전에 복제한다.
     try {
       Stack<String> temp = commandHistory.clone();
+      int count = 0;
       while (!temp.empty()) {
         System.out.println(temp.pop());
+        if (++count % 5 == 0) {
+          System.out.println(":");
+          String input = keyboard.nextLine();
+          if (input.equalsIgnoreCase("q"))
+            break;
+        }
       } 
     }catch (CloneNotSupportedException e) {
       // TODO Auto-generated catch block
