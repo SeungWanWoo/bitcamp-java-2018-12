@@ -1,29 +1,20 @@
 package com.eomcs.lms.handler;
-
 import java.sql.Date;
+import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Member;
 
-public class MemberHandler {
+public class MemberAddCommand implements Command {
   
   Scanner keyboard;
-  ArrayList<Member> list;
+  List<Member> list;
   
-  public MemberHandler(Scanner keyboard) {
+  public MemberAddCommand(Scanner keyboard, List<Member> list) {
     this.keyboard = keyboard;
-    list = new ArrayList<>();
+    this.list = list;
   }
   
-  public void listMember() {
-    Member[] lists = list.toArray(new Member[0]);
-    for (Member temp : lists) {
-      System.out.printf("%3d, %-4s, %-20s, %-15s, %s\n", 
-          temp.getNo(), temp.getName(), temp.getEmail(), 
-          temp.getTel(), temp.getRegisteredDate());
-    }
-  }
-
-  public void addMember() {
+  public void execute() {
     Member member = new Member();
     
     System.out.print("번호? ");
@@ -36,8 +27,8 @@ public class MemberHandler {
     member.setEmail(keyboard.nextLine());
     
     System.out.print("암호? ");
-    member.setPassword(keyboard.nextLine()); 
-    
+    member.setPassword(keyboard.nextLine());
+  
     System.out.print("사진? ");
     member.setPhoto(keyboard.nextLine());
   

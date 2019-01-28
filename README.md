@@ -252,4 +252,11 @@
 - deep clone 개념과 구현 : Stack의 문제점 해결
 - 23단계 과제 풀이 : List 인터페이스 사용
 - Iterator 디자인 패턴
-- 24단계 과제 풀이 : Java Connection API 사용 -> util 대체
+- 24단계 과제 풀이 : Java Collection API 사용 -> util 대체
+
+## 21일
+- 지금까지 공부했던 내용 총정리
+- JavaCollection API - indexOf(), remove(), Contains(), Stack
+- Java API 보는 방법
+- JavaCollection API - Set(), HashMap(), Hashtable()
+- 26 단계 과제
