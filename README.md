@@ -260,3 +260,7 @@
 - Java API 보는 방법
 - JavaCollection API - Set(), HashMap(), Hashtable()
 - 26 단계 과제
+
+## 22일
+- 27 단계 과제 풀이 : 예외 처리 추가
+- 예외처리

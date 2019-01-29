@@ -1,4 +1,4 @@
-package com.eomcs.lms.handler;
+package com.eomcs.util;
 
 import java.lang.reflect.Array;
 
@@ -59,7 +59,26 @@ public class ArrayList<E> {
     return temp;
   }
   
+  @SuppressWarnings("unchecked")
+  public E remove(int index) {
+    if (index < 0 || index >= size())
+      return null;
+    
+    E temp = (E) list[index];
+    for (int i = index; i < size(); i++) {
+      list[i] = list[i + 1];
+    }
+    size--;
+    return temp;
+  }
+  
   public void add(E value) {
+    if (list.length == size()) {
+      Object[] temp = new Object[list.length + (list.length >> 1)];
+      for (int i = 0; i < list.length; i++)
+        temp[i] = list[i];
+      list = temp;
+    }
     list[size++] = value;
   }
 }
