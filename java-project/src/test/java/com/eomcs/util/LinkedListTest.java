@@ -1,13 +1,14 @@
 package com.eomcs.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
-import algorithm.data_structure.linkedlist.LinkedList4;
 
 public class LinkedListTest {
 
   public void testAdd() {
-    LinkedList list = new LinkedList();
+    LinkedList<?> list = new LinkedList<>();
     
     list.add(100);
     list.add(200);

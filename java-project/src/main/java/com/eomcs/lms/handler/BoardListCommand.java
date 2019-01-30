@@ -1,17 +1,17 @@
 package com.eomcs.lms.handler;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Board;
-import com.eomcs.util.ArrayList;
 
-public class BoardHandler {
+public class BoardListCommand {
   Scanner keyboard;
-  ArrayList<Board> list;
+  List<Board> list;
   
-  public BoardHandler(Scanner keyboard) {
+  public BoardListCommand(Scanner keyboard, List<Board> list) {
     this.keyboard = keyboard;
-    list = new ArrayList<>();
+    this.list = list;
   }
   
   public void listBoard() {

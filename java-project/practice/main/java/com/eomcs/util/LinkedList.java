@@ -83,20 +83,19 @@ public class LinkedList<E> {
       cursor.prev.next = cursor.next;
     } else
       head = cursor.next;
-    
+    cursor.next.prev = cursor.prev;
     size--;
     return temp;
   }
   
-  public E insert(int index, E value) {
+  public int insert(int index, E value) {
     if (index < 0 || index >= size())
-      return null;
+      return -1;
     Node<E> cursor = head;
     
     for (int i = 1; i <= index; i++)
       cursor = cursor.next;
     
-    E temp = (E) cursor.value;
     Node<E> newNode = new Node<>(value);
     
     newNode.next = cursor;
@@ -107,26 +106,23 @@ public class LinkedList<E> {
     } else
       head = newNode;
     cursor.prev = newNode;
-    
-    
-    return temp;
+    size++;
+    return 0;
   }
   
   public void add(E value) {
     tail.value = value;
     Node<E> newNode = new Node<>();
-    newNode.next = tail;
-    newNode.prev = tail.prev;
-    tail.prev = newNode;
-    tail.prev.next = newNode;
-    
+    newNode.prev = tail;
+    tail.next = newNode;
+    tail = newNode;
     size++;
   }
   
   private class Node<E> {
-    private Node<E> next;
-    private Node<E> prev;
-    private E value;
+    Node<E> next;
+    Node<E> prev;
+    E value;
     
     Node() {}
     

@@ -1,18 +1,18 @@
 package com.eomcs.lms.handler;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Member;
-import com.eomcs.util.ArrayList;
 
 public class MemberHandler {
   
   Scanner keyboard;
-  ArrayList<Member> list;
+  List<Member> list;
   
-  public MemberHandler(Scanner keyboard) {
+  public MemberHandler(Scanner keyboard, List<Member> list) {
     this.keyboard = keyboard;
-    list = new ArrayList<>();
+    this.list = list;
   }
   
   public void listMember() {
