@@ -12,7 +12,7 @@ public class Test01_2 {
       System.out.println("데이터 읽는 중...");
       long start = System.currentTimeMillis();
       
-      byte[] buf = new byte[500];
+      byte[] buf = new byte[1024];
       int len = 0;
       while ((len = in.read(buf)) != -1) {
       }
