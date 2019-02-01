@@ -270,3 +270,7 @@
 - Decorator 패턴
 - Composite 패턴
 - 28 단계 과제 풀이
+
+## 24일
+- 파일 입출력
+- lambda 문법

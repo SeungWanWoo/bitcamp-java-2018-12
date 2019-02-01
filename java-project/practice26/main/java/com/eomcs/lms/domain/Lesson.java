@@ -53,18 +53,4 @@ public class Lesson {
     this.dayHours = dayHours;
   }
   
-  public static Lesson valueOf(String csv) {
-    String[] values = csv.split(",");
-    Lesson lesson = new Lesson();
-    lesson.setNo(Integer.parseInt(values[0]));
-    lesson.setTitle(values[1]);
-    lesson.setContents(values[2]);
-    lesson.setStartDate(Date.valueOf(values[3]));
-    lesson.setEndDate(Date.valueOf(values[4]));
-    lesson.setTotalHours(Integer.parseInt(values[5]));
-    lesson.setDayHours(Integer.parseInt(values[6]));
-    
-    return lesson;
-  }
-  
 }
