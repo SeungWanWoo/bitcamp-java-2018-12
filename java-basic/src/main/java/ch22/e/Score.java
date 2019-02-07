@@ -1,6 +1,19 @@
 package ch22.e;
 
-public class Score {
+import java.io.Serializable;
+
+// ObjectInputStream/ObjectOutputStream을 통해 인스턴스의 값을
+// 바이트 배열로 자동으로 변환하여 출력하고 읽으려면
+// java.io.Serializable 인터페이스를 구현해야 한다.
+// => Serializable 인터페이스는 메서드가 선언되어 있지 않다.
+//    단지 해당 클래스의 인스턴스가 바이트 배열로 자동 출력될 수 있는지
+//    허락하는 용으로 사용한다.
+// => 즉, Serializable 인터페이스를 구현한 클래스는
+//    ObjectOutputStream이 인스턴스를 바로 출력할 수 있다.
+// => 인스턴스 필드를 생성한 후 직접 필드에 값을 저장한다.
+//    이때는 생성자가 호출되지 않는다.
+//    따라서 초기화시킬 것이 있다면 따로 메서드를 호출해야 한다.
+public class Score implements Serializable {
   private String name;
   private int kor;
   private int eng;
@@ -8,7 +21,9 @@ public class Score {
   private int sum;
   private float aver;
   
-  public Score () {}
+  public Score () {
+    System.out.println("Score()");
+  }
   
   public Score(String name, int kor, int eng, int math) {
     this.name = name;

@@ -1,6 +1,4 @@
 package com.eomcs.lms.handler;
-
-import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Member;
@@ -16,13 +14,17 @@ public class MemberDetailCommand implements Command {
   }
   
   public void execute() {
-    int no = prompt();
-    int index = indexOf(no);
-    if (!validate(index)) 
+    System.out.print("번호? ");
+    int no = Integer.parseInt(keyboard.nextLine());
+
+    int index = indexOfMember(no);
+    if (index == -1) {
+      System.out.println("해당 회원을 찾을 수 없습니다.");
       return;
-    
+    }
+
     Member member = list.get(index);
-    
+
     System.out.printf("이름: %s\n", member.getName());
     System.out.printf("이메일: %s\n", member.getEmail());
     System.out.printf("암호: %s\n", member.getPassword());
@@ -31,26 +33,12 @@ public class MemberDetailCommand implements Command {
     System.out.printf("가입일: %s\n", member.getRegisteredDate());
   }
   
-  private boolean validate(int index) {
-    if (index == -1)
-      return false;
-    
-    return true;
-  }
-
-  private int indexOf(int index) {
-    Member[] member = list.toArray(new Member[0]);
+  private int indexOfMember(int no) {
     for (int i = 0; i < list.size(); i++) {
-      if (member[i].getNo() == index)
+      Member m = list.get(i);
+      if (m.getNo() == no)
         return i;
     }
     return -1;
   }
-
-  private int prompt() {
-    System.out.print("번호? ");
-    return Integer.parseInt(keyboard.nextLine());
-  }
-
-
 }

@@ -1,47 +1,39 @@
 package com.eomcs.lms.handler;
-
 import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Lesson;
 
 public class LessonDeleteCommand implements Command {
+
   Scanner keyboard;
   List<Lesson> list;
-  
-  public LessonDeleteCommand (Scanner keyboard, List<Lesson> list) {
+
+  public LessonDeleteCommand(Scanner keyboard, List<Lesson> list) {
     this.keyboard = keyboard;
     this.list = list;
   }
   
   public void execute() {
-    int no = prompt();
-    int index = indexOf(no);
-    if (!validate(index))
+    System.out.print("번호? ");
+    int no = Integer.parseInt(keyboard.nextLine());
+
+    int index = indexOfLesson(no);
+    if (index == -1) {
+      System.out.println("해당 수업을 찾을 수 없습니다.");
       return;
+    }
     
     list.remove(index);
+    
     System.out.println("수업을 삭제했습니다.");
   }
   
-  private boolean validate(int index) {
-    if (index == -1)
-      return false;
-    return true;
-  }
-
-  private int indexOf(int index) {
-    Lesson[] lesson = list.toArray(new Lesson[0]);
+  private int indexOfLesson(int no) {
     for (int i = 0; i < list.size(); i++) {
-      if (lesson[i].getNo() == index)
+      Lesson l = list.get(i);
+      if (l.getNo() == no)
         return i;
     }
     return -1;
   }
-
-  private int prompt() {
-    System.out.print("번호? ");
-    return Integer.parseInt(keyboard.nextLine());
-  }
-
-
 }

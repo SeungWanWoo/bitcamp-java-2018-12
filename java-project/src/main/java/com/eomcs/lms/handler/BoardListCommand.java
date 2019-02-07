@@ -1,10 +1,10 @@
 package com.eomcs.lms.handler;
-
 import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Board;
 
 public class BoardListCommand implements Command {
+  
   Scanner keyboard;
   List<Board> list;
   
@@ -14,11 +14,11 @@ public class BoardListCommand implements Command {
   }
   
   public void execute() {
-    Board[] lists = list.toArray(new Board[0]);
-    for (Board temp : lists) {
+    Board[] boards = list.toArray(new Board[0]);
+    for (Board board : boards) {
       System.out.printf("%3d, %-20s, %s, %d\n", 
-          temp.getNo(), temp.getContents(),
-          temp.getCreatedDate(), temp.getViewCount());
+          board.getNo(), board.getContents(), 
+          board.getCreatedDate(), board.getViewCount());
     }
   }
 }

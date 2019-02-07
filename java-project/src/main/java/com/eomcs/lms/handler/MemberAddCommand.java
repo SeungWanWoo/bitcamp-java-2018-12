@@ -1,5 +1,4 @@
 package com.eomcs.lms.handler;
-
 import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -28,8 +27,8 @@ public class MemberAddCommand implements Command {
     member.setEmail(keyboard.nextLine());
     
     System.out.print("암호? ");
-    member.setPassword(keyboard.nextLine()); 
-    
+    member.setPassword(keyboard.nextLine());
+  
     System.out.print("사진? ");
     member.setPhoto(keyboard.nextLine());
   

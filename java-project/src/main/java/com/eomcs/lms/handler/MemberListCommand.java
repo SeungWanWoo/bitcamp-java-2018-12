@@ -1,10 +1,9 @@
 package com.eomcs.lms.handler;
-
 import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Member;
 
-public class MemberListCommand implements Command{
+public class MemberListCommand implements Command {
   
   Scanner keyboard;
   List<Member> list;
@@ -15,11 +14,11 @@ public class MemberListCommand implements Command{
   }
   
   public void execute() {
-    Member[] lists = list.toArray(new Member[0]);
-    for (Member temp : lists) {
+    Member[] members = list.toArray(new Member[] {});
+    for (Member member : members) {
       System.out.printf("%3d, %-4s, %-20s, %-15s, %s\n", 
-          temp.getNo(), temp.getName(), temp.getEmail(), 
-          temp.getTel(), temp.getRegisteredDate());
+          member.getNo(), member.getName(), 
+          member.getEmail(), member.getTel(), member.getRegisteredDate());
     }
   }
 }
