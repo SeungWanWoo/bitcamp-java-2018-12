@@ -40,9 +40,10 @@ public class CalculatorServer {
             if (result != 0) {
               out.println("결과는 " + result + "입니다.");
               out.flush();
-            }
+            } else {
             out.println(op + " 연산자를 지원하지 않습니다.");
             out.flush();
+            }
           } catch (NumberFormatException e) {
             out.println("식의 형식이 잘못되었습니다.");
             out.flush();

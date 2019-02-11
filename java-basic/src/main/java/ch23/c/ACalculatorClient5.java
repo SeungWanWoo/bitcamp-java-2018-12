@@ -1,7 +1,10 @@
-// 계산기 클라이언트 만들기 : +, -, *, /, % 연산자는 지원한다.
+// 계산기 클라이언트 만들기 : 5단계 - 클라이언트에서 사용자가 quit을 입력하기 전까지 
+//                             계속 서버와 연결된 상태로 있기
 package ch23.c;
 
-import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -21,36 +24,28 @@ import java.util.Scanner;
  * > quit <== 사용자의 입력
  * 안녕히 가세요! <== 서버의 응답
  */
-public class CalculatorClient {
+public class ACalculatorClient5 {
   public static void main(String[] args) {
     try (Scanner keyboard = new Scanner(System.in);
         Socket socket = new Socket("localhost", 8888);
-        Scanner in = new Scanner(socket.getInputStream());
-        PrintWriter out = new PrintWriter(socket.getOutputStream())) {
-
-      String response = in.nextLine();
-      System.out.println(response);
-      response = in.nextLine();
-      System.out.println(response);
-      response = in.nextLine();
-      System.out.println(response);
-      
-      while (true) {
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(socket.getInputStream()));
+        PrintStream out = new PrintStream(socket.getOutputStream())) {
+      while (true) { 
         System.out.print("> ");
-        String command = "";
-        command = keyboard.nextLine();
-        if (command.equalsIgnoreCase("quit")) {
-          out.println("quit");
+        String input = keyboard.nextLine();
+        out.println(input);
+        out.flush();
+
+        String response = in.readLine();
+        System.out.println(response);
+        
+        if (input.equalsIgnoreCase("quit")) {
           break;
         }
-        out.println(command);
-        out.flush();
-        out.println("클라이언트에서 데이터를 전송하였습니다.");
-        out.flush();
-        String result = in.nextLine();
-        System.out.println(result);
       }
     } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }
