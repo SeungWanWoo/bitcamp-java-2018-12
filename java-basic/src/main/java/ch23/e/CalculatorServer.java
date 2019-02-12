@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Random;
 
 class IdList {
   private int id;
@@ -14,7 +15,6 @@ class IdList {
   Socket socket;
   BufferedReader in;
   PrintStream out;
-  int sessionNum;
   
   IdList () {}
   IdList (int id, int value) {
@@ -85,25 +85,29 @@ class IdList {
     }
   }
   
-  public void execute() throws Exception {
+  public void execute(HashMap<Integer, IdList> map) throws Exception {
     try (Socket socket = this.socket;
         PrintStream out = this.out;
         BufferedReader in = this.in) {
       
-      processNum();
+      processNum(map);
       
     }
   }
-  private void processNum() throws Exception {
-    out.println(sessionNum + 1);
-    out.flush();
-    System.out.println("클라이언트로 번호를 전송함");
-    
-    HashMap<Integer, IdList> session = new HashMap<>();
-    
+  private void processNum(HashMap<Integer, IdList> map) throws Exception {
     int recvSessionNum = Integer.parseInt(in.readLine());
     System.out.printf("%d번 클라이언트와 연결됨! 요청처리 중...\n", recvSessionNum);
-    if (recvSessionNum != sessionNum) {
+    
+    IdList resultList = new IdList();
+    
+    if (recvSessionNum == 0) {
+      recvSessionNum++; 
+    } else {
+      resultList.setValue(map.get(recvSessionNum));
+    }
+    calculator(result);
+    
+    /*if (recvSessionNum != sessionNum) {
       this.value = calculator(getValue());
       session.put(recvSessionNum, new IdList(recvSessionNum, value));
       
@@ -111,10 +115,10 @@ class IdList {
       sessionNum++;
       System.out.println("다음 클라이언트 번호 생성...");
     } else {
-      this.value = calculator(getValue());
-      session.put(recvSessionNum, IdList.setValue(value));
+      this.setValue(calculator(getValue()));
+      session.put(recvSessionNum, this);
       System.out.println("클라이언트 번호에 맞게 데이터를 설정함...");
-    }
+    }*/
   }
 }
 
@@ -122,6 +126,7 @@ public class CalculatorServer {
   public static void main(String[] args) {
     try (ServerSocket serverSocket = new ServerSocket(8888)) {
       System.out.println("서버 실행 중...");
+      HashMap<Integer, IdList> session = new HashMap<>();
       while (true) {
         try {
           new IdList(serverSocket.accept()).execute();

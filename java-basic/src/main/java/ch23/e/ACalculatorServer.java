@@ -1,5 +1,5 @@
-// Stateless 서버만들기
-package ch23.test;
+// Stateless 응용 - 서버에서 계산 결과 유지하기
+package ch23.e;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,14 +8,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class CalculatorServer {
+public class ACalculatorServer {
   public static void main(String[] args) {
     
+    // 클라이언트의 작업 결과를 저장할 맵 객체
     HashMap<Long, Integer> resultMap = new HashMap<>();
     
     try (ServerSocket serverSocket = new ServerSocket(8888)) {
       System.out.println("서버 실행 중...");
       
+      // 서버의 Stateless 통신 방법에서 클라이언트를 구분하여 각 클라이언트의 계산 결과를 유지하려면?
+      // => 커피숍에서는 고객의 쿠폰 포인트를 어떻게 관리할까?
       while (true) {
         
         try (Socket socket = serverSocket.accept();
@@ -25,17 +28,21 @@ public class CalculatorServer {
           
           System.out.println("클라이언트와 연결됨! 요청처리 중...");
           
+          // 먼저 클라이언트가 보낸 세션 ID를 읽는다.
           long sessionId = Long.parseLong(in.readLine());
-          int result = 0;
-          boolean isNewSessionId = false;
           System.out.printf("세션ID: %d\n", sessionId);
           
-          if (sessionId == 0) {
+          int result = 0;
+          boolean isNewSessionId = false;
+          
+          if (sessionId == 0) { 
+            // 클라이언트에게 세션ID를 발급한 적이 없다면, 새 세션ID를 발급한다. 
             sessionId = System.currentTimeMillis();
-            isNewSessionId = true;
-            
+            isNewSessionId = true; // 세션ID를 새로 발급했다고 표시한다.
           } else {
-            result = resultMap.get(sessionId);
+            // 클라이언트의 세션ID로 기존에 저장된 결과 값을 가져온다.
+            // auto-unboxing => Integer.intValue()
+            result = resultMap.get(sessionId); 
           }
           
           String[] input = in.readLine().split(" ");
@@ -63,8 +70,11 @@ public class CalculatorServer {
               out.flush();
               continue;
           }
+          
+          // 계산 결과를 세션ID를 사용해서 서버에 저장한다.
           resultMap.put(sessionId, result);
           
+          // 세션ID를 새로 발급했다면 클라이언트에게 알려준다.
           if (isNewSessionId) {
             out.println(sessionId);
           }
