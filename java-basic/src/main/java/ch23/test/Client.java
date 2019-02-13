@@ -20,8 +20,7 @@ public class Client {
         break;
       }
       
-      try (
-          Socket socket = new Socket("localhost", 8888);
+      try (Socket socket = new Socket("localhost", 8888);
           BufferedReader in = new BufferedReader(
               new InputStreamReader(socket.getInputStream()));
           PrintStream out = new PrintStream(socket.getOutputStream())) {
