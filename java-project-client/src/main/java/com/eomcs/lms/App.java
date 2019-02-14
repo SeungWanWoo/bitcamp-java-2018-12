@@ -1,3 +1,4 @@
+// Command 객체에서 데이터 통신 관련 코드를 별도의 클래스(*Agent)로 분리 
 package com.eomcs.lms;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -51,7 +52,7 @@ public class App {
     commandMap.put("/board/update", new BoardUpdateCommand(keyboard));
     commandMap.put("/board/delete", new BoardDeleteCommand(keyboard));
 
-    try (Socket socket = new Socket("localhost", 9545);
+    try (Socket socket = new Socket("localhost", 8888);
         ObjectOutputStream out = new ObjectOutputStream(
             socket.getOutputStream());
         ObjectInputStream in = new ObjectInputStream(

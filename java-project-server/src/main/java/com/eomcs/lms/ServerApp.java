@@ -1,10 +1,13 @@
-// 11 단계 : 서비스 클래스의 일반화(상속)를 수행한다.
+// 12단계: Service 클래스에서 데이터 처리 코드를 별도의 클래스(DAO)로 분리
 package com.eomcs.lms;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import com.eomcs.lms.dao.BoardDao;
+import com.eomcs.lms.dao.LessonDao;
+import com.eomcs.lms.dao.MemberDao;
 import com.eomcs.lms.service.BoardService;
 import com.eomcs.lms.service.LessonService;
 import com.eomcs.lms.service.MemberService;
@@ -13,9 +16,10 @@ public class ServerApp {
   
   static ObjectInputStream in;
   static ObjectOutputStream out;
-  static MemberService memberService;
-  static LessonService lessonService;
-  static BoardService boardService;
+  
+  static BoardDao boardDao;
+  static LessonDao lessonDao;
+  static MemberDao memberDao;
   
   public static void main(String[] args) {
 
@@ -24,28 +28,29 @@ public class ServerApp {
       
       
       try {
-      memberService = new MemberService();
-      memberService.loadData("member.bin");
+      memberDao = new MemberDao("member.bin");
+      memberDao.loadData();
       } catch (Exception e) {
         System.out.println("회원 데이터 로딩 중 오류 발생!");
-        //e.printStackTrace();
       }
       
       try {
-        lessonService = new LessonService();
-        lessonService.loadData("lesson.bin");
+        lessonDao = new LessonDao("lesson.bin");
+        lessonDao.loadData();
         } catch (Exception e) {
           System.out.println("수업 데이터 로딩 중 오류 발생!");
-          //e.printStackTrace();
         }
       
       try {
-        boardService = new BoardService();
-        boardService.loadData("board.bin");
+        boardDao = new BoardDao("board.bin");
+        boardDao.loadData();
         } catch (Exception e) {
           System.out.println("게시물 데이터 로딩 중 오류 발생!");
-          //e.printStackTrace();
         }
+      
+      MemberService memberService = new MemberService(memberDao);
+      BoardService boardService = new BoardService(boardDao);
+      LessonService lessonService = new LessonService(lessonDao);
       
       while (true) {
         try(Socket socket = serverSocket.accept();
@@ -95,19 +100,19 @@ public class ServerApp {
   
   static void quit() throws Exception {
     try {
-      boardService.saveData();
+      boardDao.saveData();
     } catch (Exception e) {
       System.out.println(e.getMessage());
       //e.printStackTrace();
     }
     try {
-      memberService.saveData();
+      memberDao.saveData();
     } catch (Exception e) {
       System.out.println(e.getMessage());
       //e.printStackTrace();
     }
     try {
-      lessonService.saveData();
+      lessonDao.saveData();
     } catch (Exception e) {
       System.out.println(e.getMessage());
       //e.printStackTrace();

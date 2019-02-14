@@ -1,9 +1,14 @@
 // 11단계 : AbstractService 상속받기
 package com.eomcs.lms.service;
 
+import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.domain.Lesson;
 
 public class LessonService extends AbstractService<Lesson> {
+  LessonDao lessonDao;
+  public LessonService(LessonDao lessonDao) {
+    this.lessonDao = lessonDao;
+  }
 
   public void execute(String request) throws Exception {
     switch (request) {
@@ -31,7 +36,7 @@ public class LessonService extends AbstractService<Lesson> {
   private void add() throws Exception {
     out.writeUTF("OK");
     out.flush();
-    list.add((Lesson) in.readObject());
+    lessonDao.insert((Lesson) in.readObject());
     out.writeUTF("OK");
   }
 
@@ -39,55 +44,43 @@ public class LessonService extends AbstractService<Lesson> {
     out.writeUTF("OK");
     out.flush();
     out.writeUTF("OK");
-    out.writeObject(list);
+    out.writeObject(lessonDao.findAll());
   }
 
   private void detail() throws Exception {
     out.writeUTF("OK");
     out.flush();
     int num = in.readInt();
-
-    for (Lesson l : list) {
-      if (l.getNo() == num) {
-        out.writeUTF("OK");
-        out.writeObject(l);
-        return;
-      }
+    Lesson l = lessonDao.findByNo(num); 
+    if (l == null) {
+      out.writeUTF("FAIL");
+      return;
     }
-    out.writeUTF("FAIL");
+    out.writeUTF("OK");
+    out.writeObject(l);
   }
 
   private void update() throws Exception {
     out.writeUTF("OK");
     out.flush();
     Lesson lesson = (Lesson) in.readObject();
-
-    int index = 0;
-    for (Lesson l : list) {
-      if (l.getNo() == lesson.getNo()) {
-        list.set(index, lesson);
-        out.writeUTF("OK");
-        return;
-      }
-      index++;
+    
+    if (lessonDao.update(lesson) == 0) {
+      out.writeUTF("FAIL");
+      return;
     }
-    out.writeUTF("FAIL");
+    out.writeUTF("OK");
   }
 
   private void delete() throws Exception {
     out.writeUTF("OK");
     out.flush();
     int num = in.readInt();
-
-    int index = 0;
-    for (Lesson l : list) {
-      if (l.getNo() == num) {
-        list.remove(index);
-        out.writeUTF("OK");
-        return;
-      }
-      index++;
+    
+    if (lessonDao.delete(num) == 0) {
+      out.writeUTF("FAIL");
+      return;
     }
-    out.writeUTF("FAIL");
+    out.writeUTF("OK");
   }
 }

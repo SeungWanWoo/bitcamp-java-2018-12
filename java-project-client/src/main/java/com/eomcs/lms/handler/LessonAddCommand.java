@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Date;
 import java.util.Scanner;
+import com.eomcs.lms.agent.LessonAgent;
 import com.eomcs.lms.domain.Lesson;
 
 public class LessonAddCommand implements Command {
@@ -39,22 +40,11 @@ public class LessonAddCommand implements Command {
     lesson.setDayHours(Integer.parseInt(keyboard.nextLine()));
 
     try {
-    out.writeUTF("/lesson/add");
-    out.flush();
-    if (!in.readUTF().equals("OK"))
-      throw new Exception("서버에서 해당 명령어를 처리하지 못합니다.");
-    
-    out.writeObject(lesson);
-    out.flush();
-    
-    String status = in.readUTF();
-    if (!status.equals("OK"))
-      throw new Exception("서버에 저장 실패!");
-    
-    System.out.println("저장하였습니다.");
+      LessonAgent.add(lesson, in, out);
+      System.out.println("저장하였습니다.");
     } catch (Exception e) {
       System.out.printf("수업 정보 저장 오류! : %s\n", e.getMessage());
     }
   }
-  
+
 }

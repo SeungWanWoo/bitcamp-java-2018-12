@@ -1,12 +1,18 @@
 // 11단계 : AbstractService 상속받기
 package com.eomcs.lms.service;
 
+import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.domain.Board;
 
 public class BoardService extends AbstractService<Board> {
 
+  BoardDao boardDao;
+  
+  public BoardService(BoardDao boardDao) {
+    this.boardDao = boardDao;
+  }
+  
   public void execute(String request) throws Exception {
-
     switch (request) {
       case "/board/add":
         add();
@@ -32,7 +38,7 @@ public class BoardService extends AbstractService<Board> {
   private void add() throws Exception {
     out.writeUTF("OK");
     out.flush();
-    list.add((Board) in.readObject());
+    boardDao.insert((Board) in.readObject());
     out.writeUTF("OK");
   }
 
@@ -40,55 +46,42 @@ public class BoardService extends AbstractService<Board> {
     out.writeUTF("OK");
     out.flush();
     out.writeUTF("OK");
-    out.writeObject(list);
+    out.writeObject(boardDao.findAll());
   }
 
   private void detail() throws Exception {
     out.writeUTF("OK");
     out.flush();
     int num = in.readInt();
-
-    for (Board b : list) {
-      if (b.getNo() == num) {
-        out.writeUTF("OK");
-        out.writeObject(b);
-        return;
-      }
+    Board b =boardDao.findByNo(num);
+    if (b == null) {
+      out.writeUTF("FAIL");
+      return;
     }
-    out.writeUTF("FAIL");
+    out.writeUTF("OK");
+    out.writeObject(b);
   }
 
   private void update() throws Exception {
     out.writeUTF("OK");
     out.flush();
     Board board = (Board) in.readObject();
-
-    int index = 0;
-    for (Board b : list) {
-      if (b.getNo() == board.getNo()) {
-        list.set(index, board);
-        out.writeUTF("OK");
-        return;
-      }
-      index++;
+    if (boardDao.update(board) == 0) {
+      out.writeUTF("FAIL");
+      return;
     }
-    out.writeUTF("FAIL");
+    out.writeUTF("OK");
   }
 
   private void delete() throws Exception {
     out.writeUTF("OK");
     out.flush();
     int num = in.readInt();
-
-    int index = 0;
-    for (Board b : list) {
-      if (b.getNo() == num) {
-        list.remove(index);
-        out.writeUTF("OK");
-        return;
-      }
-      index++;
+    
+    if (boardDao.delete(num) == 0) {
+      out.writeUTF("FAIL");
+      return;
     }
-    out.writeUTF("FAIL");
+    out.writeUTF("OK");
   }
 }
