@@ -1,14 +1,13 @@
-// Command 객체에서 데이터 통신 관련 코드를 별도의 클래스(*Agent)로 분리 
 package com.eomcs.lms;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
+import com.eomcs.lms.agent.BoardAgent;
+import com.eomcs.lms.agent.LessonAgent;
+import com.eomcs.lms.agent.MemberAgent;
 import com.eomcs.lms.handler.BoardAddCommand;
 import com.eomcs.lms.handler.BoardDeleteCommand;
 import com.eomcs.lms.handler.BoardDetailCommand;
@@ -34,84 +33,67 @@ public class App {
 
   public void service() {
     Map<String,Command> commandMap = new HashMap<>();
-    commandMap.put("/lesson/add", new LessonAddCommand(keyboard));
-    commandMap.put("/lesson/list", new LessonListCommand(keyboard));
-    commandMap.put("/lesson/detail", new LessonDetailCommand(keyboard));
-    commandMap.put("/lesson/update", new LessonUpdateCommand(keyboard));
-    commandMap.put("/lesson/delete", new LessonDeleteCommand(keyboard));
+    
+    LessonAgent lessonAgent = new LessonAgent("localhost", 8888, "/lesson");
+    commandMap.put("/lesson/add", new LessonAddCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/list", new LessonListCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/detail", new LessonDetailCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/update", new LessonUpdateCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/delete", new LessonDeleteCommand(keyboard, lessonAgent));
 
-    commandMap.put("/member/add", new MemberAddCommand(keyboard));
-    commandMap.put("/member/list", new MemberListCommand(keyboard));
-    commandMap.put("/member/detail", new MemberDetailCommand(keyboard));
-    commandMap.put("/member/update", new MemberUpdateCommand(keyboard));
-    commandMap.put("/member/delete", new MemberDeleteCommand(keyboard));
+    MemberAgent memberAgent = new MemberAgent("localhost", 8888, "/member");
+    commandMap.put("/member/add", new MemberAddCommand(keyboard, memberAgent));
+    commandMap.put("/member/list", new MemberListCommand(keyboard, memberAgent));
+    commandMap.put("/member/detail", new MemberDetailCommand(keyboard, memberAgent));
+    commandMap.put("/member/update", new MemberUpdateCommand(keyboard, memberAgent));
+    commandMap.put("/member/delete", new MemberDeleteCommand(keyboard, memberAgent));
+    
+    BoardAgent boardAgent = new BoardAgent("localhost", 8888, "/board");
+    commandMap.put("/board/add", new BoardAddCommand(keyboard, boardAgent));
+    commandMap.put("/board/list", new BoardListCommand(keyboard, boardAgent));
+    commandMap.put("/board/detail", new BoardDetailCommand(keyboard, boardAgent));
+    commandMap.put("/board/update", new BoardUpdateCommand(keyboard, boardAgent));
+    commandMap.put("/board/delete", new BoardDeleteCommand(keyboard, boardAgent));
 
-    commandMap.put("/board/add", new BoardAddCommand(keyboard));
-    commandMap.put("/board/list", new BoardListCommand(keyboard));
-    commandMap.put("/board/detail", new BoardDetailCommand(keyboard));
-    commandMap.put("/board/update", new BoardUpdateCommand(keyboard));
-    commandMap.put("/board/delete", new BoardDeleteCommand(keyboard));
+    while (true) {
+      String command = prompt();
 
-    try (Socket socket = new Socket("localhost", 8888);
-        ObjectOutputStream out = new ObjectOutputStream(
-            socket.getOutputStream());
-        ObjectInputStream in = new ObjectInputStream(
-            socket.getInputStream())) {
+      commandHistory.push(command);
+      commandHistory2.offer(command);
 
-      System.out.println("서버와 연결되었음.");
+      if (command.equals("quit")) {
+        System.out.println("종료 합니다.");
+        break;
+        
+      } else if (command.equals("history")) {
+        printCommandHistory();
+        continue;
+        
+      } else if (command.equals("history2")) {
+        printCommandHistory2();
+        continue;
+      }
+      
+      Command commandHandler = commandMap.get(command);
+      if (commandHandler == null) {
+        System.out.println("실행할 수 없는 명령입니다.");
+        continue;
+      } 
 
-      while (true) {
-        String command = prompt();
+      // stateful을 stateless로 전환할 때 주의할 점!
+      // => 가능한 서버에 요청하는 시점에 서버와 연결하라!
+      // => 이 클래스에서 서버와 연결하지 않고
+      //    데이터를 요청하는 일을 하는 객체(*Agent)에 서버 연결을 맡긴다.
 
-        // 사용자가 입력한 명령을 스택에 보관한다.
-        commandHistory.push(command);
-
-        // 사용자가 입력한 명령을 큐에 보관한다.
-        commandHistory2.offer(command);
-
-        // 사용자가 입력한 명령으로 Command 객체를 찾는다.
-        Command commandHandler = commandMap.get(command);
-
-        if (commandHandler != null) {
-          try {
-            commandHandler.execute(in, out);
-          } catch (Exception e) {
-            System.out.println("명령어 실행 중 오류 발생 : " + e.toString());
-          }
-        } else if (command.equals("quit")) {
-          quit(in, out);
-          break;
-
-        } else if (command.equals("history")) {
-          printCommandHistory();
-
-        } else if (command.equals("history2")) {
-          printCommandHistory2();
-
-        } else {
-          System.out.println("실행할 수 없는 명령입니다.");
-        }
-
-        System.out.println(); 
-      } // while
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+      try {
+        commandHandler.execute();
+        System.out.println();
+      } catch (Exception e) {
+        System.out.println("명령어 실행 중 오류 발생 : " + e.toString());
+      }
+    } // while
 
     keyboard.close();
-  }
-
-  private void quit(ObjectInputStream in, ObjectOutputStream out) {
-    try {
-      out.writeUTF("quit");
-      out.flush();
-      
-      System.out.println("서버 => " + in.readUTF());
-      
-    } catch (Exception e) {
-      // 서버와 연결을 끊다가 오류가 발생하더라도 무시한다.
-    }
-    System.out.println("안녕!");
   }
 
   @SuppressWarnings("unchecked")

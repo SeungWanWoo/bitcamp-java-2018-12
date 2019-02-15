@@ -1,25 +1,24 @@
 package com.eomcs.lms.handler;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import com.eomcs.lms.agent.MemberAgent;
 import com.eomcs.lms.domain.Member;
 
 public class MemberUpdateCommand implements Command {
-  
+  MemberAgent memberAgent;
   Scanner keyboard;
   
-  public MemberUpdateCommand(Scanner keyboard) {
+  public MemberUpdateCommand(Scanner keyboard, MemberAgent memberAgent) {
     this.keyboard = keyboard;
+    this.memberAgent = memberAgent;
   }
   
   @Override
-  public void execute(ObjectInputStream in, ObjectOutputStream out) {
+  public void execute() {
     System.out.print("번호? ");
     int no = Integer.parseInt(keyboard.nextLine());
 
     try {
-      Member member = MemberAgent.get(no, in, out);
+      Member member = memberAgent.get(no);
       
       Member temp = member.clone();
       
@@ -44,7 +43,7 @@ public class MemberUpdateCommand implements Command {
       if ((input = keyboard.nextLine()).length() > 0)
         temp.setTel(input);
       
-      MemberAgent.update(temp, in, out);
+      memberAgent.update(temp);
       System.out.println("회원을 변경했습니다.");
       
     } catch (Exception e) {
