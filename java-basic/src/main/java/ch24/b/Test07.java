@@ -8,6 +8,9 @@ public class Test07 {
     //
     Thread mainThread = Thread.currentThread();
     System.out.println(mainThread.getPriority()); // 5
+    
+    System.out.printf("우선순위 범위: %d ~ %d\n",
+        Thread.MIN_PRIORITY, Thread.MAX_PRIORITY); // 1 ~ 10
   }
 }
 
