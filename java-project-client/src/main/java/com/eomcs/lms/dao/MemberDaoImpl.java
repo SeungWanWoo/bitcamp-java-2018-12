@@ -1,22 +1,12 @@
-package com.eomcs.lms.proxy;
+package com.eomcs.lms.dao;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
-import com.eomcs.lms.dao.MemberDao;
 import com.eomcs.lms.domain.Member;
 
-public class MemberDaoProxy implements MemberDao {
-  String serverAddr;
-  int port;
-  String rootPath;
-
-  public MemberDaoProxy(String serverAddr, int port, String rootPath) {
-    this.serverAddr = serverAddr;
-    this.port = port;
-    this.rootPath = rootPath;
-  }
+public class MemberDaoImpl implements MemberDao {
   
   @SuppressWarnings("unchecked")
   public List<Member> findAll() {
