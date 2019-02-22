@@ -1,18 +1,11 @@
 // 15단계: 여러 클라이언트 요청을 처리할 때의 문제점과 해결책(멀티 스레드 적용)
 package com.eomcs.lms;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
-import com.eomcs.lms.context.ApplicationContextListener;
-import com.eomcs.lms.dao.mariadb.BoardDaoImpl;
-import com.eomcs.lms.dao.mariadb.LessonDaoImpl;
-import com.eomcs.lms.dao.mariadb.MemberDaoImpl;
 import com.eomcs.lms.handler.BoardAddCommand;
 import com.eomcs.lms.handler.BoardDeleteCommand;
 import com.eomcs.lms.handler.BoardDetailCommand;
@@ -29,6 +22,9 @@ import com.eomcs.lms.handler.MemberDeleteCommand;
 import com.eomcs.lms.handler.MemberDetailCommand;
 import com.eomcs.lms.handler.MemberListCommand;
 import com.eomcs.lms.handler.MemberUpdateCommand;
+import com.eomcs.lms.proxy.BoardDaoProxy;
+import com.eomcs.lms.proxy.LessonDaoProxy;
+import com.eomcs.lms.proxy.MemberDaoProxy;
 
 public class App {
 
@@ -36,18 +32,29 @@ public class App {
   Stack<String> commandHistory = new Stack<>();
   Queue<String> commandHistory2 = new LinkedList<>();
 
-  ArrayList<ApplicationContextListener> listeners = new ArrayList<>();
-  
-  public void service() throws Exception {
+  public void service() {
     Map<String,Command> commandMap = new HashMap<>();
     
-    HashMap<String, Object> context = new HashMap<>();
+    LessonDaoProxy lessonAgent = new LessonDaoProxy("192.168.0.31", 8888, "/lesson");
+    commandMap.put("/lesson/add", new LessonAddCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/list", new LessonListCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/detail", new LessonDetailCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/update", new LessonUpdateCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/delete", new LessonDeleteCommand(keyboard, lessonAgent));
+
+    MemberDaoProxy memberAgent = new MemberDaoProxy("192.168.0.31", 8888, "/member");
+    commandMap.put("/member/add", new MemberAddCommand(keyboard, memberAgent));
+    commandMap.put("/member/list", new MemberListCommand(keyboard, memberAgent));
+    commandMap.put("/member/detail", new MemberDetailCommand(keyboard, memberAgent));
+    commandMap.put("/member/update", new MemberUpdateCommand(keyboard, memberAgent));
+    commandMap.put("/member/delete", new MemberDeleteCommand(keyboard, memberAgent));
     
-    for (ApplicationContextListener listener : listeners) {
-      listener.contextInitialized(context);
-    }
-    
-    
+    BoardDaoProxy boardAgent = new BoardDaoProxy("192.168.0.31", 8888, "/board");
+    commandMap.put("/board/add", new BoardAddCommand(keyboard, boardAgent));
+    commandMap.put("/board/list", new BoardListCommand(keyboard, boardAgent));
+    commandMap.put("/board/detail", new BoardDetailCommand(keyboard, boardAgent));
+    commandMap.put("/board/update", new BoardUpdateCommand(keyboard, boardAgent));
+    commandMap.put("/board/delete", new BoardDeleteCommand(keyboard, boardAgent));
 
     while (true) {
       String command = prompt();
@@ -86,15 +93,8 @@ public class App {
         System.out.println("명령어 실행 중 오류 발생 : " + e.toString());
       }
     } // while
-    con.close();
+
     keyboard.close();
-    for (ApplicationContextListener listener : listeners) {
-      listener.contextDestroyed(context);
-    }
-  }
-  
-  private void addApplicationContextListener(ApplicationContextListener listener) {
-    listeners.add(listener);
   }
 
   @SuppressWarnings("unchecked")
@@ -121,11 +121,9 @@ public class App {
     return keyboard.nextLine().toLowerCase();
   }
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     App app = new App();
-    
-    app.addApplicationContextListener();
-    
+
     // App 을 실행한다.
     app.service();
   }

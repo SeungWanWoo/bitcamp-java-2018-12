@@ -18,6 +18,9 @@ public class MemberAddCommand implements Command {
     try {
       Member member = new Member();
 
+      System.out.print("번호? ");
+      member.setNo(Integer.parseInt(keyboard.nextLine()));
+
       System.out.print("이름? ");
       member.setName(keyboard.nextLine());
 

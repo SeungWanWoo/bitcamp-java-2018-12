@@ -14,14 +14,11 @@ public class MemberDetailCommand implements Command {
 
   @Override
   public void execute() {
+    System.out.print("번호? ");
+    int no = Integer.parseInt(keyboard.nextLine());
+
     try {
-      System.out.print("번호? ");
-      int no = Integer.parseInt(keyboard.nextLine());
       Member member = memberDao.findByNo(no);
-      if (member == null) {
-        System.out.println("해당 회원 정보가 존재하지 않습니다.");
-        return;
-      }
       System.out.printf("이름: %s\n", member.getName());
       System.out.printf("이메일: %s\n", member.getEmail());
       System.out.printf("암호: %s\n", member.getPassword());
