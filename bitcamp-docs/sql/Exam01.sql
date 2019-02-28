@@ -208,7 +208,8 @@ DBMS 중에는 고정 크기인 컬럼의 값을 비교할 때 빈자리까지 �
 
 > create table test1(
   c1 char(1),
-  c2 int
+  c2 int,
+  c3 boolean
   );
 
 
@@ -220,6 +221,15 @@ DBMS 중에는 고정 크기인 컬럼의 값을 비교할 때 빈자리까지 �
 > insert into test1(c1) values('0'); /* false */
 > insert into test1(c2) values(1); /* true */
 > insert into test1(c2) values(0); /* false */
+
+> insert into test1(c3) values('Y'); /* errer - 0 */
+> insert into test1(c3) values('N'); /* errer - 0 */
+> insert into test1(c3) values('T'); /* errer - 0 */
+> insert into test1(c3) values('F'); /* errer - 0 */
+> insert into test1(c3) values('1'); /* true */
+> insert into test1(c3) values('0'); /* false */
+> insert into test1(c3) values(1); /* true */
+> insert into test1(c3) values(0); /* false */
 
 
 ### 키 컬럼 지정 
@@ -287,7 +297,8 @@ DBMS 중에는 고정 크기인 컬럼의 값을 비교할 때 빈자리까지 �
 /* 이름과 나이가 같으면 중복되기 때문에 입력 거절이다. */
 > insert into test1(name, age, kor, eng, math) values('aa', 10, 88, 88, 88);
 
-- 여러 개의 컬럼을 묶어서 PK로 사용하면 데이터를 다루기가 불편하다.
+- 두 개 이상의 컬럼을 묶어서 PK로 선언하고 싶다면
+  하면 데이터를 다루기가 불편하다.
   즉 데이터를 찾을 때 마다 name과 age 값을 지정해야 한다.
 - 그래서 실무에서는 이런 경우 '학번'처럼 임의의 값을 저장하는 컬럼을 만들어 PK로 사용한다.
 > create table test1(
@@ -298,7 +309,14 @@ DBMS 중에는 고정 크기인 컬럼의 값을 비교할 때 빈자리까지 �
   eng int,
   math int
   );
-
+> create table test1(
+  name varchar(20),
+  age int,
+  kor int,
+  eng int,
+  math int,
+  constraint test1_pk primary key(name,age)
+  );
 > insert into test1(no,name,age,kor,eng,math) values(1,'a',10,90,90,90);
 > insert into test1(no,name,age,kor,eng,math) values(2,'a',11,91,91,91);
 > insert into test1(no,name,age,kor,eng,math) values(3,'b',11,81,81,81);
@@ -395,7 +413,10 @@ alter table test1
 
 alter table test1
   add column age int;  
-```
+
+alter table test1
+  add column no2 int,
+  add column age2 int;  
 
 - PK 컬럼 지정, UNIQUE 컬럼 지정, INDEX 컬럼 지정
 ```
@@ -515,6 +536,6 @@ select * from worker;
 ### 뷰 삭제
 ```
 drop view worker;
-```
+``` 
 
 
