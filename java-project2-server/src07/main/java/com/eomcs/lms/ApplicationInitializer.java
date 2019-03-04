@@ -69,11 +69,17 @@ public class ApplicationInitializer implements ApplicationContextListener {
     context.put("/board/update", new BoardUpdateCommand(boardDao));
     context.put("/board/delete", new BoardDeleteCommand(boardDao));
     
-    context.put("/photoboard/add", new PhotoBoardAddCommand(photoBoardDao));
-    context.put("/photoboard/list", new PhotoBoardListCommand(photoBoardDao));
-    context.put("/photoboard/detail", new PhotoBoardDetailCommand(photoBoardDao, photoFileDao));
-    context.put("/photoboard/update", new PhotoBoardUpdateCommand(photoBoardDao));
-    context.put("/photoboard/delete", new PhotoBoardDeleteCommand(photoBoardDao));
+    context.put("/photoboard/add", 
+        new PhotoBoardAddCommand(photoBoardDao, photoFileDao));
+    context.put("/photoboard/list", 
+        new PhotoBoardListCommand(photoBoardDao));
+    context.put("/photoboard/detail", 
+        new PhotoBoardDetailCommand(photoBoardDao, photoFileDao));
+    context.put("/photoboard/update", 
+        new PhotoBoardUpdateCommand(photoBoardDao, photoFileDao));
+    context.put("/photoboard/delete", 
+        new PhotoBoardDeleteCommand(photoBoardDao, photoFileDao));
+    
     } catch (Exception e) {
       throw new ApplicationContextException(e);
     }
