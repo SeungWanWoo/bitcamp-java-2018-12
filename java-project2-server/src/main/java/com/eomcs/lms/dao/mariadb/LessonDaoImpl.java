@@ -7,16 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.domain.Lesson;
+import com.eomcs.util.DataSource;
 
 public class LessonDaoImpl implements LessonDao {
 
-  Connection con;
-
-  public LessonDaoImpl (Connection con) {
-    this.con = con;
+  // DataSource 의존객체 선언
+  DataSource dataSource;
+  
+  public LessonDaoImpl(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
-
+  
   public List<Lesson> findAll() {
+    Connection con = dataSource.getConnection();
     try (PreparedStatement pstmt = con.prepareStatement(
         "select lesson_id, sdt, edt, tot_hr, day_hr, titl, conts"
             + " from lms_lesson order by lesson_id desc")) {
@@ -43,6 +46,7 @@ public class LessonDaoImpl implements LessonDao {
   }
 
   public void insert(Lesson lesson) {
+    Connection con = dataSource.getConnection();
     try (PreparedStatement pstmt = con.prepareStatement(
         "insert into lms_lesson (sdt, edt, tot_hr, day_hr, titl, conts) "
             + "values (?,?,?,?,?,?)")) {
@@ -59,6 +63,7 @@ public class LessonDaoImpl implements LessonDao {
   }
 
   public Lesson findByNo(int no) {
+    Connection con = dataSource.getConnection();
     try (PreparedStatement pstmt = con.prepareStatement(
         "select lesson_id, sdt, edt, tot_hr, day_hr, titl, conts"
             + " from lms_lesson where lesson_id = ?")) {
@@ -85,6 +90,7 @@ public class LessonDaoImpl implements LessonDao {
   }
 
   public int update(Lesson lesson) {
+    Connection con = dataSource.getConnection();
     try (PreparedStatement pstmt = con.prepareStatement(
         "update lms_lesson set sdt = ?, edt = ?, tot_hr = ?, day_hr = ?,"
             + " titl = ?, conts = ? where lesson_id = ?")) {
@@ -105,6 +111,7 @@ public class LessonDaoImpl implements LessonDao {
   }
 
   public int delete(int no) {
+    Connection con = dataSource.getConnection();
     try (PreparedStatement pstmt = con.prepareStatement(
         "delete from lms_lesson where lesson_id = ?")) {
       pstmt.setInt(1, no);

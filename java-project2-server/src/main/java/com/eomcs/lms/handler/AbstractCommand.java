@@ -8,12 +8,13 @@ import java.io.PrintWriter;
 // => 직접 사용하지 못한다.
 //
 public abstract class AbstractCommand implements Command {
+  
   @Override
   public void execute(BufferedReader in, PrintWriter out) {
     try {
       execute(new Response(in, out));
     } catch (Exception e) {
-      out.printf("실행 오류! : %s\n", e.getMessage());
+      throw new RuntimeException(e);
     }
   }
 

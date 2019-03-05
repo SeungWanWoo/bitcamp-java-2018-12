@@ -7,18 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.domain.Board;
+import com.eomcs.util.DataSource;
 
 public class BoardDaoImpl implements BoardDao {
 
-  Connection con;
-
-  public BoardDaoImpl(Connection con) {
-    this.con = con;
+  //DataSource 의존객체 선언
+  DataSource dataSource;
+  
+  public BoardDaoImpl(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
-
+  
   public List<Board> findAll() {
-
-    try (PreparedStatement pstmt = con.prepareStatement(
+    Connection con = dataSource.getConnection();
+    try (
+        PreparedStatement pstmt = con.prepareStatement(
         "select board_id, conts, cdt, vw_cnt from lms_board"
             + " order by board_id desc")) {
 
@@ -42,7 +45,9 @@ public class BoardDaoImpl implements BoardDao {
   }
 
   public void insert(Board board) {
-    try (PreparedStatement pstmt = con.prepareStatement(
+    Connection con = dataSource.getConnection();
+    try (
+        PreparedStatement pstmt = con.prepareStatement(
         "insert into lms_board (conts) values (?)")) {
       pstmt.setString(1, board.getContents());
       pstmt.executeUpdate();
@@ -52,6 +57,7 @@ public class BoardDaoImpl implements BoardDao {
   }
 
   public Board findByNo(int no) {
+    Connection con = dataSource.getConnection();
     try {
       try (PreparedStatement pstmt = con.prepareStatement(
           "update lms_board set vw_cnt = vw_cnt + 1"
@@ -83,6 +89,7 @@ public class BoardDaoImpl implements BoardDao {
   }
 
   public int update(Board board) {
+    Connection con = dataSource.getConnection();
     try (PreparedStatement pstmt = con.prepareStatement(
         "update lms_board set conts = ? where board_id = ?")) {
       pstmt.setString(1, board.getContents());
@@ -96,6 +103,7 @@ public class BoardDaoImpl implements BoardDao {
   }
 
   public int delete(int no) {
+    Connection con = dataSource.getConnection();
     try (PreparedStatement pstmt = con.prepareStatement(
         "delete from lms_board where board_id = ?")) {
       pstmt.setInt(1, no);

@@ -1,5 +1,4 @@
 package com.eomcs.lms.handler;
-import com.eomcs.lms.ApplicationInitializer;
 import com.eomcs.lms.dao.PhotoBoardDao;
 import com.eomcs.lms.dao.PhotoFileDao;
 import com.eomcs.lms.domain.PhotoBoard;
@@ -48,7 +47,9 @@ public class PhotoBoardAddCommand extends AbstractCommand {
     response.println("저장하였습니다.");
 
     // 트랜잭션 종료
-    ApplicationInitializer.con.commit();
+    // => 여기서 commit을 수행하는 대신에 이 메서드를 호출한 execute(BufferedReader,
+    //    PrintWriter) 메서드에서 Commit을 수행하면 된다.
+    //ApplicationInitializer.con.commit();
     
     // commit()을 호출하지 않아도 목록 데이터를 조회할 때 입력된 내용이 출력된다.
     // 엥? commit()을 안해도 된다는 것인가?

@@ -1,7 +1,5 @@
 package com.eomcs.lms;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Map;
 import com.eomcs.lms.context.ApplicationContextException;
 import com.eomcs.lms.context.ApplicationContextListener;
@@ -31,49 +29,58 @@ import com.eomcs.lms.handler.PhotoBoardDeleteCommand;
 import com.eomcs.lms.handler.PhotoBoardDetailCommand;
 import com.eomcs.lms.handler.PhotoBoardListCommand;
 import com.eomcs.lms.handler.PhotoBoardUpdateCommand;
+import com.eomcs.util.DataSource;
 
 public class ApplicationInitializer implements ApplicationContextListener {
 
-  Connection con;
-  
   @Override
   public void contextInitialized(Map<String, Object> context) {
-    
     try {
-      con = DriverManager.getConnection(
-          "jdbc:mariadb://localhost/bitcampdb?user=bitcamp&password=1111");
-
+      // 커넥션풀(DataSource) 객체 준비
+      DataSource dataSource = 
+          new DataSource("org.mariadb.jdbc.Driver",
+              "jdbc:mariadb://localhost/bitcampdb",
+              "bitcamp", "1111");
       
-    LessonDaoImpl lessonDao = new LessonDaoImpl(con);
-    MemberDaoImpl memberDao = new MemberDaoImpl(con);
-    BoardDaoImpl boardDao = new BoardDaoImpl(con);
-    PhotoBoardDaoImpl photoBoardDao = new PhotoBoardDaoImpl(con);
-    PhotoFileDaoImpl photoFileDao = new PhotoFileDaoImpl(con);
-    
-    context.put("/lesson/add", new LessonAddCommand(lessonDao));
-    context.put("/lesson/list", new LessonListCommand(lessonDao));
-    context.put("/lesson/detail", new LessonDetailCommand(lessonDao));
-    context.put("/lesson/update", new LessonUpdateCommand(lessonDao));
-    context.put("/lesson/delete", new LessonDeleteCommand(lessonDao));
+      // 다른 객체에서도 DataSource를 사용할 수 있도록 보관소에 저장한다.
+      context.put("dataSource", dataSource);
+      
+      LessonDaoImpl lessonDao = new LessonDaoImpl(dataSource);
+      MemberDaoImpl memberDao = new MemberDaoImpl(dataSource);
+      BoardDaoImpl boardDao = new BoardDaoImpl(dataSource);
+      PhotoBoardDaoImpl photoBoardDao = new PhotoBoardDaoImpl(dataSource);
+      PhotoFileDaoImpl photoFileDao = new PhotoFileDaoImpl(dataSource);
 
-    context.put("/member/add", new MemberAddCommand(memberDao));
-    context.put("/member/list", new MemberListCommand(memberDao));
-    context.put("/member/search", new MemberSearchCommand(memberDao));
-    context.put("/member/detail", new MemberDetailCommand(memberDao));
-    context.put("/member/update", new MemberUpdateCommand(memberDao));
-    context.put("/member/delete", new MemberDeleteCommand(memberDao));
+      context.put("/lesson/add", new LessonAddCommand(lessonDao));
+      context.put("/lesson/list", new LessonListCommand(lessonDao));
+      context.put("/lesson/detail", new LessonDetailCommand(lessonDao));
+      context.put("/lesson/update", new LessonUpdateCommand(lessonDao));
+      context.put("/lesson/delete", new LessonDeleteCommand(lessonDao));
 
-    context.put("/board/add", new BoardAddCommand(boardDao));
-    context.put("/board/list", new BoardListCommand(boardDao));
-    context.put("/board/detail", new BoardDetailCommand(boardDao));
-    context.put("/board/update", new BoardUpdateCommand(boardDao));
-    context.put("/board/delete", new BoardDeleteCommand(boardDao));
-    
-    context.put("/photoboard/add", new PhotoBoardAddCommand(photoBoardDao));
-    context.put("/photoboard/list", new PhotoBoardListCommand(photoBoardDao));
-    context.put("/photoboard/detail", new PhotoBoardDetailCommand(photoBoardDao, photoFileDao));
-    context.put("/photoboard/update", new PhotoBoardUpdateCommand(photoBoardDao));
-    context.put("/photoboard/delete", new PhotoBoardDeleteCommand(photoBoardDao));
+      context.put("/member/add", new MemberAddCommand(memberDao));
+      context.put("/member/list", new MemberListCommand(memberDao));
+      context.put("/member/search", new MemberSearchCommand(memberDao));
+      context.put("/member/detail", new MemberDetailCommand(memberDao));
+      context.put("/member/update", new MemberUpdateCommand(memberDao));
+      context.put("/member/delete", new MemberDeleteCommand(memberDao));
+
+      context.put("/board/add", new BoardAddCommand(boardDao));
+      context.put("/board/list", new BoardListCommand(boardDao));
+      context.put("/board/detail", new BoardDetailCommand(boardDao));
+      context.put("/board/update", new BoardUpdateCommand(boardDao));
+      context.put("/board/delete", new BoardDeleteCommand(boardDao));
+
+      context.put("/photoboard/add", 
+          new PhotoBoardAddCommand(photoBoardDao, photoFileDao));
+      context.put("/photoboard/list", 
+          new PhotoBoardListCommand(photoBoardDao));
+      context.put("/photoboard/detail", 
+          new PhotoBoardDetailCommand(photoBoardDao, photoFileDao));
+      context.put("/photoboard/update", 
+          new PhotoBoardUpdateCommand(photoBoardDao, photoFileDao));
+      context.put("/photoboard/delete", 
+          new PhotoBoardDeleteCommand(photoBoardDao, photoFileDao));
+
     } catch (Exception e) {
       throw new ApplicationContextException(e);
     }
@@ -81,11 +88,6 @@ public class ApplicationInitializer implements ApplicationContextListener {
 
   @Override
   public void contextDestroyed(Map<String, Object> context) {
-    try {
-      con.close();
-    } catch (Exception e) {
-      throw new ApplicationContextException(e);
-    }
   }
 
 }
