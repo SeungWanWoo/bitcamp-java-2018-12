@@ -51,4 +51,28 @@
     insert into x_board(title,contents) 
     values(#{title}, #{contents})
   </insert>
+  
+  <update id="update" parameterType="board">
+    update x_board set
+      title = #{title},
+      contents = #{contents}
+    where
+      board_id = #{no}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    delete from x_board
+    where
+      board_id = #{value};
+  </delete>
+  
+  <!-- insert 실행 후, 자동 생성된 PK 값 리턴받기
+  => 파라미터로 전달된 객체를 통해 리턴받는다.
+  => useGeneratedKeys="true" keyColumn="board_id" keyProperty="no"
+  -->
+  <insert id="insert3" parameterType="board" 
+  useGeneratedKeys="true" keyColumn="board_id" keyProperty="no">
+    insert into x_board(title,contents) 
+    values(#{title}, #{contents})
+  </insert>
 </mapper>
