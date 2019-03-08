@@ -14,10 +14,7 @@ public class BoardUpdateCommand extends AbstractCommand {
     Board board = new Board();
     board.setNo(response.requestInt("번호? "));
     board.setContents(response.requestString("내용? "));
-
     boardDao.update(board);
-
     response.println("게시글을 변경했습니다.");
-
   }
 }

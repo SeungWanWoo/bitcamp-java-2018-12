@@ -12,7 +12,7 @@ public class PhotoBoardListCommand extends AbstractCommand {
 
   @Override
   public void execute(Response response) {
-    List<PhotoBoard> photoBoards = photoBoardDao.findAll();
+    List<PhotoBoard> photoBoards = photoBoardDao.findAll(null);
 
     for (PhotoBoard photoBoard : photoBoards) {
       response.println(

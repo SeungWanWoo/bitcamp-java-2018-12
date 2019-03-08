@@ -1,6 +1,10 @@
 package com.eomcs.lms;
 
+import java.io.InputStream;
 import java.util.Map;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import com.eomcs.lms.context.ApplicationContextException;
 import com.eomcs.lms.context.ApplicationContextListener;
 import com.eomcs.lms.dao.mariadb.BoardDaoImpl;
@@ -29,33 +33,29 @@ import com.eomcs.lms.handler.PhotoBoardDeleteCommand;
 import com.eomcs.lms.handler.PhotoBoardDetailCommand;
 import com.eomcs.lms.handler.PhotoBoardListCommand;
 import com.eomcs.lms.handler.PhotoBoardUpdateCommand;
-import com.eomcs.util.DataSource;
 
 public class ApplicationInitializer implements ApplicationContextListener {
 
   @Override
   public void contextInitialized(Map<String, Object> context) {
     try {
-      // 커넥션풀(DataSource) 객체 준비
-      DataSource dataSource = 
-          new DataSource("org.mariadb.jdbc.Driver",
-              "jdbc:mariadb://localhost/bitcampdb",
-              "bitcamp", "1111");
+      String resource = "com/eomcs/lms/conf/mybatis-config.xml";
+      InputStream inputStream = Resources.getResourceAsStream(resource);
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
       
       // 다른 객체에서도 DataSource를 사용할 수 있도록 보관소에 저장한다.
-      context.put("dataSource", dataSource);
-      
-      LessonDaoImpl lessonDao = new LessonDaoImpl(dataSource);
-      MemberDaoImpl memberDao = new MemberDaoImpl(dataSource);
-      BoardDaoImpl boardDao = new BoardDaoImpl(dataSource);
-      PhotoBoardDaoImpl photoBoardDao = new PhotoBoardDaoImpl(dataSource);
-      PhotoFileDaoImpl photoFileDao = new PhotoFileDaoImpl(dataSource);
+      LessonDaoImpl lessonDao = new LessonDaoImpl(sqlSessionFactory);
+      MemberDaoImpl memberDao = new MemberDaoImpl(sqlSessionFactory);
+      BoardDaoImpl boardDao = new BoardDaoImpl(sqlSessionFactory);
+      PhotoBoardDaoImpl photoBoardDao = new PhotoBoardDaoImpl(sqlSessionFactory);
+      PhotoFileDaoImpl photoFileDao = new PhotoFileDaoImpl(sqlSessionFactory);
 
       context.put("/lesson/add", new LessonAddCommand(lessonDao));
       context.put("/lesson/list", new LessonListCommand(lessonDao));
       context.put("/lesson/detail", new LessonDetailCommand(lessonDao));
       context.put("/lesson/update", new LessonUpdateCommand(lessonDao));
-      context.put("/lesson/delete", new LessonDeleteCommand(lessonDao));
+      context.put("/lesson/delete", new LessonDeleteCommand(
+          lessonDao, photoBoardDao, photoFileDao));
 
       context.put("/member/add", new MemberAddCommand(memberDao));
       context.put("/member/list", new MemberListCommand(memberDao));

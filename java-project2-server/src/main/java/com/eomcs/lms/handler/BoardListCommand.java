@@ -16,11 +16,6 @@ public class BoardListCommand extends AbstractCommand {
     List<Board> boards = boardDao.findAll();
 
     for (Board board : boards) {
-//      try {
-//        Thread.sleep(5000);
-//      } catch (InterruptedException e) {
-//        e.printStackTrace();
-//      }
       response.println(
           String.format("%3d, %-20s, %s, %d", 
               board.getNo(), board.getContents(), 

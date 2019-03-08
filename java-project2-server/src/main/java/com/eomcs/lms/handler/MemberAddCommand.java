@@ -18,8 +18,10 @@ public class MemberAddCommand extends AbstractCommand {
     member.setPassword(response.requestString("암호? "));
     member.setPhoto(response.requestString("사진? "));
     member.setTel(response.requestString("전화? "));
-    memberDao.insert(member);
-    response.println("저장하였습니다.");
-
+    if (member != null) {
+      memberDao.insert(member);
+      response.println("저장하였습니다.");
+    }
+    response.println("값이 저장되지 않았습니다");
   }
 }

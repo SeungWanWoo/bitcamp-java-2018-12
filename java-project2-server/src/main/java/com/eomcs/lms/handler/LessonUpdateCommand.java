@@ -15,9 +15,17 @@ public class LessonUpdateCommand extends AbstractCommand {
 
     int no = response.requestInt("번호? ");
     Lesson lesson = lessonDao.findByNo(no);
-
-    Lesson temp = lesson.clone();
-
+    if (lesson == null) {
+      response.println("해당 번호의 수업이 없습니다.");
+      return;
+    }
+    
+    // 변경할 값만 temp에 저장할 것이기 때문에 기존의 데이터를 복제하지 않는다..
+    Lesson temp = new Lesson();
+    temp.setNo(lesson.getNo());
+    
+    // mybatis는 필드의 값이 null이 아니거나
+    // 숫자인 경우 0이 아니면 해당 컬럼 값을 update 한다.
     String input = response.requestString(
         String.format("수업명(%s)? ", lesson.getTitle()));
     if (input.length() > 0) 
@@ -42,8 +50,17 @@ public class LessonUpdateCommand extends AbstractCommand {
     if ((input = response.requestString(
         String.format("일수업시간(%d)? ", lesson.getDayHours()))).length() > 0)
       temp.setDayHours(Integer.parseInt(input));
-
-    lessonDao.update(temp);
-    response.println("수업을 변경했습니다.");
+    
+    if (lesson.getTitle() != null
+          || lesson.getContents() != null
+          || lesson.getStartDate() != null
+          || lesson.getEndDate() != null
+          || lesson.getDayHours() > 0
+          || lesson.getTotalHours() > 0) {
+      lessonDao.update(temp);
+      response.println("수업을 변경했습니다.");
+    } else {
+      response.println("변경 취소했습니다.");
+    }
   }
 }

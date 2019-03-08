@@ -2,6 +2,7 @@ package com.eomcs.lms.domain;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 public class PhotoBoard implements Serializable {
  
@@ -12,7 +13,24 @@ public class PhotoBoard implements Serializable {
   private Date createdDate;
   private int viewCount;
   private int lessonNo;
+
+  // join된 자식 테이블의 데이터를 보관할 필드
+  private Lesson lesson;
+  private List<PhotoFile> photoFiles;
   
+  public Lesson getLesson() {
+    return lesson;
+  }
+  public void setLesson(Lesson lesson) {
+    this.lesson = lesson;
+  }
+  
+  public List<PhotoFile> getPhotoFiles() {
+    return photoFiles;
+  }
+  public void setPhotoFiles(List<PhotoFile> photoFiles) {
+    this.photoFiles = photoFiles;
+  }
   public int getNo() {
     return no;
   }
