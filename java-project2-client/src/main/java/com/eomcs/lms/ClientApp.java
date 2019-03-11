@@ -27,7 +27,10 @@ public class ClientApp {
       if (input.equals("quit")) {
         System.out.println("클라이언트를 종료 합니다.");
         return;
+      } else if (input.length() == 0) { // 아무것도 입력하지 않으면
+        continue;
       }
+
       commandHistory.push(input);
       commandHistory2.offer(input);
 
@@ -35,7 +38,6 @@ public class ClientApp {
       if (input.equals("history")) {
         printCommandHistory();
         continue;
-
       } else if (input.equals("history2")) {
         printCommandHistory2();
         continue;
@@ -44,16 +46,22 @@ public class ClientApp {
       int index = input.indexOf("/"); // 예) localhost:8888/board/list
 
       // 사용자가 입력한 문자열에 host 주소와 port 번호를 분리한다.
-      String[] values = input.substring(0, index).split(":");
-      String host = values[0];
+      String[] values = null;
+      String host = null;
       int port = 8888;
-      if (values.length > 1) {
-        port = Integer.parseInt(values[1]);
+      try {
+        values = input.substring(0, index).split(":");
+        host = values[0];
+        if (values.length > 1) {
+          port = Integer.parseInt(values[1]);
+        }
+      } catch (Exception e) {
+        System.out.println("잘못된 값을 입력하셨습니다.");
+        continue;
       }
 
       // 사용자가 입력한 문자열에서 명령어를 분리한다.
       String command = input.substring(index);
-
 
       try (Socket socket = new Socket(host, port);
           PrintWriter out = new PrintWriter(socket.getOutputStream());
@@ -116,12 +124,8 @@ public class ClientApp {
     return keyboard.nextLine().toLowerCase();
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     ClientApp app = new ClientApp();
-    try {
-      app.service();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    app.service();
   }
 }
