@@ -18,6 +18,10 @@ public class BoardDetailCommand extends AbstractCommand {
       response.println("해당 게시물이 존재하지 않습니다.");
       return;
     }
+    
+    // 게시물 데이터를 가지고 왔으면 조회수를 증가시킨다.
+    boardDao.increaseCount(no);
+    
     response.println(
         String.format("내용: %s", board.getContents()));
     response.println(

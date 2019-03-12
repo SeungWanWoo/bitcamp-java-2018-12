@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="BoardMapper">
+<mapper namespace="com.eomcs.lms.dao.BoardDao">
 	<resultMap type="board" id="boardMap">
 		<result column="board_id" property="no" />
 		<result column="conts" property="contents" />
@@ -37,7 +37,7 @@
 		values (#{contents})
 	</insert>
 
-	<update id="countUp" parameterType="int">
+	<update id="increaseCount" parameterType="int">
 		update lms_board
 		set
 		vw_cnt = vw_cnt + 1
