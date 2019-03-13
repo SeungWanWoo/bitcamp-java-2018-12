@@ -271,6 +271,183 @@
 - Composite 패턴
 - 28 단계 과제 풀이
 
-## 24일
-- 파일 입출력
-- lambda 문법
+## 24일(2019-1-31)
+- File 클래스 사용법
+- Lambda 문법 다루기
+
+## 25일(2019-2-1)
+- 바이너리 데이터 입출력 다루기 
+- 버퍼 입출력 다루기 
+- 버퍼를 사용할 때 속도가 높아지는 이유 발표
+- primitive type  데이터 입출력 다루기 
+- 데코레이터 클래스 만들기 
+- 문자 데이터 입출력 다루기 
+
+## 26일(2019-2-7)
+- 인스턴스 출력 과제 해설
+- Serialize/Deserialize 개념
+- Serializable 인터페이스 
+- ObjectInputStream/ObjectOutputStream 사용법
+- transient 한정자의 용도와 사용법
+- 29, 30, 31 단계 과제 풀이
+
+## 27일(2019-2-8)
+- Observer 디자인 패턴
+- 소켓 프로그래밍 : 연결, 대기열, 타임아웃 다루기
+- 에코 클라이언트/서버 만들기
+- 파일 전송 클라이언트/서버 만들기
+- 과제: 계산기 클라이언트/서버 만들기 
+
+## 28일(2019-2-11)
+- "계산기 클라이언트/서버 만들기" 과제 풀이
+- connectionful/connectionless 방식 비교
+- stateful/stateless 통신 구현 : 계산기 클라이언트/서버 만들기
+- stateful 응용 : 계산 결과 유지하기
+- 과제) stateless 응용 : 계산 결과 유지하기
+
+## 29일(2019-2-12)
+- 과제 풀이: stateless 응용 계산기 서버 만들기
+- Connection-Oriented와 Connectionless 비교
+- DatagramSocket과 DatagramPacket을 이용하여 connectionless 통신 구현하기
+- HTTP 클라이언트와 서버 만들기
+- URL과 URLConnection 다루기
+- apache.org의 HttpClient 라이브러리 사용
+- 32단계 과제 풀이: java-project에서 데이터처리 부분을 분리하여 서버로 만들라.
+
+## 30일(2019-2-13)
+- 32단계 과제 풀이: java-project에서 데이터처리 부분을 분리하여 서버로 만들라.
+- 33단계 과제 풀이: Stateful 방식으로 Stateless 방식으로 전환하기
+
+## 31일(2019-2-14)
+- 33단계 과제 풀이: Stateful 방식으로 Stateless 방식으로 전환하기 II
+- 통신 기능을 별도의 클래스로 분리하기
+
+## 32일(2019-2-15)
+- '프록시 디자인 패턴'의 개념과 용도  
+- RMI 기술 개념과 활용하기
+
+## 33일(2019-2-18)
+- 33단계 과제 풀이: Stateful 방식으로 Stateless 방식으로 전환하기 III
+- 33단계 과제에 프록시 패턴 적용
+- Stateless의 한계 확인하기: 여러 클라이언트 요청 시에 문제점 확인
+- 34단계 과제 풀이: 멀티 스레드 활용하기
+- 멀티태스킹과 CPU 스케줄링
+- 프로세스와 스레드
+- 스레드 만들기 
+
+## 34일(2019-2-19)
+- 스레드 생명주기
+- join(), sleep()
+- 스레드와 동기화
+- 세마포어와 뮤텍스 개념
+- 35단계 과제 풀이 : 스레드풀 적용하기
+- DBMS와 Vendor API, ODBC API, JDBC API 관계
+- JDBC 드라이버의 종류와 구동 방식
+- MariaDB 설치
+- MariaDB 사용자 및 데이터베이스 생성
+
+## 35일(2019-2-20)
+- JDBC 드라이버 준비 및 프로젝트에 등록
+- 연습용 게시판 테이블 생성
+- CRUD 기본 SQL : select, insert, update, delete
+- JDBC 프로그래밍
+    - java.sql.Driver 구현체 등록하기
+    - DBMS 연결하기, java.sql.Connection 구현체
+    - java.sql.Statement 구현체 사용법
+    - CRUD JDBC 코드 구현
+
+## 36일(2019-2-21)
+- 36단계 과제 풀이(java-project2/src01): DAO에 데이터베이스 적용
+- 36단계 과제 풀이(java-project2/src02): Connection 공유
+- 36단계 과제 풀이(java-project2/src03): Observer 패턴 적용
+
+## 37일(2019-2-22)
+- 37단계 과제풀이(java-project2-client, java-project2-server): Application Server 도입하기
+- Application Server 아키텍처의 특징
+- Observer 패턴 적용
+- 캡슐화 응용 : 응답 기능을 별도의 클래스로 정의 
+
+## 38일(2019-2-25)
+- DB 모델링: 
+    - 주요 용어
+    - 수퍼 키, 후보 키, 기본 키, 대리 키, 대체 키, 외래 키
+    - 엔티티 식별 및 속성 식별
+    - 제1정규화 방법
+    - 제2정규화 방법
+    - 부모 테이블과 자식 테이블의 관계
+    - 식별 관계와 비식별 관계
+
+## 39일(2019-2-26)
+- DB 모델링: 
+  - 제3정규화 방법
+  - 다대다 관계를 해소하는 방법
+  - 포함관계 및 배타적 관계의 개념과 모델링 방법
+  - 관계 차수 설정
+  - 유니크 컬럼 지정
+  - null 컬럼과 인덱스 컬럼 지정
+  - 물리 모델링과 도메인 정의
+  - 자동 증가 컬럼 지정
+  - 포워딩 엔지니어링과 리버스 엔지니어링
+
+## 40일(2019-2-27)
+- DB 모델링 과제 리뷰
+- SQL DDL 사용법 
+
+## 41일(2019-2-28)
+- SQL DDL 사용법(계속)
+    - 테이블 생성, 삭제
+    - 뷰 생성, 삭제
+    - 인덱스 생성, 삭제
+- SQL DML 사용법
+    - insert 사용법
+    - update 사용법
+    - delete 사용법
+    - transcation 다루기: commit과 rollback
+    - join의 종류와 사용법
+
+## 42일(2019-3-4)
+- 38단계 과제풀이 : 트랜잭션의 필요성과 다루는 방법
+- 사진 게시판 및 첨부파일 기능 구현
+- JDBC 프로그래밍 : setAutoCommit(), commit(), rollback() 사용법
+
+## 43일(2019-3-5)
+- 프로젝트에 멀티 스레드 적용하기: 
+    - stateful 방식과 stateless 방식의 차이점
+    - 싱글 스레드의 한계 확인
+    - 멀티 스레드로 전환
+- 39단계 과제풀이: 멀티 스레드에서 싱글 커넥션을 사용할 때의 문제점과 해결책
+    - 멀티 스레드가 같은 커넥션을 사용하면 클라이언트들의 작업이 서로 영향을 끼친다.
+    - DAO 별로 커넥션을 따로 사용한다.
+- 40단계 과제풀이: 한 스레드에서 여러 DB 작업을 수행할 때 커넥션을 공유하기
+    - 스레드 로컬을 사용하여 스레드 마다 자신만의 커넥션을 유지할 수 있다.
+- 41단계 과제풀이: 커넥션풀을 적용하여 커넥션 재활용하기 
+
+## 44일(2019-3-6)
+- mybatis 퍼시스턴스 프레임워크 사용법 I
+    - 설정하기
+    - SqlSession 얻기
+    - SQL 실행하기
+    - 결과 값 받기: select
+    - 클래스에 별명 부여하기
+    - 컬럼과 프로퍼티 연결하기
+    - in-parameter 전달하기: insert
+- Builder 디자인 패턴 개념과 사용법
+
+## 45일(2019-3-7)
+- mybatis 퍼시스턴스 프레임워크 사용법 II
+    - dynamic sql 다루기
+    - join 데이터 다루기
+
+## 46일(2019-3-8)
+- 43단계 과제풀이: Mybatis 적용
+
+## 47일(2019-3-11)
+- 43단계 과제풀이: Mybatis에 트랜잭션 적용하기
+  - 트랜잭션 관리자 만들기
+  - 프록시 디자인 패턴을 이용하여 SqlSessionFactory와 SqlSession 객체에 기능을 추가하고 변경하기
+- 44단계 과제풀이: Mybatis의 동적 SQL 적용하기
+  - sql, bind, foreach 태그 사용하기
+
+## 48일(2019-3-12)
+- java.lang.reflect.Proxy.newProxyInstance() 를 사용하여 인터페이스 구현체 자동 생성하는 방법
+- 45 단계 과제풀이: DAO 구현체 자동생성하기 

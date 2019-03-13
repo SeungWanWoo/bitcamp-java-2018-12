@@ -9,6 +9,7 @@ public class LessonListCommand extends AbstractCommand {
 
   public LessonListCommand(LessonDao lessonDao) {
     this.lessonDao = lessonDao;
+    this.name = "/lesson/list";
   }
 
   @Override

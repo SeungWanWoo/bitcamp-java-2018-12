@@ -1,10 +1,12 @@
 package com.eomcs.lms;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import com.eomcs.lms.context.ApplicationContext;
 import com.eomcs.lms.context.ApplicationContextException;
 import com.eomcs.lms.context.ApplicationContextListener;
 import com.eomcs.lms.dao.BoardDao;
@@ -12,28 +14,6 @@ import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.dao.MemberDao;
 import com.eomcs.lms.dao.PhotoBoardDao;
 import com.eomcs.lms.dao.PhotoFileDao;
-import com.eomcs.lms.handler.BoardAddCommand;
-import com.eomcs.lms.handler.BoardDeleteCommand;
-import com.eomcs.lms.handler.BoardDetailCommand;
-import com.eomcs.lms.handler.BoardListCommand;
-import com.eomcs.lms.handler.BoardUpdateCommand;
-import com.eomcs.lms.handler.LessonAddCommand;
-import com.eomcs.lms.handler.LessonDeleteCommand;
-import com.eomcs.lms.handler.LessonDetailCommand;
-import com.eomcs.lms.handler.LessonListCommand;
-import com.eomcs.lms.handler.LessonUpdateCommand;
-import com.eomcs.lms.handler.MemberAddCommand;
-import com.eomcs.lms.handler.MemberDeleteCommand;
-import com.eomcs.lms.handler.MemberDetailCommand;
-import com.eomcs.lms.handler.MemberListCommand;
-import com.eomcs.lms.handler.MemberSearchCommand;
-import com.eomcs.lms.handler.MemberUpdateCommand;
-import com.eomcs.lms.handler.PhotoBoardAddCommand;
-import com.eomcs.lms.handler.PhotoBoardDeleteCommand;
-import com.eomcs.lms.handler.PhotoBoardDetailCommand;
-import com.eomcs.lms.handler.PhotoBoardListCommand;
-import com.eomcs.lms.handler.PhotoBoardSearchCommand;
-import com.eomcs.lms.handler.PhotoBoardUpdateCommand;
 import com.eomcs.mybatis.DaoFactory;
 import com.eomcs.mybatis.SqlSessionFactoryProxy;
 import com.eomcs.mybatis.TransactionManger;
@@ -64,38 +44,23 @@ public class ApplicationInitializer implements ApplicationContextListener {
       PhotoBoardDao photoBoardDao = daoFactory.create(PhotoBoardDao.class);
       PhotoFileDao photoFileDao = daoFactory.create(PhotoFileDao.class);
 
-      context.put("/lesson/add", new LessonAddCommand(lessonDao));
-      context.put("/lesson/list", new LessonListCommand(lessonDao));
-      context.put("/lesson/detail", new LessonDetailCommand(lessonDao));
-      context.put("/lesson/update", new LessonUpdateCommand(lessonDao));
-      context.put("/lesson/delete", new LessonDeleteCommand(
-          lessonDao, photoBoardDao, photoFileDao, txManager));
-
-      context.put("/member/add", new MemberAddCommand(memberDao));
-      context.put("/member/list", new MemberListCommand(memberDao));
-      context.put("/member/search", new MemberSearchCommand(memberDao));
-      context.put("/member/detail", new MemberDetailCommand(memberDao));
-      context.put("/member/update", new MemberUpdateCommand(memberDao));
-      context.put("/member/delete", new MemberDeleteCommand(memberDao));
-
-      context.put("/board/add", new BoardAddCommand(boardDao));
-      context.put("/board/list", new BoardListCommand(boardDao));
-      context.put("/board/detail", new BoardDetailCommand(boardDao));
-      context.put("/board/update", new BoardUpdateCommand(boardDao));
-      context.put("/board/delete", new BoardDeleteCommand(boardDao));
-
-      context.put("/photoboard/add", 
-          new PhotoBoardAddCommand(photoBoardDao, photoFileDao, txManager));
-      context.put("/photoboard/list", 
-          new PhotoBoardListCommand(photoBoardDao));
-      context.put("/photoboard/detail", 
-          new PhotoBoardDetailCommand(photoBoardDao, photoFileDao));
-      context.put("/photoboard/update", 
-          new PhotoBoardUpdateCommand(photoBoardDao, photoFileDao, txManager));
-      context.put("/photoboard/delete", 
-          new PhotoBoardDeleteCommand(photoBoardDao, photoFileDao, txManager));
-      context.put("/photoboard/search", 
-          new PhotoBoardSearchCommand(photoBoardDao));
+      // ServerApp이 사용할 객체를 객체 보관소인 ApplicationContext에 담아서
+      // 리턴한다.
+      // => 1) Command 객체가 사용할 DAO 구현체를 준비한다.
+      HashMap<String, Object> beans = new HashMap<>();
+      beans.put("boardDao", boardDao);
+      beans.put("lessonDao", lessonDao);
+      beans.put("memberDao", memberDao);
+      beans.put("photoBoardDao", photoBoardDao);
+      beans.put("photoFileDao", photoFileDao);
+      beans.put("txManager", txManager);
+      // => 이 클래스에서 준비한 인스턴스 목록과 
+      //    ApplicationContext에서 준비할 인스턴스 패키지 이름을 넘긴다. 
+      ApplicationContext appCtx = 
+          new ApplicationContext("com.eomcs.lms", beans);
+      
+      // ServerApp 쪽에서 사용할 수 있도록 ApplicationContext를 맵에 저장한다.
+      context.put("applicationContext", appCtx);
 
     } catch (Exception e) {
       throw new ApplicationContextException(e);

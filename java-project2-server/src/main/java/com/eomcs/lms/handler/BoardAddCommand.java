@@ -7,6 +7,7 @@ public class BoardAddCommand extends AbstractCommand {
 
   public BoardAddCommand(BoardDao boardDao) {
     this.boardDao = boardDao;
+    this.name = "board/add";
   }
 
   @Override

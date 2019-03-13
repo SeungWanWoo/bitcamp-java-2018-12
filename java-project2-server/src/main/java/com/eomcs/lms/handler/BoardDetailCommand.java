@@ -7,6 +7,7 @@ public class BoardDetailCommand extends AbstractCommand {
 
   public BoardDetailCommand(BoardDao boardDao) {
     this.boardDao = boardDao;
+    this.name = "/board/detail";
   }
 
   @Override
