@@ -2,7 +2,6 @@ package com.eomcs.lms.context;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.apache.ibatis.io.Resources;
-import com.eomcs.lms.context.RequestMappingHandlerMapping.RequestMappingHandler;
 
 // Command 객체를 자동 생성하는 역할을 수행한다.
 public class ApplicationContext {
@@ -43,10 +41,7 @@ public class ApplicationContext {
     // 3) Component 애노테이션이 붙은 클래스만 찾아서 인스턴스를 생성한다.
     prepareComponent();
 
-    // 4) 인스턴스 생성을 완료한 후 작업을 수행
-    postProcess();
-    
-    // 저장소에 보관된 객체의 이름과 클래스명을 출력한다.
+    // 4) 저장소에 보관된 객체의 이름과 클래스명을 출력한다.
     System.out.println("------------------------------");
     Set<String> names = beanContainer.keySet();
     for (String name : names) {
@@ -195,39 +190,5 @@ public class ApplicationContext {
         return bean;
     }
     return null;
-  }
-  
-  // bean 생성을 완료한 후 작업 수행
-  public void postProcess() {
-    // RequestMappingHandler 정보를 관리할 객체 생성
-    RequestMappingHandlerMapping handlerMapping = new RequestMappingHandlerMapping();
-    
-    // 빈 컨테이너에서 객체를 모두 꺼낸다.
-    Collection<Object> beans = beanContainer.values();
-    // 1) 빈컨테이너에서 객체 정보를 꺼낸다.
-    for (Object bean : beans) {
-      // 각 객체에 대해 @RequestMapping 메서드를 찾는다.
-      Method[] methods = bean.getClass().getMethods();
-      // 2) 빼온 객체에 대한 메서드 정보를 꺼낸다.
-      for(Method method : methods) {
-        // 3) 빼온 메서드 정보에서 해당 애너테이션이 붙었는지 확인
-        RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-        if (requestMapping == null)
-          continue;
-        
-        // 4) RequestMapping이 붙은 메서드를 찾았으면 그 정보를 RequestMappingHandler에 담는다.
-        RequestMappingHandler handler = new RequestMappingHandler(bean, method);
-        
-        // 5) 그리고 이 요청 핸들러(@RequestMapping 애노테이션이 붙은 메서드)를 저장한다.
-        handlerMapping.add(requestMapping.value(), handler);
-        
-        // RequestMapping에 명령어에 대한 메서드가 실행된다.
-      }
-    }
-    
-    // 최종적으로 해당하는 핸들러까지 저장한다.
-    // ServerApp에서 꺼낼 수 있도록 RequestMappingHandlerMapping 객체를
-    // 빈 컨테이너에 저장해 둔다.
-    beanContainer.put("handlerMapping", handlerMapping);
   }
 }

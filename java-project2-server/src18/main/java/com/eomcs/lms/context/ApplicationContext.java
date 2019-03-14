@@ -7,10 +7,11 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.ibatis.io.Resources;
-import com.eomcs.lms.context.RequestMappingHandlerMapping.RequestMappingHandler;
+import com.eomcs.lms.handler.Command;
 
 // Command 객체를 자동 생성하는 역할을 수행한다.
 public class ApplicationContext {
@@ -40,13 +41,10 @@ public class ApplicationContext {
     //    - 또한 중첩 클래스도 제외한다.
     findClasses(packageDir, packageName);
 
-    // 3) Component 애노테이션이 붙은 클래스만 찾아서 인스턴스를 생성한다.
-    prepareComponent();
+    // 3) Command 인터페이스를 구현한 클래스만 찾아서 인스턴스를 생성한다.
+    prepareCommand();
 
-    // 4) 인스턴스 생성을 완료한 후 작업을 수행
-    postProcess();
-    
-    // 저장소에 보관된 객체의 이름과 클래스명을 출력한다.
+    // 4) 저장소에 보관된 객체의 이름과 클래스명을 출력한다.
     System.out.println("------------------------------");
     Set<String> names = beanContainer.keySet();
     for (String name : names) {
@@ -68,7 +66,7 @@ public class ApplicationContext {
   public Object getBean(String name) {
     return beanContainer.get(name);
   }
-
+  
   private void findClasses(File dir, String packageName) throws Exception {
     // 디렉토리를 뒤져서 클래스 파일(.class)이나 하위 디렉토리 목록을 알아낸다.
     // => FileFilter()를 사용하는 이유 > 모든 파일의 목록이 아닌 필요한 목록만 받아온다.
@@ -97,7 +95,7 @@ public class ApplicationContext {
         // => 클래스 정보를 분석하여 인터페이스나 중첩 클래스이거나 인터페이스면 무시한다.
         if (clazz.isLocalClass() || clazz.isInterface() || clazz.isEnum())
           continue;
-
+        addBean
         // => 추상 클래스나 공개되지 않은 클래스(public이 아닌 클래스)도 무시한다.
         if (Modifier.isAbstract(clazz.getModifiers()) ||
             !Modifier.isPublic(clazz.getModifiers()))
@@ -117,26 +115,38 @@ public class ApplicationContext {
     } 
   }
 
-  private void prepareComponent() throws Exception {
+  private void prepareCommand() throws Exception {
     for (Class<?> clazz : classes) {
-      // 클래스에서 Component 애노테이션 정보를 추출한다.
-      Component compAnno = clazz.getAnnotation(Component.class);
+      // 클래스 또는 조상 클레스가 구현한 인터페이스의 목록을 꺼낸다.
+      List<Class<?>> interfaces = getAllInterFaces(clazz);
 
-      if (compAnno == null)
-        continue;
-
-      // Component 애노테이션이 붙은 클래스에 대해 인스턴스를 생성
-      Object obj = createInstance(clazz);
-
-      if (obj != null) { // 제대로 생성했으면 빈컨테이너에 저장한다.
-        // 빈컨테이너에 객체를 저장할 때, Key 값은 Component 애노테이션의 value() 값으로한다.
-        // 만약 value가 빈 문자열이라면 클래스 이름을 사용한다.
-        // => 클래스에서 getName() 메서드를 알아낸다.
-        addBean(
-            compAnno.value().length() > 0 ? compAnno.value() : clazz.getName(),
-                obj);
+      for (Class<?> i : interfaces) {
+        if (i == Command.class) {
+          // Command 인터페이스의 구현체인 경우 해당 클래스의 인스턴스를 생성
+          Object obj = createInstance(clazz);
+          if (obj != null) { // 제대로 생성했으면 빈컨테이너에 저장한다.
+            // 빈컨테이너에 Command 객체를 저장할 때, Key 값은 name 필드 값으로 한다.
+            // => 클래스에서 getName() 메서드를 알아낸다.
+            Method getName = clazz.getMethod("getName");
+            addBean((String) getName.invoke(obj), //getName()을 호출하여 리턴 값을 키로 사용한다.
+            obj);
+          }
+          break;
+        }
       }
     }
+  }
+
+  private List<Class<?>> getAllInterFaces(Class<?> clazz) {
+    ArrayList<Class<?>> list = new ArrayList<>();
+
+    while (clazz != Object.class) {
+      Class<?>[] interfaces = clazz.getInterfaces();
+      for (Class<?> i : interfaces)
+        list.add(i);
+      clazz = clazz.getSuperclass();
+    }
+    return list;
   }
 
   private Object createInstance(Class<?> clazz) throws Exception {
@@ -195,39 +205,5 @@ public class ApplicationContext {
         return bean;
     }
     return null;
-  }
-  
-  // bean 생성을 완료한 후 작업 수행
-  public void postProcess() {
-    // RequestMappingHandler 정보를 관리할 객체 생성
-    RequestMappingHandlerMapping handlerMapping = new RequestMappingHandlerMapping();
-    
-    // 빈 컨테이너에서 객체를 모두 꺼낸다.
-    Collection<Object> beans = beanContainer.values();
-    // 1) 빈컨테이너에서 객체 정보를 꺼낸다.
-    for (Object bean : beans) {
-      // 각 객체에 대해 @RequestMapping 메서드를 찾는다.
-      Method[] methods = bean.getClass().getMethods();
-      // 2) 빼온 객체에 대한 메서드 정보를 꺼낸다.
-      for(Method method : methods) {
-        // 3) 빼온 메서드 정보에서 해당 애너테이션이 붙었는지 확인
-        RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-        if (requestMapping == null)
-          continue;
-        
-        // 4) RequestMapping이 붙은 메서드를 찾았으면 그 정보를 RequestMappingHandler에 담는다.
-        RequestMappingHandler handler = new RequestMappingHandler(bean, method);
-        
-        // 5) 그리고 이 요청 핸들러(@RequestMapping 애노테이션이 붙은 메서드)를 저장한다.
-        handlerMapping.add(requestMapping.value(), handler);
-        
-        // RequestMapping에 명령어에 대한 메서드가 실행된다.
-      }
-    }
-    
-    // 최종적으로 해당하는 핸들러까지 저장한다.
-    // ServerApp에서 꺼낼 수 있도록 RequestMappingHandlerMapping 객체를
-    // 빈 컨테이너에 저장해 둔다.
-    beanContainer.put("handlerMapping", handlerMapping);
   }
 }

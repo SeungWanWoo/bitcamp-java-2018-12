@@ -59,14 +59,13 @@
   
   <update id="update" parameterType="member">
     update lms_member
-    <set>
-      <if test="name != null">name = #{name},</if>
-      <if test="email != null">email = #{email},</if>
-      <if test="password != null">pwd = #{password},</if>
-      <if test="registeredDate != null">cdt = now(),</if>
-      <if test="tel != null">tel = #{tel},</if>
-      <if test="photo != null">photo = #{photo}</if>
-    </set>
+    set
+      name = #{name},
+      email = #{email},
+      pwd = password(#{password}),
+      cdt = now(),
+      tel = #{tel},
+      photo = #{photo}
       where
         member_id = #{no}
   </update>
