@@ -3,25 +3,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import com.eomcs.lms.context.RequestMapping;
 import com.eomcs.lms.dao.PhotoBoardDao;
 import com.eomcs.lms.dao.PhotoFileDao;
 import com.eomcs.lms.domain.PhotoBoard;
 import com.eomcs.lms.domain.PhotoFile;
+import com.eomcs.mybatis.TransactionManger;
 
 @Component
 public class PhotoBoardCommand {
-  PlatformTransactionManager txManager;
+  TransactionManger txManager;
   PhotoBoardDao photoBoardDao;
   PhotoFileDao photoFileDao;
   
   public PhotoBoardCommand(
       PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao,
-      PlatformTransactionManager txManager) {
+      TransactionManger txManager) {
     this.photoBoardDao = photoBoardDao;
     this.photoFileDao = photoFileDao;
     this.txManager = txManager;
@@ -42,13 +39,7 @@ public class PhotoBoardCommand {
   
   @RequestMapping("/photoboard/add")
   public void add(Response response) throws Exception {
-    // 트랜잭션 동작방식을 설정한다.
-    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-    def.setName("tx1");
-    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-    
-    // 트랜잭션을 준비한다.
-    TransactionStatus status = txManager.getTransaction(def);
+    txManager.beginTransaction();
 
     try {
       PhotoBoard board = new PhotoBoard();
@@ -81,11 +72,11 @@ public class PhotoBoardCommand {
       photoFileDao.insert(files);
       
       response.println("저장하였습니다.");
-      txManager.commit(status);
+      txManager.commit();
     } catch (Exception e) {
       e.printStackTrace();
       response.println("저장 중 오류가 발생했습니다.");
-      txManager.rollback(status);
+      txManager.rollback();
     }
   }
   
@@ -126,13 +117,7 @@ public class PhotoBoardCommand {
   
   @RequestMapping("/photoboard/update")
   public void update(Response response) throws Exception {
-    // 트랜잭션 동작방식을 설정한다.
-    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-    def.setName("tx1");
-    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-    
-    // 트랜잭션을 준비한다.
-    TransactionStatus status = txManager.getTransaction(def);
+    txManager.beginTransaction();
 
     try {
       PhotoBoard board = new PhotoBoard();
@@ -191,22 +176,16 @@ public class PhotoBoardCommand {
         photoFileDao.insert(photoFiles);
       }
       response.println("사진을 변경했습니다.");
-      txManager.commit(status);
+      txManager.commit();
     } catch (Exception e) {
       response.println("사진 변경 중 오류가 발생했습니다.");
-      txManager.rollback(status);
+      txManager.rollback();
     }
   }
   
   @RequestMapping("/photoboard/delete")
   public void delete(Response response) throws Exception {
-    // 트랜잭션 동작방식을 설정한다.
-    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-    def.setName("tx1");
-    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-    
-    // 트랜잭션을 준비한다.
-    TransactionStatus status = txManager.getTransaction(def);
+    txManager.beginTransaction();
     try {
       int no = response.requestInt("번호?");
 
@@ -219,10 +198,10 @@ public class PhotoBoardCommand {
       }
       photoBoardDao.delete(no);
       response.println("게시글을 삭제했습니다.");
-      txManager.commit(status);
+      txManager.commit();
     } catch (Exception e) {
       response.println("게시글을 삭제 중 문제가 발견됬습니다.");
-      txManager.rollback(status);
+      txManager.rollback();
     }
   }
   

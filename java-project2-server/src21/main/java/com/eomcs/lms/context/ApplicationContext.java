@@ -7,7 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 import org.apache.ibatis.io.Resources;
 import com.eomcs.lms.context.RequestMappingHandlerMapping.RequestMappingHandler;
@@ -21,15 +21,42 @@ public class ApplicationContext {
   // 생성한 인스턴스를 보관하는 저장소
   HashMap<String, Object> beanContainer = new HashMap<>();
 
-  public ApplicationContext(
-      String packageName, Map<String, Object> beans) throws Exception {
-    // 외부에서 생성한 인스턴스가 파라미터로 넘어온다면 먼저 저장소에 보관한다.
-    if (beans != null && beans.size() > 0) {
-      Set<String> names = beans.keySet();
-      for (String name : names) {
-        addBean(name, beans.get(name));
+  public ApplicationContext(Class<?> configClass) throws Exception {
+    // IoC 컨테이너와 관련된 설정 정보를 갖고 있는 클래스 정보를 받아서 초기화를 수행한다.
+
+    // 1) 설정 정보를 갖고 있는 클래스의 인스턴스를 생성한다.
+    Constructor<?> c = configClass.getConstructor();
+    Object config = c.newInstance();
+
+    // 2) Bean 애노테이션이 붙은 메서드를 모두 찾는다.
+    ArrayList<Method> factoryMethods = new ArrayList<>();
+
+    Method[] methods = configClass.getMethods();
+    for (Method m : methods) {
+      if (m.getAnnotation(Bean.class) != null)
+        factoryMethods.add(m);
+    }
+
+    // 3) 팩토리 메서드를 호출하여 그 리턴 값을 빈 컨테이너에 보관한다.
+    while (factoryMethods.size() > 0) {
+      Method m = factoryMethods.get(0); // 메서드 목록에서 메서드를 꺼내
+      callFactoryMethod(config, m, factoryMethods, ""); // 호출한다.
+      factoryMethods.remove(m); // 호출에 성공하든 실패하든 목록에서 제거한다.
+    }
+    
+    // 4) ComponentScan 애노테이션을 처리한다.
+    // => 애노테이션에 지정된 패키지를 탐색하여 객체를 생성한다.
+    ComponentScan componentScan = configClass.getAnnotation(ComponentScan.class);
+    if (componentScan != null) {
+      String[] packages = componentScan.basePackages();
+      for (String packageName : packages) {
+        prepareComponent(packageName);
       }
     }
+  }
+
+  public void prepareComponent(
+      String packageName) throws Exception {
     // 1) 패키지 명으로 디렉토리 경로를 알아낸다.
     File packageDir = 
         Resources.getResourceAsFile(packageName.replace(".", "/"));
@@ -41,11 +68,11 @@ public class ApplicationContext {
     findClasses(packageDir, packageName);
 
     // 3) Component 애노테이션이 붙은 클래스만 찾아서 인스턴스를 생성한다.
-    prepareComponent();
+    createComponent();
 
     // 4) 인스턴스 생성을 완료한 후 작업을 수행
     postProcess();
-    
+
     // 저장소에 보관된 객체의 이름과 클래스명을 출력한다.
     System.out.println("------------------------------");
     Set<String> names = beanContainer.keySet();
@@ -117,7 +144,7 @@ public class ApplicationContext {
     } 
   }
 
-  private void prepareComponent() throws Exception {
+  private void createComponent() throws Exception {
     for (Class<?> clazz : classes) {
       // 클래스에서 Component 애노테이션 정보를 추출한다.
       Component compAnno = clazz.getAnnotation(Component.class);
@@ -196,12 +223,12 @@ public class ApplicationContext {
     }
     return null;
   }
-  
+
   // bean 생성을 완료한 후 작업 수행
   public void postProcess() {
     // RequestMappingHandler 정보를 관리할 객체 생성
     RequestMappingHandlerMapping handlerMapping = new RequestMappingHandlerMapping();
-    
+
     // 빈 컨테이너에서 객체를 모두 꺼낸다.
     Collection<Object> beans = beanContainer.values();
     // 1) 빈컨테이너에서 객체 정보를 꺼낸다.
@@ -214,20 +241,95 @@ public class ApplicationContext {
         RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
         if (requestMapping == null)
           continue;
-        
+
         // 4) RequestMapping이 붙은 메서드를 찾았으면 그 정보를 RequestMappingHandler에 담는다.
         RequestMappingHandler handler = new RequestMappingHandler(bean, method);
-        
+
         // 5) 그리고 이 요청 핸들러(@RequestMapping 애노테이션이 붙은 메서드)를 저장한다.
         handlerMapping.add(requestMapping.value(), handler);
-        
+
         // RequestMapping에 명령어에 대한 메서드가 실행된다.
       }
     }
-    
     // 최종적으로 해당하는 핸들러까지 저장한다.
     // ServerApp에서 꺼낼 수 있도록 RequestMappingHandlerMapping 객체를
     // 빈 컨테이너에 저장해 둔다.
     beanContainer.put("handlerMapping", handlerMapping);
+  }
+
+  private Object callFactoryMethod(
+      Object obj, Method factoryMethod,
+      List<Method> factoryMethods, 
+      String indent) throws Exception {
+    // System.out.println(indent + "==>" + factoryMethod.getName());
+    // 1) m 메서드에서 호출할 때 사용할 파라미터 정보를 알아낸다.
+    //    ex) m(BoardDao, MemberDao, TransactionManager)
+    //        => 파라미터 타입 배열 : 
+    //        {BoardDao.class, MemberDao.class, TransacionManager.class}
+    Class<?>[] paramsTypes = factoryMethod.getParameterTypes();
+
+    // 파라미터 값을 담을 목록을 준비한다.
+    // ex) {new BoardDao(), new MemberDao(), new TransactionManager()}
+    Object[] paramValues = new Object[paramsTypes.length];
+
+    for (int i = 0; i < paramsTypes.length; i++) {
+      // 2) 빈 컨테이너에서 파라미터 타입에 해당하는 값을 꺼낸다.
+      Object paramValue = findBean(paramsTypes[i]);
+      if (paramValue != null) {
+        paramValues[i] = paramValue;
+        continue;
+      }
+      // 3) 만약 빈 컨테이너에 파라미터에 해당하는 값이 없다면,
+      //    팩토리 메서드를 뒤져서 그 타입의 값을 리턴하는 메서드를 찾아 호출한다.
+      Method otherFactoryMethod = 
+          findMethodByReturnType(factoryMethods, paramsTypes[i]);
+      if (otherFactoryMethod == null) {
+        // 4) 만약 해당 파라미터 타입의 값을 만들어주는 다른 팩토리 메서드가 없다면
+        //    factoryMethod 호출을 포기한다.
+        return null;
+      } 
+      // 파라미터 값을 만들어 줄 다른 팩토리 메서드를 찾았다면, 그 메서드를 호출한다.
+      // => 재귀 호출을 사용한다.
+      paramValue = 
+          callFactoryMethod(obj, otherFactoryMethod, factoryMethods, indent + "    ");
+      if (paramValue == null) {
+        // 파라미터 값을 리턴해주는 팩토리 메서드를 찾긴 했지만 
+        // 그 메서드를 호출하기 위해 파라미터 값이 필요했는데,
+        // 그 파라미터 값이 없어서 메서드 호출에 실패했다면
+        // factoryMethod 메서드 호출을 포기한다.
+        return null;
+      }
+      
+      // 파라미터 값이 준비되었으면 저장한다.
+      paramValues[i] = paramValue;
+      
+    }
+    // 팩토리 메서드 호출에 성공했다면 다시 호출할 필요가 없기 때문에 메서드 목록에서 제거한다.
+    factoryMethods.remove(factoryMethod);
+    
+    // 5) 준비한 파라미터 값들을 가지고 팩토리 메서드를 호출한다.
+    //    그리고 팩토리 메서드가 생성한 객체를 빈 컨테이너에 보관한다.
+    Object bean = factoryMethod.invoke(obj, paramValues);
+    // 팩토리 메서드가 생성한 객체를 저장할 때,
+    // 애노테이션에 빈의 이름이 저장되어 있다면 그 이름을 사용하고
+    // 없다면 메서드 명을 사용한다.
+    Bean beanAnno = factoryMethod.getAnnotation(Bean.class);
+    beanContainer.put(
+        beanAnno.value().length() > 0 ? beanAnno.value() : factoryMethod.getName() 
+        ,bean);
+//    System.out.println(indent + "   : " 
+//        + bean.getClass().getSimpleName() + " 객체가 보관됨");
+    // 그리고 팩토리 메서드가 생성한 객체를 리턴한다.
+    return bean;
+  }
+  
+  private Method findMethodByReturnType(
+      List<Method> methods, Class<?> returnType) {
+    for (Method m : methods) {
+      if (m.getReturnType() == returnType) {
+        return m;
+      }
+    }
+    return null;
   }
 }

@@ -31,6 +31,18 @@ dependencies {
     // MyBatis Persistence Framework 추가
     compile group: 'org.mybatis', name: 'mybatis', version: '3.5.0'
 
+    // MyBatis와 Spring 연동 기능 라이브러리
+    compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.0'
+
+    // Spring IoC Containner 추가
+    compile group: 'org.springframework', name: 'spring-context', version: '5.1.5.RELEASE'
+
+    // Spring의 jdbc 트랜잭션 기능 추가
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '5.1.5.RELEASE'
+
+    // DataSource 구현체 추가
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.6.0'
+
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }

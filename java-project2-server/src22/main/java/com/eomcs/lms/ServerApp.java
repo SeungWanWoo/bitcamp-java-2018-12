@@ -1,25 +1,26 @@
-// 23단계 : Spring IoC 컨테이너와 Mybatis 연동하기
-// => Mybatis 관련 객체를 Spring IoC 컨테이너가 자동으로 관리하도록 연동하기
+// 22단계 : Spring IoC 컨테이너 도입
+// => 기존에 제작했던 IoC 컨테이너를 Spring IoC 컨테이너로 교체한다.
 //
 // 작업
-// 1) Spring IoC 컨테이너와 연동할 때 사용한 Mybatis 라이브러리 가져오기
-//    => mvnrepository.com 에서 mybatis-spring으로 검색한다.
+// 1) Spring IoC 컨테이너의 라이브러리 가져오기
+//    => mvnrepository.com 에서 spring-context로 검색한다.
 //    => 프로젝트의 build.gradle 파일에 spring 의존 라이브러리 정보를 추가한다.
 //    => '$ gradle eclipse'를 실행하여 의존 라이브러리를 다운로드 받고
 //       이클립스 설정 파일을 갱신한다.
 //    => 이클립스 IDE에서 프로젝트를 refresh한다.
-// 2) 의존 라이브러리 준비
-//    => DataSource 구현체인 apache의 Commons-dbcp2 라이브러리 추가
-//    => Spring의 jdbc 관련 spring-jdbc 라이브러리 추가
-//       트랜잭션 관련 라이브러리도 자동으로 추가된다.
-// 3) AppConfig 변경
-//    => Mybatis 관련 객체를 생성한다.
-//    => mybatis-config.xml 파일 삭제
-//    => SqlSessionFactoryProxy, SqlSessionProxy, TransactionManager 삭제
-//    => DaoFactory 삭제
-// 4) LessonCommand와 PhotoBoardCommand 변경
-//    => Spring 프레임워크에서 제공해주는 트랜잭션 관리자로 교체한다.
-// 5)
+// 2) 기존 애노테이션을 Spring에서 제공하는 애노테이션으로 교체한다.
+//    => 기존의 애노테이션을 삭제한다.
+//    => Bean, Component, ComponentScan 삭제
+// 3) 기존 ApplicationContext를 Spring의 ApplicationContext로 교체
+//    => 기존의 ApplicationContext 삭제
+// 4) ApplicationInitailizer 변경
+//    => 기존의 ApplicationInitializer를 Spring의 ApplicationInitializer로 교체한다.
+//    => ApplicationContext는 인터페이스
+//       Spring에서는 종류별로 관리하기 위해서 해당 규칙을 사용한 여러 클래스를 구비해놨다.
+//    => RequestMappingHandlerMapping 객체를 이 객체에서 준비한다.
+// 5) ServerApp 변경
+//    => 기존 ApplicationContext를 Spring의 ApplicationContext로 교체
+//    => RequestMappingHandlerMapping 객체를 이 객체에서 준비한다.
 package com.eomcs.lms;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
