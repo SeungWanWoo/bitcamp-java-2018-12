@@ -21,6 +21,9 @@ dependencies {
     // MyBatis Persistence Framework 추가
     compile group: 'org.mybatis', name: 'mybatis', version: '3.5.0'
 
+    // Spring
+    compile group: 'org.springframework', name: 'spring-context', version: '5.1.5.RELEASE'
+
     implementation 'com.google.guava:guava:26.0-jre'
     testImplementation 'junit:junit:4.12'
 }
