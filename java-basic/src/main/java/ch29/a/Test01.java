@@ -30,7 +30,7 @@ public class Test01 {
     // ApplicationContext 구현체
     // (implements, 인터페이스를 구현한 클래스 또는 그 클래스의 인스턴스)의 종류
     // => XML 파일에서 설정 정보를 읽어들이는 IoC 컨테이너
-    //    - ClassPahXmlApplicationContext : 설정 파일을 자바 CLASSPATH 경로에서 찾는다.
+    //    - ClassPathXmlApplicationContext : 설정 파일을 자바 CLASSPATH 경로에서 찾는다.
     //    - FileSystemXmlApplicationContext : 설정  파일을 OS 경로에서 찾는다.
     // => 자바 클래스 파일의 애노테이션에서 설정 정보를 읽어 들이는 IoC 컨테이너
     //    - AnnotationConfigApplicationContext : 설정 정보를 자바 클래스에서 찾는다.

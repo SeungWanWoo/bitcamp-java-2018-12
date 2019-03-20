@@ -1,36 +1,28 @@
-package ch29.h;
+package ch29.i.sub4;
 
 import java.util.Date;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import ch29.i.BlackBox;
 
-public class Car6 {
+@Controller
+public class Sub4Car2 {
   private String maker;
   private String model;
   private int cc;
   private int valve;
   private boolean auto;
   private Date createdDate;
-  
-  // @Autowired + @Qualifier = @Resource
-  //@Autowired(required=false)
-  //@Qualifier("bb2")
-  
-  //OpenJDK에서는 @Resource 라이브러리가 포함되어 있지 않다. 
-  //별도로 라이브러리를 추가해야 한다.
-  //=> mvnrepository.com 에서 javax.annotation 검색하라.
-  //=> build.gradle에 추가하라.
-  //=> '$ eclipse gradle' 실행하라.
-  //=> 이클립스에서 프로젝트를 갱신하라.
-  @Resource(name="bb2") private BlackBox blackBox;
+  @Autowired private BlackBox blackBox;
 
   @Override
   public String toString() {
-    return "Car6 [maker=" + maker + ", model=" + model + ", cc=" + cc + ", valve=" + valve
+    return "Sub4Car2 [maker=" + maker + ", model=" + model + ", cc=" + cc + ", valve=" + valve
         + ", auto=" + auto + ", createdDate=" + createdDate + ", blackBox=" + blackBox + "]";
   }
 
-  public Car6() {
-    System.out.println("Car6()");
+  public Sub4Car2() {
+    System.out.println("Sub4Car2()");
   }
   
   public Date getCreatedDate() {

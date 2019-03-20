@@ -8,6 +8,14 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
+//@Autowired 애노테이션을 처리해주는 역할을 한다.
+//스프링 IoC 컨테이너가 객체를 생성한 후 보고를 하면 
+//이 클래스는 생성된 객체에서 @Autowired가 붙은 세터를 찾는다.
+//있다면 세터를 호출하여 의존 객체를 주입한다.
+//의존 객체가 없다면 그 의존 객체가 생성될 때까지 
+//별도로 담아 둔다.
+//의존 객체가 생성되는 순간 즉시 별도로 담아 둔 그 객체에 대해 셋터를 호출할 것이다.
+//
 public class MyAutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
   // 생성된 모든 객체를 기록한다.
@@ -29,7 +37,7 @@ public class MyAutowiredAnnotationBeanPostProcessor implements BeanPostProcessor
     // 항상 어떤 객체가 생성되면 자신을 원하는 setter가 있는지 검사하여
     // 그 메서드를 호출해야 한다.
     callAutowiredMethod(bean);
-    
+
     System.out.println("@Autowired 애노테이션 처리: ");
 
     // 이 객체의 모든 public 메서드를 꺼낸다.
@@ -86,19 +94,19 @@ public class MyAutowiredAnnotationBeanPostProcessor implements BeanPostProcessor
     // 이 타입의 빈을 원하는 세터 목록을 꺼낸다.
     List<AutowiredMethod> setters =
         autowiredMethodMap.get(paramValue.getClass());
-      
+
     if (setters == null)
       return;
-    
+
     for(AutowiredMethod setter : setters) {
       try {
-      setter.method.invoke(setter.object, paramValue);
+        setter.method.invoke(setter.object, paramValue);
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
   }
-  
+
   class AutowiredMethod {
     Object object; // 메서드를 호출할 때 사용할 인스턴스
     Method method; // @Autowired가 붙은 메서드

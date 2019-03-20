@@ -31,7 +31,6 @@
       <context:annotation-config/> 태그를 선언하지 않으면
       이런 일을 해줄 객체가 등록되지 않기 때문에
       Car7 객체를 생성할 수 없을 것이다.
-      
       -->
   <bean id="c1" class="ch29.h.Car7" /> 
   
