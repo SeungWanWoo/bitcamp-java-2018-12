@@ -2,21 +2,21 @@ package com.eomcs.lms.handler;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import com.eomcs.lms.context.RequestMapping;
+import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.domain.Board;
-import com.eomcs.lms.service.BoardService;
 
 @Component
 public class BoardCommand {
-  BoardService boardService;
+  BoardDao boardDao;
 
-  public BoardCommand(BoardService boardService) {
-    this.boardService = boardService;
+  public BoardCommand(BoardDao boardDao) {
+    this.boardDao = boardDao;
   }
 
   @RequestMapping("/board/list")
   public void list(Response response) {
     
-    List<Board> boards = boardService.list();
+    List<Board> boards = boardDao.findAll();
 
     for (Board board : boards) {
       response.println(
@@ -31,7 +31,7 @@ public class BoardCommand {
     Board board = new Board();
     
     board.setContents(response.requestString("내용? "));
-    boardService.add(board);
+    boardDao.insert(board);
     response.println("저장하였습니다.");
   }
   
@@ -39,43 +39,37 @@ public class BoardCommand {
   public void detail(Response response) throws Exception {
     int no = response.requestInt("번호? ");
     
-    Board board = boardService.get(no);
+    Board board = boardDao.findByNo(no);
     if (board == null) {
       response.println("해당 게시물이 존재하지 않습니다.");
       return;
     }
     
-    response.println(String.format("내용: %s", board.getContents()));
-    response.println(String.format("작성일: %s", board.getCreatedDate()));
-    response.println(String.format("조회수: %d", board.getViewCount()));
+    // 게시물 데이터를 가지고 왔으면 조회수를 증가시킨다.
+    boardDao.increaseCount(no);
+    
+    response.println(
+        String.format("내용: %s", board.getContents()));
+    response.println(
+        String.format("작성일: %s", board.getCreatedDate()));
+    response.println(
+        String.format("조회수: %d", board.getViewCount()));
   }
   
   @RequestMapping("/board/update")
   public void update(Response response) throws Exception {
-    Board temp = new Board();
-    temp.setNo(response.requestInt("번호?"));
-    
-    String input = response.requestString("내용?");
-    if (input.length() > 0)
-      temp.setContents(input);
-    
-    if (temp.getContents() != null) {
-      if (boardService.update(temp) == 0) {
-        response.println("해당 번호의 게시물이 없습니다.");
-        return;
-      }
-      response.println("변경했습니다.");
-      
-    } else {
-      response.println("변경 취소했습니다.");
-    }
+    Board board = new Board();
+    board.setNo(response.requestInt("번호? "));
+    board.setContents(response.requestString("내용? "));
+    boardDao.update(board);
+    response.println("게시글을 변경했습니다.");
   }
   
   @RequestMapping("/board/delete")
   public void delete(Response response) throws Exception {
     int no = response.requestInt("번호? ");
 
-    if (boardService.delete(no) == 0) {
+    if (boardDao.delete(no) == 0) {
       response.println("해당 게시물이 존재하지 않습니다.");
       return;
     }

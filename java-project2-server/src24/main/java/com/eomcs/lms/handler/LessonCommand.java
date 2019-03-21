@@ -1,23 +1,39 @@
 package com.eomcs.lms.handler;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import com.eomcs.lms.context.RequestMapping;
+import com.eomcs.lms.dao.LessonDao;
+import com.eomcs.lms.dao.PhotoBoardDao;
+import com.eomcs.lms.dao.PhotoFileDao;
 import com.eomcs.lms.domain.Lesson;
-import com.eomcs.lms.service.LessonService;
+import com.eomcs.lms.domain.PhotoBoard;
 
 @Component
 public class LessonCommand {
-  LessonService lessonService;
+  PlatformTransactionManager txManager;
+  LessonDao lessonDao;
+  PhotoBoardDao photoBoardDao;
+  PhotoFileDao photoFileDao;
 
-  public LessonCommand(LessonService lessonService) {
-    this.lessonService = lessonService;
+  public LessonCommand(LessonDao lessonDao, 
+      PhotoBoardDao photoBoardDao, PhotoFileDao photoFileDao,
+      PlatformTransactionManager txManager) {
+    this.lessonDao = lessonDao;
+    this.photoBoardDao = photoBoardDao;
+    this.photoFileDao = photoFileDao;
+    this.txManager = txManager;
   }
 
   @RequestMapping("/lesson/list")
   public void list(Response response) {
-    List<Lesson> lessons = lessonService.list();
+    List<Lesson> lessons = lessonDao.findAll();
     for (Lesson lesson : lessons) {
       response.println(
           String.format("%3d, %-15s, %10s ~ %10s, %4d", 
@@ -38,7 +54,7 @@ public class LessonCommand {
       lesson.setTotalHours(response.requestInt("총수업시간? "));
       lesson.setDayHours(response.requestInt("일수업시간? "));
       
-      lessonService.add(lesson);
+      lessonDao.insert(lesson);
 
       response.println("저장하였습니다.");
   }
@@ -47,24 +63,28 @@ public class LessonCommand {
   public void detail(Response response) throws Exception {
     int no = response.requestInt("번호? ");
 
-    Lesson lesson = lessonService.get(no);
+    Lesson lesson = lessonDao.findByNo(no);
     if (lesson == null) {
       response.println("해당 수업 정보가 존재하지 않습니다.");
       return;
     }
-    response.println(String.format("수업명: %s", lesson.getTitle()));
-    response.println(String.format("설명: %s", lesson.getContents()));
-    response.println(String.format("기간: %s ~ %s", 
-        lesson.getStartDate(), lesson.getEndDate()));
-    response.println(String.format("총수업시간: %d", lesson.getTotalHours()));
-    response.println(String.format("일수업시간: %d", lesson.getDayHours()));
+    response.println(
+        String.format("수업명: %s", lesson.getTitle()));
+    response.println(
+        String.format("설명: %s", lesson.getContents()));
+    response.println(
+        String.format("기간: %s ~ %s", lesson.getStartDate(), lesson.getEndDate()));
+    response.println(
+        String.format("총수업시간: %d", lesson.getTotalHours()));
+    response.println(
+        String.format("일수업시간: %d", lesson.getDayHours()));
   }
   
   @RequestMapping("/lesson/update")
   public void update(Response response) throws Exception {
 
     int no = response.requestInt("번호? ");
-    Lesson lesson = lessonService.get(no);
+    Lesson lesson = lessonDao.findByNo(no);
     if (lesson == null) {
       response.println("해당 번호의 수업이 없습니다.");
       return;
@@ -102,24 +122,49 @@ public class LessonCommand {
         String.format("일수업시간(%d)? ", lesson.getDayHours()))).length() > 0)
       temp.setDayHours(Integer.parseInt(input));
     
-    if (lessonService.update(temp) != 0) 
+    if (temp.getTitle() != null
+          || temp.getContents() != null
+          || temp.getStartDate() != null
+          || temp.getEndDate() != null
+          || temp.getDayHours() > 0
+          || temp.getTotalHours() > 0) {
+      lessonDao.update(temp);
       response.println("수업을 변경했습니다.");
-    else 
+    } else {
       response.println("변경 취소했습니다.");
+    }
   }
   
   @RequestMapping("/lesson/delete")
   public void delete(Response response) throws Exception {
+    // 트랜잭션 동작방식을 설정한다.
+    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+    def.setName("tx1");
+    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+    
+    // 트랜잭션을 준비한다.
+    TransactionStatus status = txManager.getTransaction(def);
     try {
       int no = response.requestInt("번호? ");
 
-      if (lessonService.delete(no) == 0) {
+      HashMap<String, Object> params = new HashMap<>();
+      params.put("lessonNo", no);
+
+      List<PhotoBoard> boards = photoBoardDao.findAll(params);
+      for (PhotoBoard board : boards) {
+        photoFileDao.deleteByPhotoBoardNo(board.getNo());
+        photoBoardDao.delete(board.getNo());
+      }
+
+      if (lessonDao.delete(no) == 0) {
         response.println("해당 번호가 존재하지 않습니다.");
         return;
       }
       response.println("수업을 삭제했습니다.");
+      txManager.commit(status);
     } catch (Exception e) {
       response.println("수업 삭제 중 오류가 발생했습니다.");
+      txManager.rollback(status);
     }
   }
 }
