@@ -20,7 +20,6 @@ public class Response {
   
   public String requestString(String title) throws Exception {
     out.println(title);
-    out.println("!{}!");
     out.flush();
     return in.readLine();
   }

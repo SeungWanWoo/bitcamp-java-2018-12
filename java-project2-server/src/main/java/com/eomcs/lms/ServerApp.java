@@ -1,22 +1,19 @@
-// 25단계 : business layer 추가
-// => Command 객체에서 비지니스 로직을 분리하여 별도의 클래스로 정의한다.
-// => 이런 구조로 바꾸면 비즈니스 로직의 재사용성을 높일 수 있다.
+// 30단계 : HTTP 프로토콜을 적용하여 클라이언트를 웹브라우저로 변경하기
 //
 // 작업
-// 1) BoardCommand에서 비즈니스 로직 분리
-//    => BoardService 인터페이스 생성
-//    => BoardServiceImpl 구현체 생성
-// 2) PhotoBoardCommand에서 비즈니스 로직 분리
-//    => PhotoBoardService 인터페이스 생성
-//    => PhotoBoardServiceImpl 구현체 생성
+// 1) RequestHandlerThread 변경하기
+//    => HTTP 프로토콜에 따라서 클라이언트 요청을 읽고 응답한다.
 //
 package com.eomcs.lms;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import com.eomcs.lms.context.RequestMappingHandlerMapping;
@@ -24,7 +21,8 @@ import com.eomcs.lms.context.RequestMappingHandlerMapping.RequestMappingHandler;
 import com.eomcs.lms.handler.Response;
 
 public class ServerApp {
-
+  // 보통 클래스에서 사용할 로그 출력 객체는 클래스의 스태틱 멤버로 선언한다.
+  final static Logger logger = LogManager.getLogger(ServerApp.class);
   // 공통적으로 수행해야 한다 => 유지
   // 공용 객체를 보관하는 저장소
   HashMap<String, Object> context = new HashMap<>();
@@ -37,15 +35,16 @@ public class ServerApp {
 
   public void service() throws Exception {
     try (ServerSocket serverSocket = new ServerSocket(8888)) {
+      logger.info("서버 실행 중...");
+      
       // Spring IoC 컨테이너 준비
       iocContainer = new AnnotationConfigApplicationContext(AppConfig.class);
-
+      printBeans();
       // Spring IoC 컨테이너에서 RequestMappingHandlerMapping 객체를 꺼난다.
       // 가능하면 이름을 주지말고 해당 클래스의 정보를 주는 편이 오류를 낼 확률이 적다.
       handlerMapping =
           (RequestMappingHandlerMapping) iocContainer.getBean(
               RequestMappingHandlerMapping.class);
-      System.out.println("서버 실행 중...");
       while (true) {
         new RequestHandlerThread(serverSocket.accept()).start();
       }
@@ -69,22 +68,43 @@ public class ServerApp {
 
     @Override
     public void run() {
+      logger.info("클라이언트 연결 되었음");
       try (Socket socket = this.socket;
           BufferedReader in = new BufferedReader(
               new InputStreamReader(socket.getInputStream()));
           PrintWriter out = new PrintWriter(socket.getOutputStream())) {
 
-        String request = in.readLine();
-
-        RequestMappingHandler requestHandler = handlerMapping.get(request);
+        // 클라이언트의 요청 읽기
+        String requestLine = in.readLine();
+        logger.debug(requestLine);
+        while (true) {
+          String str = in.readLine();
+          if (str.length() == 0) // 요청의 끝을 만나면 읽기를 멈춘다.
+            break;
+        }
+        
+        String commandPath = requestLine.split(" ")[1];
+        
+        // 클라이언트에게 응답하기
+        // => HTTP 프로토콜에 따라서 응답 헤더를 출력한다.
+        // => 클라이언트 요청을 처리할 메서드를 꺼낸다.
+        RequestMappingHandler requestHandler = handlerMapping.get(commandPath);
 
         if (requestHandler == null) {
+          out.println("HTTP/1.1 404 Not Found");
+          out.println("Server: bitcamp");
+          out.println("Contents-Type: text/plain; charset=UTF-8");
+          out.println();
           out.println("실행할 수 없는 명령입니다.");
-          out.println("!end!");
           out.flush();
           return;
         }
+        
         try {
+          out.println("HTTP/1.1 200 OK");
+          out.println("Server: bitcamp");
+          out.println("Content-Type: text/html; charset=UTF-8");
+          out.println();
           requestHandler.method.invoke( 
               requestHandler.bean, 
               new Response(in, out)
@@ -93,14 +113,28 @@ public class ServerApp {
           e.printStackTrace();
           out.printf("실행 오류! : %s\n", e.getMessage());
         }
-
-        out.println("!end!");
         out.flush();
 
       } catch (Exception e) {
-        System.out.println("명령어 실행 중 오류 발생 : " + e.toString());
-        e.printStackTrace();
-      } 
+        logger.error("명령어 실행 중 오류 발생 : " + e.toString());
+        StringWriter strWriter = new StringWriter();
+        PrintWriter out = new PrintWriter(strWriter);
+        
+        e.printStackTrace(out);
+        logger.error(strWriter.toString());
+      }
+      logger.info("클라이언트와 연결 종료.");
     }
+  }
+  
+  private void printBeans() {
+    String[] names = iocContainer.getBeanDefinitionNames();
+    // 개발하는 동안 참고할 로그는 보통 debug 등급으로 출력한다.
+    logger.debug("-----------------------------------------");
+    for (String name : names) {
+      logger.debug(String.format("빈 생성 됨 (객체명=%s, 클래스명=%s)",name,
+          iocContainer.getBean(name).getClass().getName()));
+    }
+    logger.debug("-----------------------------------------");
   }
 }

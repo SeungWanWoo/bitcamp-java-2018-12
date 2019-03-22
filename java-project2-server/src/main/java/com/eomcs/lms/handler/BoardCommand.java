@@ -18,21 +18,32 @@ public class BoardCommand {
     
     List<Board> boards = boardService.list();
 
+    response.println("<html><head><title>게시물 목록</title></head>");
+    response.println("<body><h1>게시물 목록</h1>");
+    response.println("<table border='1'>");
+    response.println("<tr><th>번호</th><th>제목</th><th>등록일</th><th>조회수</th></tr>");
+      
     for (Board board : boards) {
       response.println(
-          String.format("%3d, %-20s, %s, %d", 
+          String.format("<tr><td>%3d</td><td>%-20s</td><td>%s</td><td>%d</td></tr>", 
               board.getNo(), board.getContents(), 
               board.getCreatedDate(), board.getViewCount()));
     }
+    response.println("</table></body></html>");
   }
   
   @RequestMapping("/board/add")
   public void add(Response response) throws Exception {
     Board board = new Board();
-    
-    board.setContents(response.requestString("내용? "));
+    response.println("<html><head><title>게시물 추가</title></head>");
+    response.println("<body><h1>게시물 추가</h1>");
+    response.println("<table border='1' cellspacing='1' cellpadding='5'>");
+    response.println("<tr><th>내용</th><th>입력</tr>");
+    board.setContents(response.requestString("<tr><td>내용? </td><input type=text size='20' name=contents></tr>"));
     boardService.add(board);
     response.println("저장하였습니다.");
+    
+    response.println("</table></body></html>");
   }
   
   @RequestMapping("/board/detail")
