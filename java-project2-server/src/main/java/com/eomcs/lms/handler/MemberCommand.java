@@ -1,5 +1,6 @@
 
 package com.eomcs.lms.handler;
+import java.io.PrintWriter;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import com.eomcs.lms.context.RequestMapping;
@@ -15,105 +16,208 @@ public class MemberCommand {
   }
 
   @RequestMapping("/member/list")
-  public void list(Response response) {
+  public void list(ServletRequest request, ServletResponse response) {
+    PrintWriter out = response.getWriter();
     List<Member> members = memberService.list(null);
+
+    out.println("<html><head><title>회원 목록</title></head>");
+    out.println("<body><h1>회원 목록</h1>");
+    out.println("<p><a href='/member/form'>회원 가입</a></p>");
+    out.println("<table border='1'>");
+    out.println("<tr> <th>번호</th> <th>이름</th> <th>이메일</th> <th>전화번호</th> "
+                + "<th>등록일</th> </tr>");
     for (Member member : members) {
-      response.println(
-          String.format("%3d, %-4s, %-20s, %-15s, %s", 
-              member.getNo(), member.getName(), 
-              member.getEmail(), member.getTel(), member.getRegisteredDate()));
+      out.println(String.format("<tr><td>%d</td> "
+          + "<td><a href='/member/detail?no=%1$d'>%s</a></td> "
+          + "<td>%s</td> "
+          + "<td>%s</td> "
+          + "<td>%s</td> </tr>", 
+          member.getNo(), member.getName(), 
+          member.getEmail(), member.getTel(), member.getRegisteredDate()));
     }
+    out.println("</table><form action='/member/search'>");
+    out.println("<input name='name'>");
+    out.println("<button type='submit'>검색</button>");
+    out.println("</form>");
+    out.println("</body></html>");
   }
   
   @RequestMapping("/member/add")
-  public void add(Response response) throws Exception {
+  public void add(ServletRequest request, ServletResponse response) throws Exception {
     Member member = new Member();
-
-    member.setName(response.requestString("이름? "));
-    member.setEmail(response.requestString("이메일? "));
-    member.setPassword(response.requestString("암호? "));
-    member.setPhoto(response.requestString("사진? "));
-    member.setTel(response.requestString("전화? "));
+    member.setName(request.getParameter("name"));
+    member.setEmail(request.getParameter("email"));
+    member.setPassword(request.getParameter("password"));
+    member.setPhoto(request.getParameter("photo"));
+    member.setTel(request.getParameter("tel"));
+    
     memberService.add(member);
-    response.println("저장하였습니다.");
+
+    PrintWriter out = response.getWriter();
+
+    out.println("<html><head>"
+        + "<title>회원 등록</title>"
+        + "<meta http-equiv='Refresh' content='1;url=/member/list'>"
+        + "</head>");
+    out.println("<body><h1>회원 등록</h1>");
+    out.println("<p>저장하였습니다.</p>");
+    out.println("</body></html>");
   }
   
   @RequestMapping("/member/detail")
-  public void detail(Response response) throws Exception {
-    int no = response.requestInt("번호? ");
+  public void detail(ServletRequest request, ServletResponse response) throws Exception {
+    int no = Integer.parseInt(request.getParameter("no"));
+
     Member member = memberService.get(no);
+    PrintWriter out = response.getWriter();
+
+    out.println("<html><head><title>회원 조회</title></head>");
+    out.println("<body><h1>회원 조회</h1>");
     if (member == null) {
-      response.println("해당 회원 정보가 존재하지 않습니다.");
+      response.println("<p>해당 회원 정보가 존재하지 않습니다.</p>");
       return;
     }
-    response.println(String.format("이름: %s", member.getName()));
-    response.println(String.format("이메일: %s", member.getEmail()));
-    response.println(String.format("암호: %s", member.getPassword()));
-    response.println(String.format("사진: %s", member.getPhoto()));
-    response.println(String.format("전화: %s", member.getTel()));
-    response.println(String.format("가입일: %s", member.getRegisteredDate()));
+    out.println("<form action='/member/update'>");
+    out.println("<table border='1'>");
+    out.println(
+        String.format("<tr>"
+        + "<th>번호</th>"
+        + "<td><input type='text' name='no' value='%d' readonly></td>"
+        + "</tr>\n", no));
+    out.println(String.format("<tr> <th>이름</th> "
+        + "<td><input type='text' name='name' value='%s'></td>"
+        + "</tr>", member.getName()));
+    out.println(String.format("<tr> <th>이메일</th> "
+        + "<td><input type='email' name='email' value='%s'></td>"
+        + "</tr>", member.getEmail()));
+    out.println(String.format("<tr> <th>암호</th> "
+        + "<td><input type='password' name='password' value='%s'></td>"
+        + "</tr>", member.getPassword()));
+    out.println(String.format("<tr> <th>사진</th> "
+        + "<td><input type='text' name='photo' value='%s'></td>"
+        + "</tr>", member.getPhoto()));
+    out.println(String.format("<tr> <th>전화번호</th> "
+        + "<td><input type='text' name='tel' value='%s'></td>"
+        + "</tr>", member.getTel()));
+    out.println(String.format("<tr> <th>가입일</th> <td>%s</td> </tr>", member.getRegisteredDate()));
+
+    out.println("</table>");
+    out.println("<p><a href='/member/list'>목록</a>"
+        + " <a href='/member/delete?no=" + member.getNo() + "'>삭제</a>"
+        + " <button type='submit'>변경</button>"
+        + "</p>"); // p = 한 문단
+    out.println("</form>");
+    out.println("</body></html>");
   }
   
   @RequestMapping("/member/update")
-  public void update(Response response) throws Exception {
-    int no = response.requestInt("번호? ");
-    Member member = memberService.get(no);
+  public void update(ServletRequest request, ServletResponse response) throws Exception {
+    Member member = new Member();
+    member.setNo(Integer.parseInt(request.getParameter("no")));
+    member.setName(request.getParameter("name"));
+    member.setEmail(request.getParameter("email"));
+    member.setPassword(request.getParameter("password"));
+    member.setPhoto(request.getParameter("photo"));
+    member.setTel(request.getParameter("tel"));
     
-    if (member == null) {
-      response.println("해당 회원이 존재하지 않습니다.");
-      return;
+    PrintWriter out = response.getWriter();
+    out.println("<html><head>"
+        + "<title>회원 변경</title>"
+        + "<meta http-equiv='Refresh' content='1;url=/member/list'>"
+        + "</head>");
+    out.println("<body><h1>회원 변경</h1>");
+    out.println("</body></html>");
+    if (memberService.update(member) == 0) {
+      out.println("<p>해당 게시물이 존재하지 않습니다.</p>");
+    } else {
+      out.println("<p>변경했습니다.</p>");
     }
-    
-    Member temp = new Member();
-    temp.setNo(member.getNo());
-    
-    String input = response.requestString(
-        String.format("이름(%s)? ", member.getName()));
-    if (input.length() > 0) 
-      temp.setName(input);
-
-    if ((input = response.requestString(
-        String.format("이메일(%s)? ", member.getEmail()))).length() > 0)
-      temp.setEmail(input);
-
-    if ((input = response.requestString(
-        "암호(새 암호를 입력하세요)? ")).length() > 0)
-      temp.setPassword(input);
-
-    if ((input = response.requestString(
-        String.format("사진(%s)? ", member.getPhoto()))).length() > 0)
-      temp.setPhoto(input);
-
-    if ((input = response.requestString(
-        String.format("전화(%s)? ", member.getTel()))).length() > 0)
-      temp.setTel(input);
-    
-    if (memberService.update(temp) != 0)
-      response.println("회원을 변경했습니다.");
-    else
-      response.println("변경을 취소하였습니다.");
+    out.println("</body></html>");
   }
   
   @RequestMapping("/member/delete")
-  public void delete(Response response) throws Exception {
+  public void delete(ServletRequest request, ServletResponse response) throws Exception {
+    int no = Integer.parseInt(request.getParameter("no"));
 
-    int no = response.requestInt("번호? ");
+    PrintWriter out = response.getWriter();
+    out.println("<html><head>"
+        + "<title>회원 탈퇴</title>"
+        + "<meta http-equiv='Refresh' content='1;url=/member/list'>"
+        + "</head>");
+    out.println("<body><h1>회원 탈퇴</h1>");
+    out.println("</body></html>");
     if (memberService.delete(no) == 0) {
-      response.println("해당 번호의 회원이 없습니다.");
-      return;
+      out.println("<p>해당 번호의 회원이 없습니다.</p>");
+    } else {
+      out.println("<p>삭제했습니다.</p>");
     }
-    response.println("회원을 삭제했습니다.");
+    out.println("</body></html>");
   }
   
   @RequestMapping("/member/search")
-  public void search(Response response) throws Exception {
-    String keyword = response.requestString("검색어? ");
+  public void search(ServletRequest request, ServletResponse response) throws Exception {
+    PrintWriter out = response.getWriter();
+    
+    out.println("<html>");
+    out.println("<head><title>회원 검색</title></head>");
+    out.println("<body>");
+    out.println("<h1>회원 검색</h1>");
+    out.println("<table border='1'>");
+    out.println("<tr> <th>번호</th> <th>이름</th> <th>이메일</th> <th>전화번호</th> "
+                + "<th>등록일</th> </tr>");
+    
+    String keyword = request.getParameter("name");
     List<Member> members = memberService.list(keyword);
     for (Member member : members) {
-      response.println(
-          String.format("%3d, %-4s, %-20s, %-15s, %s", 
-              member.getNo(), member.getName(), 
-              member.getEmail(), member.getTel(), member.getRegisteredDate()));
+      out.println(String.format("<tr><td>%d</td> "
+          + "<td><a href='/member/detail?no=%1$d'>%s</a></td> "
+          + "<td>%s</td> "
+          + "<td>%s</td> "
+          + "<td>%s</td> </tr>", 
+          member.getNo(), member.getName(), 
+          member.getEmail(), member.getTel(), member.getRegisteredDate()));
     }
+    out.println("<a href='/member/list'>목록</a>");
+    out.println("</table></body></html>");
+  }
+  
+  @RequestMapping("/member/form")
+  public void form(ServletRequest request, ServletResponse response) throws Exception {
+    PrintWriter out = response.getWriter();
+
+    out.println("<html>");
+    out.println("   <head><title>새 회원</title></head>");
+    out.println("   <body>");
+    out.println("   <h1>새 회원</h1>");
+    out.println("<form action='/member/add'>");
+    out.println("<table boarder='1'>");
+    out.println("<tr>");
+    out.println("   <th>이름</th>");
+    out.println("   <td><input type='text' name='name'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>이메일</th>");
+    out.println("   <td><input type='email' name='email'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>비밀번호</th>");
+    out.println("   <td><input type='password' name='password'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>사진</th>");
+    out.println("   <td><input type='text' name='photo'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>전화번호</th>");
+    out.println("   <td><input type='text' name='tel'></td>");
+    out.println("</tr>");
+    out.println("</table>");
+    out.println("<p>");
+    out.println("<button type='submit'>등록</button>");
+    out.println("<a href='/member/list'>목록</a>");
+    out.println("</p>");
+    out.println("</form>");
+    out.println("</body>");
+    out.println("</html>");
   }
 }

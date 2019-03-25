@@ -18,7 +18,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import com.eomcs.lms.context.RequestMappingHandlerMapping;
 import com.eomcs.lms.context.RequestMappingHandlerMapping.RequestMappingHandler;
-import com.eomcs.lms.handler.Response;
+import com.eomcs.lms.handler.ServletRequest;
+import com.eomcs.lms.handler.ServletResponse;
 
 public class ServerApp {
   // 보통 클래스에서 사용할 로그 출력 객체는 클래스의 스태틱 멤버로 선언한다.
@@ -83,11 +84,20 @@ public class ServerApp {
             break;
         }
         
-        String commandPath = requestLine.split(" ")[1];
+        // GET /member/list HTTP/1.1 => 명령어만보내고 데이터를 보내지 않는 경우
+        // 예) GET /member/add?name=aaa&email=aaa@test.com&password=1111 HTTP/1.1
+        //     => 명령어와 데이터를 여러개 보내는 경우
+        // requestURI[0] : /member/add
+        // requestURI[1] : name=aaa&email=aaa@test.com&password=1111 => Query String
+        // 예) GET /board/detail?no=1 HTTP/1.1
+        //     => 명령어와 데이터를 한 개 보내는 경우
+        // requestURI[0] : /board/detail
+        // requestURI[1] : no=1
+        String[] requestURI = requestLine.split(" ")[1].split("\\?");
+        String commandPath = requestURI[0];
         
         // 클라이언트에게 응답하기
         // => HTTP 프로토콜에 따라서 응답 헤더를 출력한다.
-        // => 클라이언트 요청을 처리할 메서드를 꺼낸다.
         RequestMappingHandler requestHandler = handlerMapping.get(commandPath);
 
         if (requestHandler == null) {
@@ -101,14 +111,22 @@ public class ServerApp {
         }
         
         try {
+          // 요청을 처리할 메서드가 사용할 Request, Response 준비하기
+          ServletRequest request = new ServletRequest();
+          if (requestURI.length > 1) {
+            // 예) name=aaa&email=aaa@test.com&password=1111
+            request.setQueryString(requestURI[1]);
+          }
+          
+          ServletResponse response = new ServletResponse(in, out);
+          
+          // => 클라이언트 요청을 처리할 메서드를 찾았다면 호출한다.
           out.println("HTTP/1.1 200 OK");
           out.println("Server: bitcamp");
           out.println("Content-Type: text/html; charset=UTF-8");
           out.println();
-          requestHandler.method.invoke( 
-              requestHandler.bean, 
-              new Response(in, out)
-              );
+          requestHandler.method.invoke(requestHandler.bean, request, response);
+          
         } catch (Exception e) {
           e.printStackTrace();
           out.printf("실행 오류! : %s\n", e.getMessage());

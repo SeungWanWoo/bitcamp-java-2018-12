@@ -1,5 +1,6 @@
 package com.eomcs.lms.handler;
 
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -16,110 +17,185 @@ public class LessonCommand {
   }
 
   @RequestMapping("/lesson/list")
-  public void list(Response response) {
+  public void list(ServletRequest request, ServletResponse response) {
+    PrintWriter out = response.getWriter();
     List<Lesson> lessons = lessonService.list();
+
+    out.println("<html><head><title>수업 목록</title></head>");
+    out.println("<body><h1>수업 목록</h1>");
+    out.println("<p><a href='/lesson/form'>신규 수업</a></p>");
+    out.println("<table border='1'>");
+    out.println("<tr> <th>번호</th> <th>수업 제목</th> <th>시작일 ~ 종료일</th> "
+        + "<th>총 시간</th> </tr>");
     for (Lesson lesson : lessons) {
-      response.println(
-          String.format("%3d, %-15s, %10s ~ %10s, %4d", 
-              lesson.getNo(), lesson.getTitle(), 
-              lesson.getStartDate(), lesson.getEndDate(), lesson.getTotalHours()));
+      out.println(String.format("<tr><td>%d</td> "
+          + "<td><a href='/lesson/detail?no=%1$d'>%s</a></td> "
+          + "<td>%s ~ %s</td> "
+          + "<td>%s</td> </tr>", 
+          lesson.getNo(), lesson.getTitle(), 
+          lesson.getStartDate(), lesson.getEndDate(), lesson.getTotalHours()));
     }
+    out.println("</table></body></html>");
   }
-  
+
   @RequestMapping("/lesson/add")
-  public void add(Response response) throws Exception {
+  public void add(ServletRequest request, ServletResponse response) throws Exception {
 
-      Lesson lesson = new Lesson();
-      
-      lesson.setTitle(response.requestString("수업명? "));
-      lesson.setContents(response.requestString("설명? "));
-      lesson.setStartDate(response.requestDate("시작일? "));
-      lesson.setEndDate(response.requestDate("종료일? "));
-      lesson.setTotalHours(response.requestInt("총수업시간? "));
-      lesson.setDayHours(response.requestInt("일수업시간? "));
-      
-      lessonService.add(lesson);
+    Lesson lesson = new Lesson();
 
-      response.println("저장하였습니다.");
+    lesson.setTitle(request.getParameter("title"));
+    lesson.setContents(request.getParameter("contents"));
+    lesson.setStartDate(Date.valueOf(request.getParameter("startDate")));
+    lesson.setEndDate(Date.valueOf(request.getParameter("endDate")));
+    lesson.setTotalHours(Integer.parseInt(request.getParameter("totalHours")));
+    lesson.setDayHours(Integer.parseInt(request.getParameter("dayHours")));
+
+    lessonService.add(lesson);
+    PrintWriter out = response.getWriter();
+
+    out.println("<html><head>"
+        + "<title>수업 등록</title>"
+        + "<meta http-equiv='Refresh' content='1;url=/lesson/list'>"
+        + "</head>");
+    out.println("<body><h1>수업 등록</h1>");
+    out.println("<p>저장하였습니다.</p>");
+    out.println("</body></html>");
   }
-  
+
   @RequestMapping("/lesson/detail")
-  public void detail(Response response) throws Exception {
-    int no = response.requestInt("번호? ");
+  public void detail(ServletRequest request, ServletResponse response) throws Exception {
+    int no = Integer.parseInt(request.getParameter("no"));
 
     Lesson lesson = lessonService.get(no);
+    PrintWriter out = response.getWriter();
+
+    out.println("<html><head><title>수업 조회</title></head>");
+    out.println("<body><h1>수업 조회</h1>");
     if (lesson == null) {
-      response.println("해당 수업 정보가 존재하지 않습니다.");
+      response.println("<p>해당 수업 정보가 존재하지 않습니다.</p>");
       return;
     }
-    response.println(String.format("수업명: %s", lesson.getTitle()));
-    response.println(String.format("설명: %s", lesson.getContents()));
-    response.println(String.format("기간: %s ~ %s", 
-        lesson.getStartDate(), lesson.getEndDate()));
-    response.println(String.format("총수업시간: %d", lesson.getTotalHours()));
-    response.println(String.format("일수업시간: %d", lesson.getDayHours()));
+    out.println("<form action='/lesson/update'>");
+    out.println("<table border='1'>");
+    out.println(
+        String.format("<tr><th>번호</th>"
+            + "<td><input type='text' name='no' value='%d' readonly></td>"
+            + "</tr>\n", no));
+    out.println(String.format("<tr> <th>수업명</th> "
+        + "<td><input type='text' name='title' value='%s'></td>"
+        + "</tr>", lesson.getTitle()));
+    out.println(String.format("<tr> <th>설명</th> "
+        + "<td><input type='text' name='contents' value='%s'></td>"
+        + "</tr>", lesson.getContents()));
+    out.println(String.format("<tr> <th>시작일</th> "
+        + "<td><input type='date' name='startDate' value='%s'></td>"
+        + "</tr>", lesson.getStartDate()));
+    out.println(String.format("<tr> <th>종료일</th> "
+        + "<td><input type='date' name='endDate' value='%s'></td>"
+        + "</tr>", lesson.getEndDate()));
+    out.println(String.format("<tr> <th>총수업시간</th> "
+        + "<td><input type='number' name='totalHours' value='%s'></td>"
+        + "</tr>", lesson.getTotalHours()));
+    out.println(String.format("<tr> <th>일수업시간</th> "
+        + "<td><input type='number' name='dayHours' value='%s'></td>"
+        + "</tr>", lesson.getDayHours()));
+
+    out.println("</table>");
+    out.println("<p><a href='/lesson/list'>목록</a>"
+        + " <a href='/lesson/delete?no=" + lesson.getNo() + "'>삭제</a>"
+        + " <button type='submit'>변경</button>"
+        + "</p>"); // p = 한 문단
+    out.println("</form>");
+    out.println("</body></html>");
   }
-  
+
+
   @RequestMapping("/lesson/update")
-  public void update(Response response) throws Exception {
+  public void update(ServletRequest request, ServletResponse response) throws Exception {
+    Lesson lesson = new Lesson();
+    lesson.setNo(Integer.parseInt(request.getParameter("no")));
+    lesson.setTitle(request.getParameter("title"));
+    lesson.setContents(request.getParameter("contents"));
+    lesson.setStartDate(Date.valueOf(request.getParameter("startDate")));
+    lesson.setEndDate(Date.valueOf(request.getParameter("endDate")));
+    lesson.setTotalHours(Integer.parseInt(request.getParameter("totalHours")));
+    lesson.setDayHours(Integer.parseInt(request.getParameter("dayHours")));
 
-    int no = response.requestInt("번호? ");
-    Lesson lesson = lessonService.get(no);
-    if (lesson == null) {
-      response.println("해당 번호의 수업이 없습니다.");
-      return;
+    PrintWriter out = response.getWriter();
+    out.println("<html><head>"
+        + "<title>수업 변경</title>"
+        + "<meta http-equiv='Refresh' content='1;url=/lesson/list'>"
+        + "</head>");
+    out.println("<body><h1>수업 변경</h1>");
+    out.println("</body></html>");
+    if (lessonService.update(lesson) == 0) {
+      out.println("<p>해당 수업 존재하지 않습니다.</p>");
+    } else {
+      out.println("<p>변경했습니다.</p>");
     }
-    
-    // 변경할 값만 temp에 저장할 것이기 때문에 기존의 데이터를 복제하지 않는다..
-    Lesson temp = new Lesson();
-    temp.setNo(lesson.getNo());
-    
-    // mybatis는 필드의 값이 null이 아니거나
-    // 숫자인 경우 0이 아니면 해당 컬럼 값을 update 한다.
-    String input = response.requestString(
-        String.format("수업명(%s)? ", lesson.getTitle()));
-    if (input.length() > 0) 
-      temp.setTitle(input);
-    
-    input = response.requestString(
-        String.format("설명(%s)? ", lesson.getContents()));
-    if (input.length() > 0)
-      temp.setContents(input);
+    out.println("</body></html>");
+  }
 
-    if ((input = response.requestString(
-        String.format("시작일(%s)? ", lesson.getStartDate()))).length() > 0)
-      temp.setStartDate(Date.valueOf(input));
+  @RequestMapping("/lesson/delete")
+  public void delete(ServletRequest request, ServletResponse response) throws Exception {
+    int no = Integer.parseInt(request.getParameter("no"));
 
-    if ((input = response.requestString(
-        String.format("종료일(%s)? ", lesson.getEndDate()))).length() > 0)
-      temp.setEndDate(Date.valueOf(input));
-
-    if ((input = response.requestString(
-        String.format("총수업시간(%d)? ", lesson.getTotalHours()))).length() > 0)
-      temp.setTotalHours(Integer.parseInt(input));
-
-    if ((input = response.requestString(
-        String.format("일수업시간(%d)? ", lesson.getDayHours()))).length() > 0)
-      temp.setDayHours(Integer.parseInt(input));
-    
-    if (lessonService.update(temp) != 0) 
-      response.println("수업을 변경했습니다.");
-    else 
-      response.println("변경 취소했습니다.");
+    PrintWriter out = response.getWriter();
+    out.println("<html><head>"
+        + "<title>수업 삭제</title>"
+        + "<meta http-equiv='Refresh' content='1;url=/lesson/list'>"
+        + "</head>");
+    out.println("<body><h1>수업 삭제</h1>");
+    out.println("</body></html>");
+    if (lessonService.delete(no) == 0) {
+      out.println("<p>해당 번호의 수업 없습니다.</p>");
+    } else {
+      out.println("<p>삭제했습니다.</p>");
+    }
+    out.println("</body></html>");
   }
   
-  @RequestMapping("/lesson/delete")
-  public void delete(Response response) throws Exception {
-    try {
-      int no = response.requestInt("번호? ");
+  @RequestMapping("/lesson/form")
+  public void form(ServletRequest request, ServletResponse response) throws Exception {
+    PrintWriter out = response.getWriter();
 
-      if (lessonService.delete(no) == 0) {
-        response.println("해당 번호가 존재하지 않습니다.");
-        return;
-      }
-      response.println("수업을 삭제했습니다.");
-    } catch (Exception e) {
-      response.println("수업 삭제 중 오류가 발생했습니다.");
-    }
+    out.println("<html>");
+    out.println("<head><title>신규 수업</title></head>");
+    out.println("<body>");
+    out.println("<h1>신규 수업</h1>");
+    out.println("<form action='/lesson/add'>");
+    out.println("<table boarder='1'>");
+    out.println("<tr>");
+    out.println("<th>제목</th>");
+    out.println("<td><input type='text' name='title'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>내용</th>");
+    out.println("<td><textarea name='contents' rows='5' cols='50'></textarea></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>시작일</th>");
+    out.println("<td><input type='date' name='startDate'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>종료일</th>");
+    out.println("<td><input type='date'  name='endDate'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>총 수업시간</th>");
+    out.println("<td><input type='number'  name='totalHours'></td>");
+    out.println("</tr>");
+    out.println("<tr>");
+    out.println("<th>일 수업시간</th>");
+    out.println("<td><input type='number'  name='dayHours'></td>");
+    out.println("</tr>");
+    out.println("</table>");
+    out.println("<p>");
+    out.println("<button type='submit'>등록</button>");
+    out.println("<a href='/lesson/list'>목록</a>");
+    out.println("</p>");
+    out.println("</form>");
+    out.println("</body>");
+    out.println("</html>");
   }
 }
