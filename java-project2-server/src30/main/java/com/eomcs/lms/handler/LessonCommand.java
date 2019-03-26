@@ -3,8 +3,6 @@ package com.eomcs.lms.handler;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.List;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import org.springframework.stereotype.Component;
 import com.eomcs.lms.context.RequestMapping;
 import com.eomcs.lms.domain.Lesson;
@@ -19,19 +17,19 @@ public class LessonCommand {
   }
 
   @RequestMapping("/lesson/list")
-  public void list(ServletRequest request, ServletResponse response) throws Exception {
+  public void list(ServletRequest request, ServletResponse response) {
     PrintWriter out = response.getWriter();
     List<Lesson> lessons = lessonService.list();
 
     out.println("<html><head><title>수업 목록</title></head>");
     out.println("<body><h1>수업 목록</h1>");
-    out.println("<p><a href='form'>신규 수업</a></p>");
+    out.println("<p><a href='/lesson/form'>신규 수업</a></p>");
     out.println("<table border='1'>");
     out.println("<tr> <th>번호</th> <th>수업 제목</th> <th>시작일 ~ 종료일</th> "
         + "<th>총 시간</th> </tr>");
     for (Lesson lesson : lessons) {
       out.println(String.format("<tr><td>%d</td> "
-          + "<td><a href='detail?no=%1$d'>%s</a></td> "
+          + "<td><a href='/lesson/detail?no=%1$d'>%s</a></td> "
           + "<td>%s ~ %s</td> "
           + "<td>%s</td> </tr>", 
           lesson.getNo(), lesson.getTitle(), 
@@ -57,7 +55,7 @@ public class LessonCommand {
 
     out.println("<html><head>"
         + "<title>수업 등록</title>"
-        + "<meta http-equiv='Refresh' content='1;url=list'>"
+        + "<meta http-equiv='Refresh' content='1;url=/lesson/list'>"
         + "</head>");
     out.println("<body><h1>수업 등록</h1>");
     out.println("<p>저장하였습니다.</p>");
@@ -74,10 +72,10 @@ public class LessonCommand {
     out.println("<html><head><title>수업 조회</title></head>");
     out.println("<body><h1>수업 조회</h1>");
     if (lesson == null) {
-      out.println("<p>해당 수업 정보가 존재하지 않습니다.</p>");
+      response.println("<p>해당 수업 정보가 존재하지 않습니다.</p>");
       return;
     }
-    out.println("<form action='update'>");
+    out.println("<form action='/lesson/update'>");
     out.println("<table border='1'>");
     out.println(
         String.format("<tr><th>번호</th>"
@@ -103,8 +101,8 @@ public class LessonCommand {
         + "</tr>", lesson.getDayHours()));
 
     out.println("</table>");
-    out.println("<p><a href='list'>목록</a>"
-        + " <a href='delete?no=" + lesson.getNo() + "'>삭제</a>"
+    out.println("<p><a href='/lesson/list'>목록</a>"
+        + " <a href='/lesson/delete?no=" + lesson.getNo() + "'>삭제</a>"
         + " <button type='submit'>변경</button>"
         + "</p>"); // p = 한 문단
     out.println("</form>");
@@ -126,7 +124,7 @@ public class LessonCommand {
     PrintWriter out = response.getWriter();
     out.println("<html><head>"
         + "<title>수업 변경</title>"
-        + "<meta http-equiv='Refresh' content='1;url=list'>"
+        + "<meta http-equiv='Refresh' content='1;url=/lesson/list'>"
         + "</head>");
     out.println("<body><h1>수업 변경</h1>");
     out.println("</body></html>");
@@ -145,7 +143,7 @@ public class LessonCommand {
     PrintWriter out = response.getWriter();
     out.println("<html><head>"
         + "<title>수업 삭제</title>"
-        + "<meta http-equiv='Refresh' content='1;url=list'>"
+        + "<meta http-equiv='Refresh' content='1;url=/lesson/list'>"
         + "</head>");
     out.println("<body><h1>수업 삭제</h1>");
     out.println("</body></html>");
@@ -165,8 +163,8 @@ public class LessonCommand {
     out.println("<head><title>신규 수업</title></head>");
     out.println("<body>");
     out.println("<h1>신규 수업</h1>");
-    out.println("<form action='add'>");
-    out.println("<table border='1'>");
+    out.println("<form action='/lesson/add'>");
+    out.println("<table boarder='1'>");
     out.println("<tr>");
     out.println("<th>제목</th>");
     out.println("<td><input type='text' name='title'></td>");
@@ -194,7 +192,7 @@ public class LessonCommand {
     out.println("</table>");
     out.println("<p>");
     out.println("<button type='submit'>등록</button>");
-    out.println("<a href='list'>목록</a>");
+    out.println("<a href='/lesson/list'>목록</a>");
     out.println("</p>");
     out.println("</form>");
     out.println("</body>");
