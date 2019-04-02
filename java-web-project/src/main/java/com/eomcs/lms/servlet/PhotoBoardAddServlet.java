@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import com.eomcs.lms.InitServlet;
+import org.springframework.context.ApplicationContext;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.domain.PhotoBoard;
 import com.eomcs.lms.domain.PhotoFile;
@@ -36,7 +36,8 @@ public class PhotoBoardAddServlet extends HttpServlet {
       throws ServletException, IOException {
 
     PhotoBoardService photoBoardService = 
-        InitServlet.iocContainer.getBean(PhotoBoardService.class);
+        ((ApplicationContext) this.getServletContext()
+            .getAttribute("iocContainer")).getBean(PhotoBoardService.class);
     response.setContentType("text/html;charset=UTF-8");
 
     PhotoBoard board = new PhotoBoard();
@@ -64,13 +65,17 @@ public class PhotoBoardAddServlet extends HttpServlet {
         + "<meta http-equiv='Refresh' content='1;url=list'>"
         + "</head>");
     out.println("<body><h1>사진 등록</h1>");
+    
     if (board.getLessonNo() == 0) {
       out.println("<p>사진 또는 파일을 등록할 수업을 선택하세요.</p>");
+      
     } else if (files.size() == 0) {
       out.println("<p>최소 한개 사진 파일을 등록해야합니다.</p>");
+      
     } else { 
       photoBoardService.add(board);
-      out.println("<p>저장하였습니다.</p>");
+      response.sendRedirect("list");
+      
     }
     out.println("</body></html>");
   }
@@ -80,7 +85,8 @@ public class PhotoBoardAddServlet extends HttpServlet {
       throws ServletException, IOException {
     
     LessonService lessonService = 
-        InitServlet.iocContainer.getBean(LessonService.class);
+        ((ApplicationContext) this.getServletContext()
+            .getAttribute("iocContainer")).getBean(LessonService.class);
     
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();

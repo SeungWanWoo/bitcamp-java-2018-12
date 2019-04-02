@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import com.eomcs.lms.InitServlet;
+import org.springframework.context.ApplicationContext;
 import com.eomcs.lms.domain.PhotoBoard;
 import com.eomcs.lms.domain.PhotoFile;
 import com.eomcs.lms.service.PhotoBoardService;
@@ -31,7 +31,8 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    PhotoBoardService photoBoardService = InitServlet.iocContainer.getBean(PhotoBoardService.class);
+    PhotoBoardService photoBoardService = ((ApplicationContext) this.getServletContext()
+        .getAttribute("iocContainer")).getBean(PhotoBoardService.class);
     response.setContentType("text/html;charset=UTF-8");
     
     PhotoBoard board = new PhotoBoard();
@@ -39,6 +40,7 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
 
     board.setNo(Integer.parseInt(request.getParameter("no")));
     board.setTitle(request.getParameter("title"));
+    board.setLessonNo(Integer.parseInt(request.getParameter("lessonNo")));
 
     ArrayList<PhotoFile> files = new ArrayList<>();
     Collection<Part> photos = request.getParts();
@@ -53,22 +55,24 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
       PhotoFile file = new PhotoFile();
       file.setFilePath(filename);
       file.setPhotoBoardNo(board.getNo());
+      
       files.add(file);
     }
     board.setPhotoFiles(files);
-
+    response.setHeader("Refresh", "1;url=list");
 
     out.println("<html><head>"
         + "<title>사진 내용 변경</title>"
-        + "<meta http-equiv='Refresh' content='1;url=list'>"
         + "</head>");
     out.println("<body><h1>사진 내용 변경</h1>");
     
     if (files.size() == 0) {
       out.println("<p>최소 한개 사진 파일을 등록해야합니다.</p>");
+      
     } else { 
       photoBoardService.update(board);
-      out.println("<p>변경하였습니다.</p>");
+      response.sendRedirect("list");
+      return;
     }
     out.println("</body></html>");
   }
