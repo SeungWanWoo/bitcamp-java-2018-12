@@ -26,6 +26,10 @@ public class PhotoBoardSearchServlet extends HttpServlet {
     out.println("<html>");
     out.println("<head><title>사진 목록 검색</title></head>");
     out.println("<body>");
+    
+    // 헤더를 출력한다.
+    request.getRequestDispatcher("/header").include(request, response);
+    
     out.println("<h1>사진 목록 검색</h1>");
 
     int lessonNo = 0;

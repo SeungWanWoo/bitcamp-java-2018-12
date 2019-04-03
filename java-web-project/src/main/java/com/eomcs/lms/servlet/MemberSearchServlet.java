@@ -27,6 +27,10 @@ public class MemberSearchServlet extends HttpServlet {
     out.println("<html>");
     out.println("<head><title>회원 검색</title></head>");
     out.println("<body>");
+    
+    // 헤더를 출력한다.
+    request.getRequestDispatcher("/header").include(request, response);
+    
     out.println("<h1>회원 검색</h1>");
     out.println("<table border='1'>");
     out.println("<tr> <th>번호</th> <th>이름</th> <th>이메일</th> <th>전화번호</th> "

@@ -1,5 +1,6 @@
 package com.eomcs.lms.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.eomcs.lms.dao.MemberDao;
@@ -59,5 +60,13 @@ public class MemberServiceImpl implements MemberService {
     public int delete(int no) {
       // 이 메서드도 그냥 DAO에 명령을 전달하는 역할을 한다.
       return memberDao.delete(no);
+    }
+
+    @Override
+    public Member get(String email, String password) {
+      HashMap<String,Object> paramMap = new HashMap<>();
+      paramMap.put("email", email);
+      paramMap.put("password", password);
+      return memberDao.findByEmailPassword(paramMap);
     }
 }

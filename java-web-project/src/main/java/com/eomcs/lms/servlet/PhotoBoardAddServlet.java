@@ -94,6 +94,10 @@ public class PhotoBoardAddServlet extends HttpServlet {
     out.println("<html>");
     out.println("<head><title>사진 추가</title></head>");
     out.println("<body>");
+    
+    // 헤더를 출력한다.
+    request.getRequestDispatcher("/header").include(request, response);
+    
     out.println("<h1>사진 추가</h1>");
     out.println("<form action='add' method='post' enctype='multipart/form-data'>");
     out.println("<table border='1'>");

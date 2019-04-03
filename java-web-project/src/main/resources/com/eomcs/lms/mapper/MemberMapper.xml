@@ -50,9 +50,22 @@
       member_id = #{value}
   </select>
   
+  <select id="findByEmailPassword" resultMap="memberMap" parameterType="map">
+    select
+      <include refid="default-columns"/>,
+      photo
+    from lms_member
+    where
+      email = #{email} 
+      and pwd = password(#{password}) 
+  </select>
+  
   <insert id="insert" parameterType="member">
-    insert into lms_member (name, email, pwd, tel, photo)
-    values (#{name}, #{email}, #{password}, #{tel}, #{photo})
+    insert into lms_member (
+      name, email, pwd, tel, photo
+    )
+    values 
+      (#{name}, #{email}, password(#{password}), #{tel}, #{photo})
   </insert>
   
   
@@ -61,7 +74,7 @@
     <set>
       <if test="name != null">name = #{name},</if>
       <if test="email != null">email = #{email},</if>
-      <if test="password != null">pwd = #{password},</if>
+      <if test="password != null">pwd = password(#{password}),</if>
       <if test="registeredDate != null">cdt = now(),</if>
       <if test="tel != null">tel = #{tel},</if>
       <if test="photo != null">photo = #{photo}</if>

@@ -27,8 +27,13 @@ public class BoardListServlet extends HttpServlet {
     List<Board> boards = boardService.list();
 
     out.println("<html><head><title>게시물 목록</title></head>");
-    out.println("<body><h1>게시물 목록</h1>");
-    out.println("<p><a href='add'>새글</a></p>");
+    out.println("<body>");
+    
+    // 헤더를 출력한다.
+    request.getRequestDispatcher("/header").include(request, response);
+    
+    out.println("<h1>게시물 목록</h1>");
+    out.println("<p><a href='add'>새 글</a></p>");
     out.println("<table border='1'>");
     out.println("<tr> <th>번호</th> <th>제목</th> <th>등록일</th> <th>조회수</th> </tr>");
 

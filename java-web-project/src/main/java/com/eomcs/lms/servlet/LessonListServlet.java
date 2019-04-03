@@ -26,7 +26,12 @@ public class LessonListServlet extends HttpServlet {
     List<Lesson> lessons = lessonService.list();
 
     out.println("<html><head><title>수업 목록</title></head>");
-    out.println("<body><h1>수업 목록</h1>");
+    out.println("<body>");
+    
+    // 헤더를 출력한다.
+    request.getRequestDispatcher("/header").include(request, response);
+    
+    out.println("<h1>수업 목록</h1>");
     out.println("<p><a href='add'>신규 수업</a></p>");
     out.println("<table border='1'>");
     out.println("<tr> <th>번호</th> <th>수업 제목</th> <th>시작일 ~ 종료일</th> "

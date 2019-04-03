@@ -28,7 +28,12 @@ public class MemberDetailServlet extends HttpServlet {
     PrintWriter out = response.getWriter();
 
     out.println("<html><head><title>회원 조회</title></head>");
-    out.println("<body><h1>회원 조회</h1>");
+    out.println("<body>");
+    
+    // 헤더를 출력한다.
+    request.getRequestDispatcher("/header").include(request, response);
+    
+    out.println("<h1>회원 조회</h1>");
     if (member == null) {
       out.println("<p>해당 회원 정보가 존재하지 않습니다.</p>");
       return;
