@@ -1,7 +1,6 @@
 
 package com.eomcs.lms.servlet;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -46,14 +45,8 @@ public class MemberUpdateServlet extends HttpServlet {
       return;
     }
     
-    response.setHeader("Refresh", "2;url=list");
-    
-    PrintWriter out = response.getWriter();
-    out.println("<html><head>"
-        + "<title>회원 변경</title>"
-        + "</head>");
-    out.println("<body><h1>회원 변경</h1>");
-    out.println("<p>해당 게시물이 존재하지 않습니다.</p>");
-    out.println("</body></html>");
+    request.setAttribute("error.title", "회원 변경 오류");
+    request.setAttribute("error.content", "해당 번호의 수업이 없습니다.");
+    request.getRequestDispatcher("/error.jsp").include(request, response);
   }
 }
