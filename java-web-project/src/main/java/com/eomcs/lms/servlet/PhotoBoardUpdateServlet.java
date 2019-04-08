@@ -1,6 +1,5 @@
 package com.eomcs.lms.servlet;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -36,8 +35,6 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
     response.setContentType("text/html;charset=UTF-8");
     
     PhotoBoard board = new PhotoBoard();
-    PrintWriter out = response.getWriter();
-
     board.setNo(Integer.parseInt(request.getParameter("no")));
     board.setTitle(request.getParameter("title"));
     board.setLessonNo(Integer.parseInt(request.getParameter("lessonNo")));
@@ -59,21 +56,16 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
       files.add(file);
     }
     board.setPhotoFiles(files);
-    response.setHeader("Refresh", "1;url=list");
 
-    out.println("<html><head>"
-        + "<title>사진 내용 변경</title>"
-        + "</head>");
-    out.println("<body><h1>사진 내용 변경</h1>");
-    
     if (files.size() == 0) {
-      out.println("<p>최소 한개 사진 파일을 등록해야합니다.</p>");
+      request.setAttribute("error.title", "사진 변경 오류");
+      request.setAttribute("error.content", "최소 한개 사진 파일을 등록해야 합니다.");
+      request.getRequestDispatcher("/error.jsp").include(request, response);
       
     } else { 
       photoBoardService.update(board);
       response.sendRedirect("list");
       return;
     }
-    out.println("</body></html>");
   }
 }
