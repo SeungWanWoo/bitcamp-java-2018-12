@@ -6,15 +6,16 @@
           contentType="text/html; charset=UTF-8"
           pageEncoding="UTF-8"
           trimDirectiveWhitespaces="true"%>
-<%
-  PhotoBoard board = (PhotoBoard) request.getAttribute("photoboard");
-%>
+
+<jsp:useBean scope="request" id="photoboard" type="com.eomcs.lms.domain.PhotoBoard"/>
+<jsp:useBean scope="request" id="lessons" type="java.util.List<Lesson>"/>
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>사진 조회</title>
 </head>
-<%if (board == null) {%>
+<%if (photoboard == null) {%>
   <p>해당 사진 정보가 존재하지 않습니다.</p>
       <%return;
     } else {%>
@@ -25,26 +26,25 @@
     <table border='1'>
       <tr>
         <th>번호</th>
-        <td><input type='text' name='no' value='<%=board.getNo()%>' readonly></td>
+        <td><input type='text' name='no' value='<%=photoboard.getNo()%>' readonly></td>
       </tr>
 
       <tr>
         <th>내용</th>
-        <td><textarea name='title' rows='3' cols='50'><%=board.getTitle()%></textarea></td>
+        <td><textarea name='title' rows='3' cols='50'><%=photoboard.getTitle()%></textarea></td>
       </tr>
       <tr>
         <th>등록일</th>
-        <td><%=board.getCreatedDate()%></td>
+        <td><%=photoboard.getCreatedDate()%></td>
       </tr>
       <tr>
         <th>조회수</th>
-        <td><%=board.getViewCount()%></td>
+        <td><%=photoboard.getViewCount()%></td>
       </tr>
       <tr>
         <th>수업</th>
         <td><select name='lessonNo'>
-            <%List<Lesson> lessons = (List<Lesson>) request.getAttribute("lessons");
-            for (Lesson lesson : lessons) {%>
+            <% for (Lesson lesson : lessons) {%>
             <option value='<%=lesson.getNo()%>'>
             <%=lesson.getTitle()%>(<%=lesson.getStartDate() %> ~ <%=lesson.getEndDate()%>)
             </option>
@@ -60,11 +60,11 @@
       <td><input type='file' name='photo'></td>
       </tr>
       <%}%>
-      <%if (board == null) {
+      <%if (photoboard == null) {
     } else {%>
       <tr>
         <th>사진</th>
-        <% List<PhotoFile> files = board.getPhotoFiles(); %>
+        <jsp:useBean scope="request" id="files" type="java.util.List<PhotoFile>"/>
         <%for (PhotoFile file : files) {%>
         <td><img src='../upload/photoboard/<%=file.getFilePath()%>'
           style='height: 80px'><br></td>
@@ -72,7 +72,7 @@
       </tr>
     </table>
     <p>
-      <a href='list'>목록</a> <a href='delete?no=<%=board.getNo()%>'>삭제</a>
+      <a href='list'>목록</a> <a href='delete?no=<%=photoboard.getNo()%>'>삭제</a>
       <button type='submit'>변경</button>
     </p>
     <%} %>

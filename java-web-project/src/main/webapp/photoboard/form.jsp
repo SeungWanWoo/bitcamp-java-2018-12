@@ -2,6 +2,7 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
   trimDirectiveWhitespaces="true"%>
+<jsp:useBean scope="request" id="lessons" type="java.util.List<Lesson>"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,9 +17,6 @@
         <th>수업</th>
         <td><select name='lessonNo'>
             <option value='0'>수업을 선택하세요</option>
-            <%
-              List<Lesson> lessons = (List<Lesson>) request.getAttribute("lessons");
-            %>
             <%
               for (Lesson lesson : lessons) {
             %>

@@ -4,17 +4,15 @@
           contentType="text/html; charset=UTF-8"
           pageEncoding="UTF-8"
           trimDirectiveWhitespaces="true"%>
-<%
-List<Member> members = (List<Member>) request.getAttribute("members");
-%>
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>회원 목록(JSP)</title>
+  <title>회원 목록(JSP2)</title>
 </head>
 <body>
   <jsp:include page="/header.jsp" />
-  <h1>회원 목록(JSP)</h1>
+  <h1>회원 목록(JSP2)</h1>
   <p>
     <a href='add'>회원 가입</a>
   </p>
@@ -26,6 +24,7 @@ List<Member> members = (List<Member>) request.getAttribute("members");
       <th>전화번호</th>
       <th>등록일</th>
     </tr>
+    <jsp:useBean scope="request" id="members" type="java.util.List<Member>"/>
     <%for (Member member : members) {%>
     <tr>
       <td><%=member.getNo()%></td>

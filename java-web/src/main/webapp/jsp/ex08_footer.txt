@@ -1,0 +1,2 @@
+<%@ page pageEncoding="UTF-8"%> <%-- <= jsp가 인크루딩할때 버려진다. --%>
+<footer>꼬리말</footer>

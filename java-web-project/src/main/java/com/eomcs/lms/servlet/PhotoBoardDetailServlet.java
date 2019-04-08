@@ -35,6 +35,7 @@ public class PhotoBoardDetailServlet extends HttpServlet {
     
     request.setAttribute("photoboard", board);
     request.setAttribute("lessons", lessons);
+    request.setAttribute("files", board.getPhotoFiles());
     request.getRequestDispatcher("/photoboard/detail.jsp").include(request, response);
   }
 }
