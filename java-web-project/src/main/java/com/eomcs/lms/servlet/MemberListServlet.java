@@ -20,10 +20,9 @@ public class MemberListServlet extends HttpServlet {
     
     MemberService memberService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(MemberService.class);
-    response.setContentType("text/html;charset=UTF-8");
     List<Member> members = memberService.list(null);
     
     request.setAttribute("members", members);
-    request.getRequestDispatcher("/member/list.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/member/list.jsp");
   }
 }

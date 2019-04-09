@@ -26,8 +26,6 @@ public class PhotoBoardDetailServlet extends HttpServlet {
     LessonService lessonService = iocContainer.getBean(LessonService.class);
     PhotoBoardService photoBoardService = iocContainer.getBean(PhotoBoardService.class);
 
-    response.setContentType("text/html;charset=UTF-8");
-
     int no = Integer.parseInt(request.getParameter("no"));
 
     PhotoBoard board = photoBoardService.get(no);
@@ -36,6 +34,6 @@ public class PhotoBoardDetailServlet extends HttpServlet {
     request.setAttribute("photoboard", board);
     request.setAttribute("lessons", lessons);
     request.setAttribute("files", board.getPhotoFiles());
-    request.getRequestDispatcher("/photoboard/detail.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/photoboard/detail.jsp");
   }
 }

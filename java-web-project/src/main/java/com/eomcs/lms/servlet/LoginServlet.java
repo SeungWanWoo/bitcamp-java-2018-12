@@ -1,5 +1,6 @@
 package com.eomcs.lms.servlet;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -29,21 +30,7 @@ public class LoginServlet extends HttpServlet {
     HttpSession session = request.getSession();
     session.setAttribute(REFERER_URL, request.getHeader("Referer"));
 
-    // 이메일 쿠키 값을 꺼내온다.
-    Cookie[] cookies = request.getCookies();
-    String email = "";
-    if (cookies != null) {
-      for (Cookie c : cookies) {
-        if(c.getName().equals("email")) {
-          email = c.getValue();
-          break;
-        }
-      }
-    }
-    
-    response.setContentType("text/html;charset=UTF-8");
-    request.setAttribute("email", email);
-    request.getRequestDispatcher("/auth/form.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/auth/form.jsp");
   }
 
   @Override
@@ -61,8 +48,10 @@ public class LoginServlet extends HttpServlet {
       cookie.setMaxAge(0); // 기존의 쿠키를 제거한다.
 
     }
-    response.addCookie(cookie);
-
+    ArrayList<Cookie> cookies = new ArrayList<>();
+    cookies.add(cookie);
+    request.setAttribute("cookies", cookies);
+    
     // 도대체 어느 페이지에서 이리로 보냈나?
     System.out.println(request.getHeader("Referer"));
 
@@ -70,34 +59,29 @@ public class LoginServlet extends HttpServlet {
         ((ApplicationContext) this.getServletContext()
             .getAttribute("iocContainer")).getBean(MemberService.class);
 
-    request.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html;charset=UTF-8");
-
     Member member = memberService.get(
         request.getParameter("email"),
         request.getParameter("password"));
 
-    
     if (member == null) {
-      response.setContentType("text/html;charset=UTF-8");
       request.setAttribute("email", request.getParameter("email"));
-      request.getRequestDispatcher("/auth/fail.jsp").include(request, response);
-      return;
-    }
-
-    HttpSession session = request.getSession();
-
-    // 세션에 로그인 사용자의 정보를 보관한다.
-    session.setAttribute("loginUser", member);
-
-    // 로그인 성공하면 메인 화면으로 보낸다.
-    String refererUrl = (String) session.getAttribute(REFERER_URL);
-    if (refererUrl == null) {
-      response.sendRedirect(getServletContext().getContextPath());
-
+      request.setAttribute("viewUrl", "/auth/fail.jsp");
     } else {
-      response.sendRedirect(refererUrl);
 
+      HttpSession session = request.getSession();
+
+      // 세션에 로그인 사용자의 정보를 보관한다.
+      session.setAttribute("loginUser", member);
+
+      // 로그인 성공하면 메인 화면으로 보낸다.
+      String refererUrl = (String) session.getAttribute(REFERER_URL);
+      if (refererUrl == null) {
+        request.setAttribute("viewUrl", getServletContext().getContextPath());
+
+      } else {
+        request.setAttribute("viewUrl", "redirect:" + refererUrl);
+
+      }
     }
   }
 }

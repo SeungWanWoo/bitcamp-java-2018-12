@@ -1,18 +1,16 @@
-<%@ page import="com.eomcs.lms.domain.Member"%>
-<%@ page import="java.util.List"%>
 <%@ page language="java" 
           contentType="text/html; charset=UTF-8"
           pageEncoding="UTF-8"
           trimDirectiveWhitespaces="true"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>회원 목록(JSP2)</title>
+  <title>회원 목록(JSP4)</title>
 </head>
 <body>
   <jsp:include page="/header.jsp" />
-  <h1>회원 목록(JSP2)</h1>
+  <h1>회원 목록(JSP4)</h1>
   <p>
     <a href='add'>회원 가입</a>
   </p>
@@ -24,21 +22,20 @@
       <th>전화번호</th>
       <th>등록일</th>
     </tr>
-    <jsp:useBean scope="request" id="members" type="java.util.List<Member>"/>
-    <%for (Member member : members) {%>
+    <c:forEach items="${members}" var="member">
     <tr>
-      <td><%=member.getNo()%></td>
-      <td><a href='detail?no=<%=member.getNo()%>'><%=member.getName()%></a></td>
-      <td><%=member.getEmail()%></td>
-      <td><%=member.getTel()%></td>
-      <td><%=member.getRegisteredDate()%></td>
+      <td>${member.no}</td>
+      <td><a href='detail?no=${member.no}'>${member.name}</a></td>
+      <td>${member.email}</td>
+      <td>${member.tel}</td>
+      <td>${member.registeredDate}</td>
     </tr>
-    <%}%>
+    </c:forEach>
   </table>
   <form action='search'>
     <input name='name'>
     <button type='submit'>검색</button>
   </form>
-  <a href='../index.html'>처음화면</a>
+  <a href='../../index.html'>처음화면</a>
 </body>
 </html>

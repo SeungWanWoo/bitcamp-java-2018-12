@@ -15,7 +15,6 @@ import com.eomcs.lms.domain.PhotoBoard;
 import com.eomcs.lms.domain.PhotoFile;
 import com.eomcs.lms.service.PhotoBoardService;
 
-@MultipartConfig(maxFileSize = 1024 * 1024 * 5)
 @SuppressWarnings("serial")
 @WebServlet("/photoboard/update")
 public class PhotoBoardUpdateServlet extends HttpServlet {
@@ -32,7 +31,6 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
       throws ServletException, IOException {
     PhotoBoardService photoBoardService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(PhotoBoardService.class);
-    response.setContentType("text/html;charset=UTF-8");
     
     PhotoBoard board = new PhotoBoard();
     board.setNo(Integer.parseInt(request.getParameter("no")));
@@ -60,12 +58,10 @@ public class PhotoBoardUpdateServlet extends HttpServlet {
     if (files.size() == 0) {
       request.setAttribute("error.title", "사진 변경 오류");
       request.setAttribute("error.content", "최소 한개 사진 파일을 등록해야 합니다.");
-      request.getRequestDispatcher("/error.jsp").include(request, response);
       
     } else { 
       photoBoardService.update(board);
-      response.sendRedirect("list");
-      return;
+      request.setAttribute("viewUrl", "redirect:list");
     }
   }
 }

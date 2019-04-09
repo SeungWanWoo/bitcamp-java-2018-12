@@ -20,16 +20,13 @@ public class BoardDetailServlet extends HttpServlet {
     BoardService boardService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(BoardService.class);
     
-    response.setContentType("text/html;charset=UTF-8");
-    
     int no = Integer.parseInt(request.getParameter("no"));
 
     Board board = boardService.get(no);
     
     // JSP가 사용할 수 있도록 ServletRequest 보관소에 저장해둔다.
     request.setAttribute("board", board);
-    
-    // JSP의 실행을 포함시킨다.
-    request.getRequestDispatcher("/board/detail.jsp").include(request, response);
+
+    request.setAttribute("viewUrl", "/board/detail.jsp");
   }
 }

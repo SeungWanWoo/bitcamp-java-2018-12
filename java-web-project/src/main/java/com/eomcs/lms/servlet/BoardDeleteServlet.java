@@ -21,14 +21,13 @@ public class BoardDeleteServlet extends HttpServlet {
         .getAttribute("iocContainer")).getBean(BoardService.class);
     response.setContentType("text/html;charset=UTF-8");
     
-    if (boardService.delete(no) == 1) {
-      response.sendRedirect("list");
-      return;
-    };
-    
-    request.setAttribute("error.title", "게시물 삭제");
-    request.setAttribute("error.content", "해당 번호의 게시물이 없습니다.");
-    
-    request.getRequestDispatcher("/error.jsp").forward(request, response);
+    if (boardService.delete(no) > 0) {
+      request.setAttribute("viewUrl", "redirect:list");
+      
+    } else {
+      request.setAttribute("error.title", "게시물 삭제");
+      request.setAttribute("error.content", "해당 번호의 게시물이 없습니다.");
+      
+    }
   }
 }

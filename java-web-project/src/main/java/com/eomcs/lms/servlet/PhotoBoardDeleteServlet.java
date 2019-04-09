@@ -17,17 +17,13 @@ public class PhotoBoardDeleteServlet extends HttpServlet {
       throws ServletException, IOException {
     PhotoBoardService photoBoardService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(PhotoBoardService.class);
-    response.setContentType("text/html;charset=UTF-8");
-    
     int no = Integer.parseInt(request.getParameter("no"));
 
     if (photoBoardService.delete(no) == 1) {
-      response.sendRedirect("list");
-      return;
+      request.setAttribute("viewUrl", "redirect:list");
+    } else {
+      request.setAttribute("error.title", "사진 변경 오류");
+      request.setAttribute("error.content", "해당 번호의 사진이 존재하지 않습니다.");
     }
-    
-    request.setAttribute("error.title", "사진 변경 오류");
-    request.setAttribute("error.content", "해당 번호의 사진이 존재하지 않습니다.");
-    request.getRequestDispatcher("/error.jsp").include(request, response);
   }
 }

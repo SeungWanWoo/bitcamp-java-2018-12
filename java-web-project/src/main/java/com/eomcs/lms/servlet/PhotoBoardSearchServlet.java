@@ -19,7 +19,6 @@ public class PhotoBoardSearchServlet extends HttpServlet {
       throws ServletException, IOException {
     PhotoBoardService photoBoardService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(PhotoBoardService.class);
-    response.setContentType("text/html;charset=UTF-8");
 
     int lessonNo = 0;
     try {
@@ -37,6 +36,6 @@ public class PhotoBoardSearchServlet extends HttpServlet {
 
     List<PhotoBoard> photoBoards = photoBoardService.list(lessonNo, searchWord);
     request.setAttribute("photoboard", photoBoards);
-    request.getRequestDispatcher("/photoboard/search.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/photoboard/search.jsp");
   }
 }

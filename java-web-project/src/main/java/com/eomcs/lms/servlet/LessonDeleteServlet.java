@@ -24,12 +24,10 @@ public class LessonDeleteServlet extends HttpServlet {
 
     
     if (lessonService.delete(no) == 1) {
-      response.sendRedirect("list");
-      return;
-    };
-    
-    request.setAttribute("error.title", "수업 삭제 오류");
-    request.setAttribute("error.content", "해당 번호의 수업이 없습니다.");
-    request.getRequestDispatcher("/error.jsp").include(request, response);
+      request.setAttribute("viewUrl", "redirect:list");
+    } else {
+      request.setAttribute("error.title", "수업 삭제 오류");
+      request.setAttribute("error.content", "해당 번호의 수업이 없습니다.");
+    }
   }
 }

@@ -24,6 +24,6 @@ public class LessonListServlet extends HttpServlet {
     List<Lesson> lessons = lessonService.list();
 
     request.setAttribute("lessons", lessons);
-    request.getRequestDispatcher("/lesson/list.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/lesson/list.jsp");
   }
 }

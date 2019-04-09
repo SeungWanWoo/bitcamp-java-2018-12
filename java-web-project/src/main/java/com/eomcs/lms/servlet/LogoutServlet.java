@@ -18,7 +18,7 @@ public class LogoutServlet extends HttpServlet {
     request.getSession().invalidate();
     
     // 메인 화면으로 보낸다.
-    response.sendRedirect(getServletContext().getContextPath());
+    request.setAttribute("viewUrl", "redirect:" + getServletContext().getContextPath());
   }
   
 }

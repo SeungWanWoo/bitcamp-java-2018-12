@@ -20,11 +20,10 @@ public class PhotoBoardListServlet extends HttpServlet {
     
     PhotoBoardService photoBoardService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(PhotoBoardService.class);
-    response.setContentType("text/html;charset=UTF-8");
     
     List<PhotoBoard> photoBoards = photoBoardService.list(0, null);
     
     request.setAttribute("photoboards", photoBoards);
-    request.getRequestDispatcher("/photoboard/list.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/photoboard/list.jsp");
   }
 }

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import com.eomcs.lms.domain.PhotoFile;
 import com.eomcs.lms.service.LessonService;
 import com.eomcs.lms.service.PhotoBoardService;
 
-@MultipartConfig(maxFileSize = 1024 * 1024 * 5)
 @SuppressWarnings("serial")
 @WebServlet("/photoboard/add")
 public class PhotoBoardAddServlet extends HttpServlet {
@@ -37,7 +35,6 @@ public class PhotoBoardAddServlet extends HttpServlet {
     PhotoBoardService photoBoardService = 
         ((ApplicationContext) this.getServletContext()
             .getAttribute("iocContainer")).getBean(PhotoBoardService.class);
-    response.setContentType("text/html;charset=UTF-8");
 
     PhotoBoard board = new PhotoBoard();
     board.setTitle(request.getParameter("title"));
@@ -61,16 +58,14 @@ public class PhotoBoardAddServlet extends HttpServlet {
     if (board.getLessonNo() == 0) {
       request.setAttribute("error.title", "사진 변경 오류");
       request.setAttribute("error.content", "사진 또는 파일을 등록할 수업을 선택하세요.");
-      request.getRequestDispatcher("/error.jsp").include(request, response);
       
     } else if (files.size() == 0) {
       request.setAttribute("error.title", "사진 변경 오류");
       request.setAttribute("error.content",  "최소 한개 사진 파일을 등록해야 합니다.");
-      request.getRequestDispatcher("/error.jsp").include(request, response);
       
     } else { 
       photoBoardService.add(board);
-      response.sendRedirect("list");
+      request.setAttribute("viewUrl", "redirect:list");
     }
   }
 
@@ -82,10 +77,9 @@ public class PhotoBoardAddServlet extends HttpServlet {
         ((ApplicationContext) this.getServletContext()
             .getAttribute("iocContainer")).getBean(LessonService.class);
     
-    response.setContentType("text/html;charset=UTF-8");
     List<Lesson> lessons = lessonService.list();
     request.setAttribute("lessons", lessons);
-    request.getRequestDispatcher("/photoboard/form.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/photoboard/form.jsp");
     
   }
 }

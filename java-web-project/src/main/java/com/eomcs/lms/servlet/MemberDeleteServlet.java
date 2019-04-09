@@ -18,16 +18,13 @@ public class MemberDeleteServlet extends HttpServlet {
       throws ServletException, IOException {
     MemberService memberService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(MemberService.class);
-    response.setContentType("text/html;charset=UTF-8");
     int no = Integer.parseInt(request.getParameter("no"));
 
     if (memberService.delete(no) == 1) {
-      response.sendRedirect("list");
-      return;
+      request.setAttribute("viewUrl", "redirect:list");
+    } else {
+      request.setAttribute("error.title", "회원 삭제 오류");
+      request.setAttribute("error.content", "해당 번호의 수업이 없습니다.");
     }
-    
-    request.setAttribute("error.title", "회원 삭제 오류");
-    request.setAttribute("error.content", "해당 번호의 수업이 없습니다.");
-    request.getRequestDispatcher("/error.jsp").include(request, response);
   }
 }

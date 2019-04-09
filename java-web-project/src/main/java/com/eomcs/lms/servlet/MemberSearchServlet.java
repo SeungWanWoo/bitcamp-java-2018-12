@@ -19,11 +19,10 @@ public class MemberSearchServlet extends HttpServlet {
       throws ServletException, IOException {
     MemberService memberService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(MemberService.class);
-    response.setContentType("text/html;charset=UTF-8");
     
     String keyword = request.getParameter("name");
     List<Member> members = memberService.list(keyword);
     request.setAttribute("members", members);
-    request.getRequestDispatcher("/member/search.jsp").include(request, response);
+    request.setAttribute("viewUrl", "/member/search.jsp");
   }
 }

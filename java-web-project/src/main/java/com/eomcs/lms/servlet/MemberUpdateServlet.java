@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import com.eomcs.lms.domain.Member;
 import com.eomcs.lms.service.MemberService;
 
-@MultipartConfig(maxFileSize = 1024 * 1024 * 5)
 @SuppressWarnings("serial")
 @WebServlet("/member/update")
 public class MemberUpdateServlet extends HttpServlet {
@@ -23,7 +22,6 @@ public class MemberUpdateServlet extends HttpServlet {
       throws ServletException, IOException {
     MemberService memberService = ((ApplicationContext) this.getServletContext()
         .getAttribute("iocContainer")).getBean(MemberService.class);
-    response.setContentType("text/html;charset=UTF-8");
     
     Member member = new Member();
     member.setNo(Integer.parseInt(request.getParameter("no")));
@@ -41,12 +39,10 @@ public class MemberUpdateServlet extends HttpServlet {
     }
     
     if (memberService.update(member) == 1) {
-      response.sendRedirect("list");
-      return;
+      request.setAttribute("viewUrl", "redirect:list");
+    } else {
+      request.setAttribute("error.title", "회원 변경 오류");
+      request.setAttribute("error.content", "해당 번호의 수업이 없습니다.");
     }
-    
-    request.setAttribute("error.title", "회원 변경 오류");
-    request.setAttribute("error.content", "해당 번호의 수업이 없습니다.");
-    request.getRequestDispatcher("/error.jsp").include(request, response);
   }
 }
