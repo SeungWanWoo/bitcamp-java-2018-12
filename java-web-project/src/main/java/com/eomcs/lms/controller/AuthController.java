@@ -1,13 +1,13 @@
 package com.eomcs.lms.controller;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import com.eomcs.lms.context.RequestMapping;
-import com.eomcs.lms.context.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.eomcs.lms.domain.Member;
 import com.eomcs.lms.service.MemberService;
 
@@ -19,18 +19,20 @@ public class AuthController {
   @Autowired ServletContext servletContext;
   
   @RequestMapping("/auth/form")
-  public String form(HttpServletRequest request, HttpSession session) {
+  public String form(
+      @RequestHeader("Referer") String refererUrl,
+      HttpSession session) {
     
-    session.setAttribute(REFERER_URL, request.getHeader("Referer"));
-
+    session.setAttribute(REFERER_URL, refererUrl);
+    System.out.println("===========================> " + refererUrl);
     return "/auth/form.jsp";
   }
   
   @RequestMapping("/auth/login")
   public String login(
       @RequestParam("email") String email,
-      @RequestParam("saveEmail") String saveEmail,
       @RequestParam("password") String password,
+      @RequestParam("saveEmail") String saveEmail,
       HttpSession session,
       HttpServletResponse response) throws Exception {
 
@@ -60,7 +62,7 @@ public class AuthController {
 
     String refererUrl = (String) session.getAttribute(REFERER_URL);
     if (refererUrl == null) {
-      return "redirect:" + servletContext.getContextPath();
+      return "redirect:../../";
 
     } else {
       return "redirect:" + refererUrl;
@@ -73,6 +75,6 @@ public class AuthController {
     // 세션을 무효화한다.
     session.invalidate();
     
-    return "redirect:" + servletContext.getContextPath();
+    return "redirect:../../";
   }
 }

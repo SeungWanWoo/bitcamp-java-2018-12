@@ -32,10 +32,14 @@ dependencies {
     compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.0'
 
     // Spring IoC Containner 추가
-    compile group: 'org.springframework', name: 'spring-context', version: '5.1.5.RELEASE'
+    // => Spring Web MVC 프레임워크 라이브러리를 추가하면 의존 라이브러리로 자동 추가된다.
+    // compile group: 'org.springframework', name: 'spring-context', version: '5.1.6.RELEASE'
 
+    // Spring Web MVC 프레임워크 라이브러리
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '5.1.6.RELEASE'
+     
     // Spring의 jdbc 트랜잭션 기능 추가
-    compile group: 'org.springframework', name: 'spring-jdbc', version: '5.1.5.RELEASE'
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '5.1.6.RELEASE'
 
     // DataSource 구현체 추가
     compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.6.0'
@@ -54,5 +58,6 @@ dependencies {
     
     // JSTL 명세를 구현한 라이브러리
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+    
     
 }

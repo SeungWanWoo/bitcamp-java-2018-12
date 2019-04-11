@@ -3,8 +3,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import com.eomcs.lms.context.RequestMapping;
-import com.eomcs.lms.context.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.eomcs.lms.domain.Board;
 import com.eomcs.lms.service.BoardService;
 
@@ -14,9 +14,7 @@ public class BoardController {
   @Autowired BoardService boardService;
 
   @RequestMapping("/board/add")
-  public String add(@RequestParam("contents") String contents) throws Exception {
-    Board board = new Board();
-    board.setContents(contents);
+  public String add(Board board) throws Exception {
     boardService.add(board);
 
     return "redirect:list";
@@ -59,13 +57,7 @@ public class BoardController {
   }
   
   @RequestMapping("/board/update")
-  public String update(@RequestParam("no") int no,
-      @RequestParam("contents") String contents
-      ) throws Exception {
-
-    Board board = new Board();
-    board.setNo(no);
-    board.setContents(contents);
+  public String update(Board board) throws Exception {
 
     if (boardService.update(board) == 0) 
       throw new Exception("해당 번호의 게시물이 없습니다.");

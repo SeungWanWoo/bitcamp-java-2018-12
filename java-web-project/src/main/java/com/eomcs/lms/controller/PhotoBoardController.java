@@ -1,6 +1,5 @@
 package com.eomcs.lms.controller;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -9,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import com.eomcs.lms.context.RequestMapping;
-import com.eomcs.lms.context.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.domain.PhotoBoard;
 import com.eomcs.lms.domain.PhotoFile;
@@ -28,18 +27,13 @@ public class PhotoBoardController {
   @RequestMapping("/photoboard/add")
   public String add(
       HttpServletRequest request,
-      @RequestParam("title") String title,
-      @RequestParam("lessonNo") int lessonNo,
-      @RequestParam("photo") Part[] photos) throws Exception {
+     PhotoBoard board,
+      @RequestParam("photoFile") Part[] photoFiles) throws Exception {
     this.uploadDir = servletContext.getRealPath("/upload/photoboard");
 
-    PhotoBoard board = new PhotoBoard();
-    board.setTitle(title);
-    board.setLessonNo(lessonNo);
-
     ArrayList<PhotoFile> files = new ArrayList<>();
-    for (Part photo : photos) {
-      if (photo.getSize() == 0 || !photo.getName().equals("photo"))
+    for (Part photo : photoFiles) {
+      if (photo.getSize() == 0 || !photo.getName().equals("photoFile"))
         continue;
 
       String filename = UUID.randomUUID().toString();
@@ -107,35 +101,29 @@ public class PhotoBoardController {
   public String search(
       @RequestParam("lessonNo") int lessonNo,
       @RequestParam("searchWord") String keyword,
-      HttpServletRequest request) throws Exception {
+      Map<String,Object> map) throws Exception {
+   
     String searchWord = null;
     if (keyword.length() > 0)
       searchWord = keyword;
+    
     List<PhotoBoard> photoBoards = photoBoardService.list(lessonNo, searchWord);
-    request.setAttribute("photoboard", photoBoards);
+    map.put("photoboard", photoBoards);
     return "/photoboard/search.jsp";
   }
   
   @RequestMapping("/photoboard/update")
   public String update(
       HttpServletRequest request,
-      @RequestParam("no") int no,
-      @RequestParam("title") String title,
-      @RequestParam("lessonNo") int lessonNo
-      ) throws Exception {
+      PhotoBoard photoBoard,
+      @RequestParam("photoFile") Part[] photoFiles) throws Exception {
     this.uploadDir = 
         servletContext.getRealPath("/upload/photoboard");
     
-    PhotoBoard board = new PhotoBoard();
-    board.setNo(no);
-    board.setTitle(title);
-    board.setLessonNo(lessonNo);
-
     ArrayList<PhotoFile> files = new ArrayList<>();
-    Collection<Part> photos = request.getParts();
     
-    for (Part photo : photos) {
-      if (photo.getSize() == 0 || !photo.getName().equals("photo"))
+    for (Part photo : photoFiles) {
+      if (photo.getSize() == 0 || !photo.getName().equals("photoFile"))
         continue;
 
       String filename = UUID.randomUUID().toString();
@@ -143,16 +131,16 @@ public class PhotoBoardController {
       
       PhotoFile file = new PhotoFile();
       file.setFilePath(filename);
-      file.setPhotoBoardNo(board.getNo());
+      file.setPhotoBoardNo(photoBoard.getNo());
       
       files.add(file);
     }
-    board.setPhotoFiles(files);
+    photoBoard.setPhotoFiles(files);
 
     if (files.size() == 0) {
       throw new Exception("최소 한개 사진 파일을 등록해야 합니다.");
     } 
-    photoBoardService.update(board);
+    photoBoardService.update(photoBoard);
     return "redirect:list";
   }
 }
