@@ -12,7 +12,7 @@
   <jsp:include page="/header.jsp" />
   <h1>회원 목록(JSP4)</h1>
   <p>
-    <a href='add'>회원 가입</a>
+    <a href='form'>회원 가입</a>
   </p>
   <table border='1'>
     <tr>

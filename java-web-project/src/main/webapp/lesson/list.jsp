@@ -10,7 +10,7 @@
   <jsp:include page="/header.jsp" />
   <h1>수업 목록(JSP4)</h1>
   <p>
-    <a href='add'>신규 수업</a>
+    <a href='form'>신규 수업</a>
   </p>
   <table border='1'>
     <tr>

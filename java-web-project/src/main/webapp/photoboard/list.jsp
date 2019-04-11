@@ -10,7 +10,7 @@
   <jsp:include page="/header.jsp" />
   <h1>사진 목록4</h1>
   <p>
-    <a href='add'>사진 추가</a>
+    <a href='form'>사진 추가</a>
   </p>
   <table border='1'>
     <tr>
