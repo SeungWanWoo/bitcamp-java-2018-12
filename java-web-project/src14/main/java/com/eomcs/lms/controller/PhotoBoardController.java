@@ -102,7 +102,7 @@ public class PhotoBoardController {
       @RequestParam("lessonNo") int lessonNo,
       @RequestParam("searchWord") String keyword,
       Map<String,Object> map) throws Exception {
-    
+   
     String searchWord = null;
     if (keyword.length() > 0)
       searchWord = keyword;

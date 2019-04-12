@@ -31,7 +31,7 @@
     </c:forEach>
   </table>
   <form action='search'>
-    수업번호: <input type='text' name='lessonNo'> 검색어: <input type='text' name='searchWord'>
+    수업번호: <input type='number' name='lessonNo'> 검색어: <input type='text' name='searchWord'>
     <button type='submit'>검색</button>
   </form>
   <a href='../../index.html'>처음화면</a>
