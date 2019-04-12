@@ -15,7 +15,7 @@
   <!-- Java config 설정하기 -->
   <!-- 예1) IoC 컨테이너의 설정을 자바 클래스 파일로 지정할 수 있다. 
         => XML 대신 Java 클래스로 설정하려면 DispatcherServlet의
-           기본 IoCContainer를 교체해야한다.
+           기본 IoC Container를 교체해야한다.
         => contextClass 라는 초기화 파라미터를 통해
            ConfigurableWebApplicatonContext 인터페이스를 구현한
            IoC 컨테이너를 지정하라
@@ -40,6 +40,10 @@
     <servlet-name>app5</servlet-name>
     <url-pattern>/app5/*</url-pattern>
   </servlet-mapping>
+  
+  <!-- 예2) WebApplicationInitializer 구현체를 이용하여 DispatcherServlet 설정하기 
+        => bitcamp.WebApplicationInitializerImpl1 클래스를 참조하라!
+  -->
   
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
