@@ -109,7 +109,7 @@ Git 프로젝트는 다음 세 가지 단계로 관리된다.
 - .git/config
   - 특정 저장소에만 적용되는 설정.
   - `git config` 옵션을 지정하지 않으면 이 파일을 읽고 쓸 수 있다.
-
+  
 ```
 예1) 사용자 이름 설정하기
 $ git config --global user.name "Jinyoung Eom"
