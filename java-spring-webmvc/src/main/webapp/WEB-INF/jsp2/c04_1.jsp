@@ -4,11 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>jsp2/h1</title>
+<title>jsp2/c04_1.jsp</title>
 </head>
 <body>
-<h1>/WEB-INF/jsp2/c01_1/h1.jsp</h1>
-이름: ${name}<br>
-나이: ${age}<br>
+<h1>/WEB-INF/jsp2/c04_1.jsp</h1>
 </body>
 </html>
+<%
+System.out.println("c04_1.jsp 실행");
+%>
