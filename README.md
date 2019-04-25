@@ -536,11 +536,128 @@
 - 파일 업로드(멀티파트 데이터) 다루기 : Apache 라이브러리와 Servlet 3.0 API 이용하기
 - HTTP 프로토콜 다루기 : HttpServlet 클래스의 구조와 사용법
 - 웹 프로젝트 1단계 과제: 커맨드 클래스를 서블릿으로 전환하기
-
 ## 62일(2019-4-1)
 - 웹 프로젝트 1단계 과제: 커맨드 클래스를 서블릿으로 전환하기(계속)
     - 파일 업로드 적용
     - 필터를 이용하여 입력 데이터의 한글 처리
     - 수업 사진 게시글을 등록/변경할 때 수업 목록에서 수업을 선택
-- 서블릿 프로그래밍 : loadOnStartup
+- 서블릿 프로그래밍 
+    - loadOnStartup 제어하기
+    - 서블릿 초기화 파라미터, 필터 초기화 파라미터, 컨텍스트 초기화 파라미터 
+    - 포워딩/인클루딩 제어
+- 웹 프로젝트 2단계 과제: 인클루딩 기법을 이용하여 게시물을 관리하기
 
+## 63일(2019-4-2)
+- 리프래시와 리다이렉트 다루기
+- 웹 프로젝트 2단계 과제(계속)
+    - 포워딩 적용하기
+    - 리프래시 및 리다이렉트 적용하기
+- 웹 프로젝트 3단계 과제
+    - ServletContextListener에서 스프링 IoC 컨테이너 준비하기
+    - ServletContext 보관소 이용하여 스프링 IoC 컨테이너 보관하기
+
+## 64일(2019-4-3)
+- 쿠키 다루기
+- 세션을 식별하는 원리
+- 세션 다루기
+- 웹 프로젝트 4단계 과제
+    - 로그인 적용
+    - 로그인 정보를 출력하는 헤더 서블릿 적용
+
+## 65일(2019-4-4)
+- HTML 사용법
+- 썸네일 이미지 다루기
+    - thumbnailator 라이브러리 사용
+
+## 66일(2019-4-5)
+- JSP 사용법 I
+    - JSP 주석, scriptlet/expression/declaration/directive element 사용법
+- 웹 프로젝트 5단계 과제
+    - JSP를 도입하여 MVC 아키텍처로 변경
+
+## 67일(2019-4-8)
+- JSP 사용법 II
+    - JSP 액션 태그 사용법
+- 웹 프로젝트 6단계 과제
+    - ServletRequest 보관소에서 값을 꺼낼 때 jsp:useBean을 사용한다.
+
+## 68일(2019-4-9)
+- JSP 사용법 III
+    - EL 사용법
+    - JSTL 사용법
+- 웹 프로젝트 7단계 과제
+    - JSP에 EL 적용
+- 웹 프로젝트 8단계 과제
+    - JSP에 JSTL 적용    
+- 프론트 컨트롤러 패턴 소개
+- 웹 프로젝트 9단계 과제
+    - 프론트 컨트롤러 도입
+
+## 69일(2019-4-10)
+- 페이지 컨트롤러를 POJO 클래스 전환
+    - PageController 인터페이스 추가
+    - 페이지 컨트롤러는 PageController 인터페이스 구현
+    - 웹 프로젝트 10단계 과제 수행
+- @RequestMapping 애노테이션 도입
+    - PageController 인터페이스 삭제
+    - 메서드에 @RequestMapping 애노테이션을 붙인다.
+    - 웹 프로젝트 11단계 과제 수행
+- CRUD 페이지 컨트롤러를 한 개의 클래스로 합친다.
+    - 예) BoardListController + BoardAddController + BoardDetailController + BoardUpdateController + BoardDeleteController = BoardController
+    - 웹 프로젝트 12단계 과제 수행
+- 요청 핸들러의 파라미터 값 준비를 자동화하기
+    - 요청 핸들러의 파라미터 타입을 분석한다.
+    - 분석을 바탕으로 메서드를 호출할 때 값을 넘긴다.
+    - 웹 프로젝트 13단계 과제 수행
+
+## 70일(2019-4-11)
+- 요청 핸들러의 파라미터 값 준비를 자동화하기 (계속)
+    - @RequestHeader 처리
+    - VO 파라미터 처리
+- Sprint WebMVC 프레임워크 적용
+    - 웹 프로젝트 14단계 과제 수행
+
+## 71일(2019-4-12) 
+- Spring WebMVC 프레임워크 사용법 
+    - 프로젝트 생성(java-spring-webmvc)
+    - 스프링 Web MVC 설정하기
+
+## 72일(2019-4-15)
+- 프로젝트 발표
+    - UI 프로토타입 2차 발표
+- Use-case 모델링
+    - Actor 식별법
+    - Use-case 식별법
+    - Use-case 명세서 작성법
+
+## 73일(2019-4-16)
+- git 기본 사용법
+    - add, commit, push 등 다루기
+
+## 74일(2019-4-17)
+- git 고급 사용법
+    - branch 다루기
+
+## 75일(2019-4-18)
+- Spring WebMVC 프레임워크 사용법 II
+
+## 76일(2019-4-19)
+- Spring WebMVC 프레임워크 사용법 III
+
+## 77일(2019-4-22)
+- Spring WebMVC 프레임워크 사용법 IV
+
+## 78일(2019-4-23)
+- 웹 프로젝트 15단계 과제 수행 : XML로 설정하기
+    - web 패키지 추가
+        - 페이지 컨트롤러와 웹 관련 클래스들을 이 패키지로 옮긴다.
+    - Spring WebMVC XML 설정하기
+        - /WEB-INF/app-servlet.xml 파일 생성
+    - JSP 파일 옮기기 및 수정
+        - /WEB-INF/jsp/ 폴더로 JSP 파일을 옮긴다.
+        - header.jsp 경로 수정
+    - ContextLoaderListener의 IoC 컨테이너 설정하기
+        - /WEB-INF/application-context*.xml 파일 생성
+    - 페이지 컨트롤러 수정
+        - Spring Web MVC 관련 애노테이션을 적용한다.
+- 웹 프로젝트 15단계 과제 수행 : Java config 로 설정하기
