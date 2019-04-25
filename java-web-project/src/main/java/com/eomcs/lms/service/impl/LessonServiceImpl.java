@@ -28,8 +28,11 @@ public class LessonServiceImpl implements LessonService {
 
   // 비지니스 객체에서 메서드 이름은 가능한 업무 용어를 사용한다.
   @Override
-  public List<Lesson> list() {
-    return lessonDao.findAll(); 
+  public List<Lesson> list(int pageNo, int pageSize) {
+    HashMap<String,Object> params = new HashMap<>();
+    params.put("size", pageSize);
+    params.put("rowNo", (pageNo - 1) * pageSize);
+    return lessonDao.findAll(params); 
   }
   //
   @Override
@@ -65,5 +68,10 @@ public class LessonServiceImpl implements LessonService {
       photoBoardDao.delete(board.getNo());
     }
     return lessonDao.delete(no);
+  }
+
+  @Override
+  public int size() {
+    return lessonDao.countAll();
   }
 }

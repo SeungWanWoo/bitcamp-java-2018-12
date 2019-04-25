@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+body {
+  font-size: small;
+}
+
+h1 {
+  text-align: center;
+}
+
+.bit-list {
+  
+  min-height: 200px;
+}
+
+div.container {
+  width: 800px;
+}
+
+#bit-login-state {
+  margin: 0px 10px;
+}
+

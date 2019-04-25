@@ -4,30 +4,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>수업 목록(JSP4)</title>
+<title>수업 목록</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="${contextRootPath}/css/common.css">
 </head>
 <body>
   <jsp:include page="../header.jsp" />
-  <h1>수업 목록(JSP4)</h1>
+  <div class="container">
+  <h1>수업 목록</h1>
   <p>
-    <a href='form'>신규 수업</a>
+    <a href='form' class="btn btn-success btn-sm">신규 수업</a>
   </p>
-  <table border='1'>
+  <table class="table table-hover">
+    <thead>
     <tr>
-      <th>번호</th>
-      <th>수업 제목</th>
-      <th>시작일 ~ 종료일</th>
-      <th>총 시간</th>
+      <th scope="col">번호</th>
+      <th scope="col">수업 제목</th>
+      <th scope="col">시작일 ~ 종료일</th>
+      <th scope="col">총 시간</th>
     </tr>
+    </thead>
+    <tbody>
     <c:forEach items="${lessons}" var="lesson">
     <tr>
-      <td>${lesson.no}</td>
-      <td><a href='${lesson.no}'>${lesson.title}</a></td>
-      <td>${lesson.startDate}~ ${lesson.endDate}</td>
-      <td>${lesson.totalHours}</td>
+      <th scope="row">${lesson.no}</th>
+      <td scope="row"><a href='${lesson.no}'>${lesson.title}</a></td>
+      <td scope="row">${lesson.startDate}~ ${lesson.endDate}</td>
+      <td scope="row">${lesson.totalHours}</td>
     </tr>
     </c:forEach>
+    </tbody>
   </table>
-  <a href='../../index.html'>처음화면</a>
+  
+  <nav aria-label="목록 페이지 이동">
+  <ul class="pagination justify-content-center" >
+    <li class="page-item ${pageNo <= 1 ? 'disabled' : '' }  "><a class="page-link" 
+        href="?pageNo=${pageNo - 1}&pageSize=${pageSize}">이전</a></li>
+    <li class="page-item active"><span class="page-link">${pageNo}</span></li>
+    <li class="page-item ${pageNo >= totalPage ? 'disabled' : '' }"><a class="page-link" 
+        href="?pageNo=${pageNo + 1}&pageSize=${pageSize}">다음</a></li>
+  </ul>
+  </nav>
+  
+  </div> <!-- container -->
+  <jsp:include page="../javascript.jsp"/>
 </body>
 </html>

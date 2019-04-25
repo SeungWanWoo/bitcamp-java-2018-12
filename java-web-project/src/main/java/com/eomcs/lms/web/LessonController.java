@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.service.LessonService;
 
@@ -46,12 +47,31 @@ public class LessonController {
   }
   
   @GetMapping
-  public String list(Model model) throws Exception {
+  public String list(
+      @RequestParam(defaultValue="1") int pageNo,
+      @RequestParam(defaultValue="3") int pageSize,
+      Model model) throws Exception {
     
-    List<Lesson> lessons = lessonService.list();
+    if (pageSize < 3 || pageSize > 8) 
+      pageSize = 3;
+    
+    int rowSize = lessonService.size();
+    int totalPage = rowSize / pageSize;
+    
+    if (rowSize % pageSize > 0) 
+      totalPage++;
+    
+    if (pageNo < 1)
+      pageNo = 1;
+    else if (pageNo > totalPage)
+      pageNo = totalPage;
+    
+    List<Lesson> lessons = lessonService.list(pageNo, pageSize);
 
     model.addAttribute("lessons", lessons);
-    
+    model.addAttribute("pageNo", pageNo);
+    model.addAttribute("pageSize", pageSize);
+    model.addAttribute("totalPage", totalPage);
     return "lesson/list";
   }
   

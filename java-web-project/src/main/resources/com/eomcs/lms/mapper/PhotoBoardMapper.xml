@@ -38,7 +38,8 @@
       cdt,
       vw_cnt,
       lesson_id
-    from lms_photo
+      from
+      lms_photo
   </sql>
 
   <select id="findAll" resultMap="photoBoardMap" parameterType="map">
@@ -48,16 +49,18 @@
     <include refid="select1"/>
     <where>
       <if test="lessonNo != null">or lesson_id = #{lessonNo}</if>
-      <!-- mybatis에서 검색 패턴을 만든 경우, 다음과 같이 mybatis에서 만든 bind를 사용한다 -->
       <if test="pattern1 != null">or titl like #{pattern1}</if>
-      
-      <!-- 자바에서 검색 패턴을 만든 경우, 다음과 같이 그냥 keyword 값을 사용하면 된다. -->
-      <!-- 
-      <if test="keyword !=null">or titl like #{keyword}></if>
-       -->
+      <if test="lessonNo != null">
+        <if test="pattern1 != null">
+        or lesson_id = #{lessonNo} and titl like #{pattern1}
+        </if>
+      </if>
     </where>
     order by
       photo_id desc
+    <if test="#{size != null || rowNo != null}">
+      limit #{rowNo}, #{size}
+    </if>
   </select>
   
   <update id="increaseCount" parameterType="int">
@@ -114,4 +117,8 @@
   <delete id="delete" parameterType="int">
     delete from lms_photo where photo_id = #{no}
   </delete>
+  
+  <select id="countAll" resultType="int">
+    select count(*) from lms_photo
+  </select>
 </mapper>

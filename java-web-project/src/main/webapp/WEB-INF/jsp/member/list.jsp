@@ -6,15 +6,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>회원 목록(JSP4)</title>
+  <title>회원 목록</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="${contextRootPath}/css/common.css">
 </head>
 <body>
   <jsp:include page="../header.jsp" />
-  <h1>회원 목록(JSP4)</h1>
+  <div class="container">
+  <h1>회원 목록</h1>
   <p>
     <a href='form'>회원 가입</a>
   </p>
-  <table border='1'>
+  <table class="table table-hover">
     <tr>
       <th>번호</th>
       <th>이름</th>
@@ -34,8 +37,8 @@
   </table>
   <form action='search'>
     <input name='name'>
-    <button type='submit'>검색</button>
+    <button class="btn btn-info btn-sm">검색</button>
   </form>
-  <a href='../../index.html'>처음화면</a>
+  </div>
 </body>
 </html>

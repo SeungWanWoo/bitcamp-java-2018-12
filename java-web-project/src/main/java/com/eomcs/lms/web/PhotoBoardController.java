@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.domain.PhotoBoard;
 import com.eomcs.lms.domain.PhotoFile;
@@ -64,7 +65,7 @@ public class PhotoBoardController {
   
   @GetMapping("form")
   public String form(Model model) {
-    List<Lesson> lessons = lessonService.list();
+    List<Lesson> lessons = lessonService.list(0, 3);
     model.addAttribute("lessons", lessons);
     
     return "photoboard/form";
@@ -83,7 +84,7 @@ public class PhotoBoardController {
   public String detail(@PathVariable int no, Model model) throws Exception {
     
     PhotoBoard board = photoBoardService.get(no);
-    List<Lesson> lessons = lessonService.list();
+    List<Lesson> lessons = lessonService.list(1, 3);
     
     model.addAttribute("photoboard", board);
     model.addAttribute("lessons", lessons);
@@ -93,10 +94,30 @@ public class PhotoBoardController {
   }
   
   @GetMapping
-  public String list(Model model) {
+  public String list(
+      @RequestParam(defaultValue="1") int pageNo,
+      @RequestParam(defaultValue="3") int pageSize,
+      Model model) {
     
-    List<PhotoBoard> photoBoards = photoBoardService.list(0, null);
+    if (pageSize < 3 || pageSize > 8)
+      pageSize = 3;
+    
+    int rowCount = photoBoardService.size();
+    int totalPage = rowCount / pageSize;
+    
+    if (rowCount % pageSize > 0)
+      totalPage++;
+    
+    if (pageNo < 1)
+      pageNo = 1;
+    else if (pageNo > totalPage)
+      pageNo = totalPage;
+    
+    List<PhotoBoard> photoBoards = photoBoardService.list(0, null, pageNo, pageSize);
     model.addAttribute("photoboards", photoBoards);
+    model.addAttribute("pageNo", pageNo);
+    model.addAttribute("pageSize", pageSize);
+    model.addAttribute("totalPage", totalPage);
     
     return "photoboard/list";
   }
@@ -105,6 +126,7 @@ public class PhotoBoardController {
   public void search(
       String lessonNo, 
       String searchWord, Model model) {
+    
     int num = 0;
     if (!lessonNo.equals("")) {
       num = Integer.parseInt(lessonNo);
@@ -113,7 +135,7 @@ public class PhotoBoardController {
     if (searchWord.length() > 0)
       sWord = searchWord;
     
-    List<PhotoBoard> photoBoards = photoBoardService.list(num, sWord);
+    List<PhotoBoard> photoBoards = photoBoardService.list(num, sWord, 1, 3);
     model.addAttribute("photoboard", photoBoards);
     
   }
@@ -149,4 +171,5 @@ public class PhotoBoardController {
     photoBoardService.update(photoBoard);
     return "redirect:.";
   }
+  
 }

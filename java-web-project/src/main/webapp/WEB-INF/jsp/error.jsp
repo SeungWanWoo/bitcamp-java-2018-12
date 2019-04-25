@@ -10,13 +10,9 @@ pageContext.servletContext.contextPath : header.Referer}</c:set>
 <html>
 <head>
 <title>실행 오류</title>
-<%--
-<meta http-equiv="Refresh" content="2;url=${
-   (empty header.Referer) ? pageContext.servletContext.contextPath : header.Referer}">
- --%>
 </head>
 <body>
-<jsp:include page="../header.jsp"/>
+<jsp:include page="header.jsp"/>
   <h1>${requestScope["error.title"]}</h1>
   <p>${requestScope["error.content"]}</p>
   <p><a href="${refererUrl}">이전 페이지로 가기</a></p>
