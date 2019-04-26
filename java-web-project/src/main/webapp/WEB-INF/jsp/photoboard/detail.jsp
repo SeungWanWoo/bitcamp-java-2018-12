@@ -48,16 +48,13 @@
                 value="${photoboard.viewCount}">
             </div>
           </div>
-          <div class="form-group row">
-            <label for="lessonNo" class="col-sm-2 col-form-label">수업</label>
-          <select id="lessonNo" name="lessonNo" class="btn btn-secondary dropdown-toggle" 
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <select name='lessonNo'>
             <c:forEach items="${lessons}" var="lesson">
-              <option class="dropdown-item" value='${lesson.no}' ${board.lessonNo == lesson.no ? "selected" : ""}>
-                ${lesson.title}(${lesson.startDate} ~ ${lesson.endDate})</option>
+              <option value='${lesson.no}' ${board.lessonNo == lesson.no ? "selected" : ""}>
+               ${lesson.title}(${lesson.startDate} ~ ${lesson.endDate})
+            </option>
             </c:forEach>
-          </select>
-          </div>
+        </select>
           <div class="form-group row">
             <div class="col-sm-10">
               <input type="text" readonly class="form-control-plaintext" id="viewCount"

@@ -84,7 +84,7 @@ public class PhotoBoardController {
   public String detail(@PathVariable int no, Model model) throws Exception {
     
     PhotoBoard board = photoBoardService.get(no);
-    List<Lesson> lessons = lessonService.list(1, 3);
+    List<Lesson> lessons = lessonService.list(0, 0);
     
     model.addAttribute("photoboard", board);
     model.addAttribute("lessons", lessons);
@@ -156,7 +156,7 @@ public class PhotoBoardController {
 
       String filename = UUID.randomUUID().toString();
       photo.write(uploadDir + "/" + filename);
-      
+      System.out.println(photoBoard.getLessonNo());
       PhotoFile file = new PhotoFile();
       file.setFilePath(filename);
       file.setPhotoBoardNo(photoBoard.getNo());
