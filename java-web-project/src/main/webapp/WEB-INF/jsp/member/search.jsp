@@ -7,28 +7,36 @@
 <html>
 <head>
 <title>회원 검색</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="${contextRootPath}/css/common.css">
 </head>
 <body>
-  <jsp:include page="../header.jsp"/>
+  <jsp:include page="../header.jsp" />
+  <div class="container">
   <h1>회원 검색</h1>
-  <table border='1'>
+  <table class="table table-hover">
+    <thead>
     <tr>
-      <th>번호</th>
-      <th>이름</th>
-      <th>이메일</th>
-      <th>전화번호</th>
-      <th>등록일</th>
+      <th scope="col">번호</th>
+      <th scope="col">이름</th>
+      <th scope="col">이메일</th>
+      <th scope="col">전화번호</th>
+      <th scope="col">등록일</th>
     </tr>
+    </thead>
+    <tbody>
     <c:forEach items="${members}" var="member">
     <tr>
-      <td>${member.no}</td>
-      <td><a href='${member.no}'>${member.name}</a></td>
-      <td>${member.email}</td>
-      <td>${member.tel}</td>
-      <td>${member.registeredDate}</td>
+      <td scope="row">${member.no}</td>
+      <td scope="row"><a href='${member.no}'>${member.name}</a></td>
+      <td scope="row">${member.email}</td>
+      <td scope="row">${member.tel}</td>
+      <td scope="row">${member.registeredDate}</td>
     </tr>
     </c:forEach>
+    </tbody>
   </table>
-    <a href='.'>목록</a>
+    <a href='.' class="btn btn-primary btn-sm">목록</a>
+    </div> <!-- container -->
 </body>
 </html>

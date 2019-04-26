@@ -18,7 +18,7 @@
     tel
   </sql>
 
-  <select id="findAll" resultMap="memberMap">
+  <select id="findAll" resultMap="memberMap" parameterType="map">
     select
       <include refid="default-columns"/>,
       pwd,
@@ -27,6 +27,9 @@
       lms_member
     order by
       member_id desc
+      <if test="#{size != null || rowNo != null}">
+        limit #{rowNo}, #{size}
+      </if>
   </select>
   
   <select id="findByKeyword" resultMap="memberMap" parameterType="string">
@@ -86,4 +89,8 @@
   <delete id="delete" parameterType="int">
     delete from lms_member where member_id = #{no}
   </delete>
+  
+  <select id="countAll" resultType="int">
+    select count(*) from lms_member
+  </select>
 </mapper>

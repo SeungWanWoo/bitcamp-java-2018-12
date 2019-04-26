@@ -15,7 +15,7 @@
   <div class="container">
   <h1>회원 목록</h1>
   <p>
-    <a href='form'>회원 가입</a>
+    <a href='form' class="btn btn-success btn-sm">회원 가입</a>
   </p>
   <table class="table table-hover">
     <tr>
@@ -39,6 +39,16 @@
     <input name='name'>
     <button class="btn btn-info btn-sm">검색</button>
   </form>
-  </div>
+  
+  <nav aria-label="목록 페이지 이동">
+  <ul class="pagination justify-content-center" >
+    <li class="page-item ${pageNo <= 1 ? 'disabled' : '' }  "><a class="page-link" 
+        href="?pageNo=${pageNo - 1}&pageSize=${pageSize}">이전</a></li>
+    <li class="page-item active"><span class="page-link">${pageNo}</span></li>
+    <li class="page-item ${pageNo >= totalPage ? 'disabled' : '' }"><a class="page-link" 
+        href="?pageNo=${pageNo + 1}&pageSize=${pageSize}">다음</a></li>
+  </ul>
+  </nav>
+  </div> <!-- container -->
 </body>
 </html>
