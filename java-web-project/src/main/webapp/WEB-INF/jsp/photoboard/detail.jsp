@@ -5,11 +5,7 @@
 <html>
 <head>
 <title>사진 조회</title>
-<link rel="stylesheet"
-  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-  crossorigin="anonymous">
-<link rel="stylesheet" href="${contextRootPath}/css/common.css">
+<jsp:include page="../commonCss.jsp"/>
 </head>
 <body>
   <jsp:include page="../header.jsp" />
@@ -50,8 +46,8 @@
           </div>
           <select name='lessonNo'>
             <c:forEach items="${lessons}" var="lesson">
-              <option value='${lesson.no}' ${board.lessonNo == lesson.no ? "selected" : ""}>
-                ${lesson.title}(${lesson.startDate} ~ ${lesson.endDate})</option>
+              <option value='lesson.no' ${board.lessonNo == lesson.no ? "selected" : ""}>
+                lesson.title(lesson.startDate ~ lesson.endDate)</option>
             </c:forEach>
           </select>
           <div class="form-group row">

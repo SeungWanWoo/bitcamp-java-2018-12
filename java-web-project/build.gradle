@@ -59,5 +59,8 @@ dependencies {
     // JSTL 명세를 구현한 라이브러리
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
     
+    // Jackson 라이브러리
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    
     
 }
