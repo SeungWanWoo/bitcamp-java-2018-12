@@ -1,6 +1,7 @@
 package com.eomcs.lms.web.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -45,7 +46,14 @@ public class AuthFilter implements Filter {
         // 절대 경로를 써라. 클라이언트가 요청한 위치를 알 수 없기 때문에
         // 막연히 상대경로로 로그인 폼의 URL을 지정할 수 없다.
         // 절대 경로로 정확하게 지정하라.
-        httpResponse.sendRedirect(contextRootPath + "/app/auth/form");
+        if (pathInfo.startsWith("/json")) {
+          response.setContentType("text/plain;charset=UTF-8");
+          PrintWriter out = response.getWriter();
+          out.println("{\"status\":\"loginfail\", \"message\":\"로그인 하지 않았습니다.\"}");
+          
+        } else {
+          httpResponse.sendRedirect(contextRootPath + "/app/auth/form");
+        }
         return;
       }
     }
