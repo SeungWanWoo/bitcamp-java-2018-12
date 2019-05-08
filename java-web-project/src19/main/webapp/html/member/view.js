@@ -33,11 +33,9 @@ document.querySelector('#add-btn').onclick = () => {
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var name = document.querySelector('#name').value;
   var email = document.querySelector('#email').value;
-  var photo = document.querySelector('#photoFile').value;
   var tel = document.querySelector('#tel').value;
   xhr.send('name=' + encodeURIComponent(name) +
       '&email=' + encodeURIComponent(email) +
-      '&photoFile=' + encodeURIComponent(photo) +
       '&tel=' + encodeURIComponent(tel))
 }
 
@@ -80,13 +78,11 @@ document.querySelector('#update-btn').onclick = () => {
   var no = document.querySelector('#no').value,
       name = document.querySelector('#name').value,
       email = document.querySelector('#email').value,
-      photoFile = document.querySelector('#photoFile').value,
       tel = document.querySelector('#tel').value,
       registeredDate = document.querySelector('#registeredDate').value;
   
   var qs = 'name=' + encodeURIComponent(name) +
             'email=' + encodeURIComponent(email) +
-            'photo=' + encodeURIComponent(photoFile) +
             'tel=' + encodeURIComponent(tel) +
             'registeredDate=' + encodeURIComponent(registeredDate) +
             '&no' + no;
@@ -109,7 +105,6 @@ function loadData(no) {
     document.querySelector('#no').value = data.no;
     document.querySelector('#name').value = data.name;
     document.querySelector('#email').value = data.email;
-    document.querySelector('#photoFile').value = data.photo;
     document.querySelector('#tel').value = data.tel;
     document.querySelector('#registeredDate').value = data.registeredDate;
   };

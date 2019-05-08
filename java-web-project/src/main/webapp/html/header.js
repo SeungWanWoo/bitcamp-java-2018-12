@@ -27,7 +27,7 @@ document.body.addEventListener('loaded.header', () => {
   loadLoginUser();
   
   // 로그아웃 버튼의 click 리스너를 등록한다.
-  document.querySelector('#logout-menu').addEventListener('click', (e) => {
+  $('#logout-menu').addEventListener('click', (e) => {
     e.preventDefault();
     var xhr = new XMLHttpRequest();
 
