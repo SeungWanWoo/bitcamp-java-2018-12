@@ -28,18 +28,15 @@
 
 $('#fileupload').fileupload({
     dataType: 'json',
-    add: function (e, data) { // 각 파일에 대해 호출된다.
+    add: function (e, data) {
         console.log('add()...');
-        data.context = $('<p/>').text('Uploading...').appendTo(document.body);
+        // 선택한 파일을 서버에 보내고 싶다면 submit()을 호출해야 한다.
         data.submit(); // 해당 파일의 서버 전송을 시작한다.
     },
     done: function (e, data) {
+      // 각각의 파일을 서버에 보낸 후에 응답 또한 각각 받는다.
       console.log('done()...');
       console.log(data.result);
-      var files = data.result.files;
-      for (var file of files) {
-        $('<p/>').text(file.filename + " : " + file.filesize).appendTo(document.body);
-      }
     }
 });
 

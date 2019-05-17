@@ -5,7 +5,7 @@
 <title>ajax 파일 업로드</title>
 </head>
 <body>
-  <h1>AJAX 멀티파트 전송 - 사진 파일 전송 후 바로 출력하기</h1>
+  <h1>AJAX 멀티파트 전송 - 버튼을 클릭할 때 서버에 전송하기</h1>
   <pre>
 1) jquery.fileupload() 함수
    - 버튼을 클릭 했을 때 서버에 비동기 요청하도록 설정한다.
@@ -14,7 +14,6 @@
    - fileupload()에 넘길 파라미터 객체를 정의할 때, add 프로퍼티 추가한다.
    - add() 함수가 호출될 때, 업로드 버튼을 출력한다.
    - 업로드 버튼을 클릭할 때 submit()을 호출하게 만든다.
-   - done() 함수가 호출될 때, 업로드한 이미지를 바로 출력한다.
 
 </pre>
 
@@ -33,28 +32,25 @@
             dataType : 'json',
             add : function(e, data) {
               console.log('add()...');
-              data.context = $('<p>').append('$(<button>)').text(
-                  data.files[0].name + ' 파일 업로드').click(function() {
-                data.context.html('업로드 중....');
-                data.submit();// 해당 파일의 서버 전송을 시작한다.
-              }).appendTo('#btnBox')
+
+              var btn = $('<button>').text(data.files[0].name + ' 업로드').appendTo('#btnBox').click(
+                  function() {
+                    // 파일을 업로드하면 업로드 중이라고 표시한다.
+              data.context.html('업로드 중...');
+                    // 버튼을 클릭했을 때 파일을 서버에 전송 한다.
+                    data.submit();
+                  });
+              data.context = $('<p>').append(btn).appendTo('#btnBox');
+              
             },
             done : function(e, data) {
               console.log('done()...');
               console.log(data.result);
-              // 파일 업로드를 완료한 후 p 태그의 콘텐트를 제거한다.
-
-              window.setTimeout(function() {
-              data.context.html('');
-                // p 태그에 img 태그를 붙인다.
-                // ==> 이클립스에서 톰캣 서버를 실행할 때는 서버에서 파일을 저장한 후
-                //     일정 시간이 지나야만 웹 브라우저에서 해당 이미지를 제대로 출력할 수 있다.
-                // => 그래서 파일 업로드 한 후 일정 시간이 지난 다음에 이미지 태그를 출력하도록 하였다.
-                data.context.append($('<img>').attr('src',
-                    '../upload/' + data.result.files[0].filename).css('height',
-                    '150px'));
-
-              }, '5000');
+              // 파일 업로드를 완료한 후 p 태그의 값을 변경한다.
+              data.context.html("업로드 완료!");
+              /*       var file = data.result;
+               $('<img/>').attr("src", "../files/" + file.filename)
+               .replaceAll(data.context); */
             }
           });
     </script>

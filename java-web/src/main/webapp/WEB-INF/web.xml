@@ -175,7 +175,7 @@
 		<jsp-file>/fileupload/upload.jsp</jsp-file>
 		<!-- 멀티파트 데이터를 처리하려면 다음 태그를 선언해야 한다. -->
 		<multipart-config>
-			<max-file-size>10000000</max-file-size>
+			<max-file-size>100000000</max-file-size>
 		</multipart-config>
 	</servlet>
 

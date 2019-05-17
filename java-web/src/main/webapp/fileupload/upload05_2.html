@@ -32,15 +32,12 @@ $('#fileupload').fileupload({
     dataType: 'json',
     add: function (e, data) {
         console.log('add()...');
-        
-        // 선택한 각각의 파일에 대해 업로드 버튼을 생성한다.
-        // 그리고 업로드가 완료되었을 때, 즉 done() 함수가 호출될 때
-        // 해당 버튼을 제거할 수 있도록 data 객체에 context라는 이름으로 보관한다.
-        data.context = $('<button>').text('업로드').appendTo('#btnBox').click(function (){ 
-              // 버튼을 클릭했을 때 서버에 전송한다.
-              alert(data.files[0].name + "  파일 업로드!");
-              data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-              data.submit();// 해당 파일의 서버 전송을 시작한다.
+        data.context = $('<button>')
+        .text('업로드')
+        .appendTo('#btnBox')
+        .click(function (){ 
+              // 버튼을 클릭했을 때 파일을 서버에 전송 한다.
+              data.submit();
           });
     },
     done: function (e, data) {
