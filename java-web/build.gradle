@@ -9,7 +9,6 @@
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-
     id 'eclipse-wtp'
     id 'war'
 }
@@ -27,8 +26,6 @@ repositories {
 dependencies {
     // 특정 디렉토리에 있는 라이브러리 파일을 가져오기
     // => repositories {} 의 flatDir {} 에 지정된 폴더에서 해당 이름의 .jar 파일을 찾는다. 
-    compile name: 'java-web-library'
-
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 
